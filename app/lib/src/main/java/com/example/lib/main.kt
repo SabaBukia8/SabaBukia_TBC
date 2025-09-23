@@ -1,6 +1,8 @@
 package com.example.lib
 
 fun main() {
-    println(MathOperations().USG(24, 80))
-    println(MathOperations().USJ(2, 4))
+    println(Opperation().usg(24, 80))
+    println(Opperation().usj(2, 4))
+    println(Opperation().hasDollar("sixSeven$"))
+    println(Opperation().countSumHundred())
 }

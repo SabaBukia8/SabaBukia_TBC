@@ -1,7 +1,7 @@
 package com.example.lib
 
-class MathOperations {
-    fun USG(num1: Int, num2: Int): Int {
+class Opperation{
+    fun usg(num1: Int, num2: Int): Int {
         var a = num1
         var b = num2
             while (b != 0) {
@@ -12,10 +12,25 @@ class MathOperations {
             return a
         }
 
-    fun USJ(num1: Int, num2: Int): Int{
+    fun usj(num1: Int, num2: Int): Int{
         var a = num1
         var b = num2
 
-        return a * b / USG(a,b)
+        return a * b / usg(a,b)
+    }
+
+    fun hasDollar(string: String): Boolean{
+        for (char in string){
+            if (char == '$'){
+                return true
+            }
+        }
+        return false
+    }
+
+    fun countSumHundred (num: Int = 0, finish: Int = 100): Int{
+        if (num > finish)
+            return 0
+        return num + countSumHundred(num + 2, finish)
     }
     }
