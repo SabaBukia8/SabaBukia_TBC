@@ -5,4 +5,5 @@ fun main() {
     println(Opperation().usj(2, 4))
     println(Opperation().hasDollar("sixSeven$"))
     println(Opperation().countSumHundred())
+
 }
