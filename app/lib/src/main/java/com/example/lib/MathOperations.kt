@@ -11,4 +11,11 @@ class MathOperations {
                 }
             return a
         }
+
+    fun USJ(num1: Int, num2: Int): Int{
+        var a = num1
+        var b = num2
+
+        return a * b / USG(a,b)
+    }
     }
