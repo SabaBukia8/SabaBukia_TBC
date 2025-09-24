@@ -34,10 +34,10 @@ class Opperation{
         return num + countSumHundred(num + 2, finish)
     }
 
-    fun reverseNum(num: Int):Int{
-       val a = num.toString().reversed()
-        val answer = a.toInt()
-        return answer
+    fun reverseNum(num: Int): Int {
+        val absoluteValue = if (num < 0) -num else num
+        val reversed = absoluteValue.toString().reversed().toInt()
+        return if (num < 0) -reversed else reversed
     }
 
     fun isPalindrome(string: String): Boolean{
