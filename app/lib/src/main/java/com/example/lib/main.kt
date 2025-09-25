@@ -7,4 +7,5 @@ fun main() {
     println(Opperation().countSumHundred())
     println(Opperation().reverseNum(-23450))
     println(Opperation().isPalindrome("202"))
+    Calculator().calculate()
 }
