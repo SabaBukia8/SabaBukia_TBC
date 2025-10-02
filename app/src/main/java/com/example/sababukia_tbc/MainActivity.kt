@@ -3,28 +3,27 @@ package com.example.sababukia_tbc
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.content.ContextCompat
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import com.example.sababukia_tbc.databinding.ActivityMainBinding
-import com.google.android.material.switchmaterial.SwitchMaterial
 
+data class User(val fullName: String, val email: String)
 class MainActivity : AppCompatActivity() {
-    lateinit var numberET: EditText
-    lateinit var spellOutButton: Button
-    lateinit var result: TextView
-     lateinit var languageSwitch: SwitchMaterial
+    lateinit var enterName : AppCompatEditText
+    lateinit var enterEmail : AppCompatEditText
+    lateinit var addUserBtn : AppCompatButton
+    lateinit var userCount : AppCompatTextView
+    lateinit var checkEmail : AppCompatEditText
+    lateinit var getUserInfoBtn : AppCompatButton
+    lateinit var userInfo : AppCompatTextView
 
-     private lateinit var binding: ActivityMainBinding
+    private val users = mutableListOf<User>()
+
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
-
 
         super.onCreate(savedInstanceState)
 
@@ -32,139 +31,78 @@ class MainActivity : AppCompatActivity() {
 
         enableEdgeToEdge()
         setContentView(binding.root)
-
         initializeViews()
-        setupClickListeners()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        clickListener()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
     }
-
-    private fun initializeViews() {
-        numberET = findViewById(R.id.numberET)
-        spellOutButton = findViewById(R.id.spellOutButton)
-        result = findViewById(R.id.result)
-        languageSwitch = findViewById(R.id.languageSwitch)
+    private fun initializeViews(){
+         enterName = binding.enterName
+         enterEmail = binding.enterEmail
+         addUserBtn = binding.addUserBtn
+         userCount = binding.userCount
+         checkEmail = binding.checkEmail
+         getUserInfoBtn = binding.getUserInfoBtn
+         userInfo = binding.userInfo
     }
-
-    private fun setupClickListeners() {
-        spellOutButton.setOnClickListener {
-            convertNumberToWords()
+    private fun clickListener(){
+        addUserBtn.setOnClickListener {
+            addUser()
+        }
+        getUserInfoBtn.setOnClickListener {
+            checkUser()
         }
     }
-    private fun convertNumberToWords() {
-
-        val inputText = numberET.text.toString().trim()
-
-        if (inputText.isEmpty()) {
-            showError("Please enter a number")
+    private fun addUser(){
+        val fullName = enterName.text.toString().trim()
+        val email = enterEmail.text.toString().trim()
+        if (fullName.isEmpty()){
+            enterName.error = "Please enter your full name"
+            return
+        }
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            enterEmail.error = "Please enter a valid email address"
             return
         }
 
-        try {
-            val number = inputText.toInt()
+        val emailExists = users.find { it.email.equals(email, ignoreCase = true) }
+        if (emailExists != null) {
+            enterEmail.error = "There already is a user with this email!"
+            return
+        }
 
-            if (number < 1 || number > 1000) {
-                showError("Please enter a number between 1 and 1000")
-                return
-            }
+        val user = User(fullName, email)
+            users.add(user)
 
-            val words = if (languageSwitch.isChecked) {
-                spellOutNumberEnglish(number)
-            } else {
-                spellOutNumberGeorgian(number)
-            }
-            showResult(words)
-        } catch (e: NumberFormatException) {
-            showError("Please enter a valid number")
+        userCount.text = "Users -> ${users.size}"
+
+        enterName.text?.clear()
+        enterEmail.text?.clear()
+    }
+
+    private fun checkUser(){
+
+        val email = checkEmail.text.toString().trim()
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            checkEmail.error = "Please enter a valid email address"
+            return
+        }
+        if (!userExists(email)){
+            userInfo.text = "User not found"
+        } else{
+            val activeUser = userByEmail(email)
+            userInfo.text = "Name = ${activeUser?.fullName}\n Email = ${activeUser?.email}"
         }
     }
-
-    private fun spellOutNumberEnglish(number: Int): String {
-        if (number == 1000) return "One Thousand"
-
-        val units = arrayOf("", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine")
-        val teens = arrayOf("Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen")
-        val tens = arrayOf("", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety")
-
-        return when {
-            number >= 100 -> {
-                val hundreds = number / 100
-                val remainder = number % 100
-                val hundredText = "${units[hundreds]} Hundred"
-
-                if (remainder == 0) hundredText else "$hundredText ${spellOutNumberEnglish(remainder)}"
-            }
-            number >= 20 -> {
-                val tensDigit = number / 10
-                val unitsDigit = number % 10
-                if (unitsDigit == 0) tens[tensDigit] else "${tens[tensDigit]}-${units[unitsDigit]}"
-            }
-            number >= 10 -> teens[number - 10]
-            else -> units[number]
-        }
+    fun userExists(email: String): Boolean {
+        return users.any { it.email.equals(email, ignoreCase = true) }
     }
-
-    private fun spellOutNumberGeorgian(number: Int): String {
-        if (number == 1000) return "ათასი"
-
-        val units = arrayOf("", "ერთი", "ორი", "სამი", "ოთხი", "ხუთი", "ექვსი", "შვიდი", "რვა", "ცხრა")
-        val teens = arrayOf("ათი", "თერთმეტი", "თორმეტი", "ცამეტი", "თოთხმეტი", "თხუთმეტი", "თექვსმეტი", "ჩვიდმეტი", "თვრამეტი", "ცხრამეტი")
-        val tens = arrayOf("", "", "ოცი", "ოცდაათი", "ორმოცი", "ორმოცდაათი", "სამოცი", "სამოცდაათი", "ოთხმოცი", "ოთხმოცდაათი")
-
-        return when {
-            number >= 100 -> {
-                val hundreds = number / 100
-                val remainder = number % 100
-                val hundredText = when (hundreds) {
-                    1 -> "ასი"
-                    2 -> "ორასი"
-                    3 -> "სამასი"
-                    4 -> "ოთხასი"
-                    5 -> "ხუთასი"
-                    6 -> "ექვსასი"
-                    7 -> "შვიდასი"
-                    8 -> "რვაასი"
-                    9 -> "ცხრაასი"
-                    else -> ""
-                }
-
-                if (remainder == 0) hundredText else {
-                    val remainderText = spellOutNumberGeorgian(remainder)
-                    hundredText.replace("ასი", "ას") + remainderText
-                }
-            }
-            number >= 20 -> {
-                val tensDigit = number / 10
-                val unitsDigit = number % 10
-                if (unitsDigit == 0) {
-                    tens[tensDigit]
-                } else {
-                    val baseTwenty = when (tensDigit % 2) {
-                        0 -> {tens[tensDigit].replace("ი", "")
-                        }
-                        else -> {tens[tensDigit].replace("ათი", "")
-                        }
-                    }
-
-                        "$baseTwenty${if (tensDigit % 2 == 0) "და"+"${units[unitsDigit]}" else "${teens[unitsDigit]}"}"
-
-
-                }
-            }
-            number >= 10 -> teens[number - 10]
-            else -> units[number]
-        }
-    }
-    private fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        result.text = "Error: $message"
-        result.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
-    }
-    private fun showResult(words: String) {
-        result.text = words
-        result.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
+    fun userByEmail(email: String): User? {
+        return users.find { it.email.equals(email, ignoreCase = true) }
     }
 }
