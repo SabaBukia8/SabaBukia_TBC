@@ -1,95 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:id="@+id/main"
-    >
+    android:id="@+id/main">
+
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/firstLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:textAllCaps="false">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/enterName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-            android:hint="@string/enter_full_name"
-            android:background="@drawable/edittext_outline"
-            android:layout_marginBottom="16dp"
-            />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/enterEmail"
+            android:id="@+id/enterAnagram"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_outline"
-            android:hint="@string/enter_email"
-            />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/addUserBtn"
-            android:text="@string/add_user"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="19sp"
-            android:textAllCaps="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/userCount"
-            android:text="@string/users_0"
-            android:gravity="center"
-            android:textSize="19sp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:hint="@string/enter_a_word"
+            android:inputType="text"
+            android:background="@drawable/edittext_outline" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/secondLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/checkEmail"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight="0"
-                android:maxLines="2"
-                android:layout_marginEnd="25dp"
-                android:background="@drawable/edittext_outline"
-                android:hint="@string/enter_email"
-                />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/getUserInfoBtn"
-                android:text="@string/get_user_info"
-                android:layout_gravity="center"
-                android:textSize="19sp"
-                android:gravity="center"
-                android:textAllCaps="false"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"/>
+                android:id="@+id/saveBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="@string/save"
+                android:textAllCaps="false" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/outputBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="@string/group_anagrams"
+                android:textAllCaps="false" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
+
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/userInfo"
-            android:gravity="center"
-            android:textSize="19sp"
-            android:layout_marginTop="16dp"
+            android:id="@+id/anagrams"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/anagram_groups_0"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/anagram_groups"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/displayAnagrams"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/clearBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear"
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/connectAndTransferBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_transfer_button"
+            />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 
 </androidx.core.widget.NestedScrollView>
