@@ -31,5 +31,13 @@
     <string name="toast_failed_send">Failed to send message</string>
     <string name="toast_not_connected">Not connected or message empty</string>
     <string name="connect_transfer_button">Connect &amp; Transfer</string>
-    <string name="message_to_send">Hello I am hacker from tbc it academy</string>
+    <string name="scanning_for_devices">Scanning for BLE devices…</string>
+    <string name="connecting_to_device">Connecting to device: %s</string>
+    <string name="connection_successful">Connected successfully!</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="data_sent">Data sent successfully!</string>
+    <string name="data_failed">Failed to send data</string>
+    <string name="no_ble_support">BLE not supported on this device</string>
+    <string name="bluetooth_disabled">Please enable Bluetooth</string>
+    <string name="location_permission_required">Location permission required for BLE scanning</string>
 </resources>
