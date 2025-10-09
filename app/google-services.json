@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "413108820717",
+    "project_id": "tbc-academy-project",
+    "storage_bucket": "tbc-academy-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413108820717:android:b9aecbeeffcb847fa58ae4",
+        "android_client_info": {
+          "package_name": "com.example.sababukia_tbc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_ATPb4j0ba13DYrLSNB3t2wp3BLub22Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
