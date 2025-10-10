@@ -11,4 +11,20 @@
     <string name="by_signing_up_you_agree_to_photo_s_terms_of_service_and_privacy_policy">By signing up, you agree to Photo\'s <u>Terms of Service</u> and <u>Privacy Policy</u></string>
     <string name="nickname">Nickname</string>
     <string name="logout">Logout</string>
+    <string name="authentication_successful">Authentication successful.</string>
+    <string name="loginpage">LoginPage</string>
+    <string name="couldn_t_find_a_user_with_this_nickname">Couldn\'t find a user with this nickname</string>
+    <string name="invalid_password_please_try_again">Invalid password. Please try again.</string>
+    <string name="authentication_failed">Authentication failed</string>
+    <string name="authentication_failedOne">Authentication failed: %1$s</string>
+    <string name="please_enter_an_email">Please enter an email!</string>
+    <string name="please_enter_a_correct_email">Please enter a correct email!</string>
+    <string name="please_enter_a_password">Please enter a password</string>
+    <string name="password_must_be_at_least_8_characters_long">Password must be at least 8 characters long</string>
+    <string name="registerpage">RegisterPage</string>
+    <string name="email_already_used">Email already used!</string>
+    <string name="nickname_is_set">Nickname is set!</string>
+    <string name="couldn_t_set_a_nickname">couldn\'t set a nickname</string>
+    <string name="you_are_not_signed_in">You are not signed in</string>
+    <string name="please_enter_a_nickname">Please enter a nickname</string>
 </resources>

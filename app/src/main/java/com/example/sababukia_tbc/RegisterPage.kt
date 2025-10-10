@@ -49,16 +49,23 @@ class RegisterPage : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(baseContext, "Authentication successful.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            baseContext,
+                            getString(R.string.authentication_successful), Toast.LENGTH_SHORT
+                        ).show()
                         val intent = Intent(this, RegisterSecondStep::class.java)
                         startActivity(intent)
 
                     } else {
                         val exception = task.exception
-                        Log.e("RegisterPage", "Authentication failed", exception)
+                        Log.e(
+                            getString(R.string.registerpage),
+                            getString(R.string.authentication_failed),
+                            exception
+                        )
                         val errorMessage = when (exception) {
-                            is FirebaseAuthUserCollisionException -> "Email already used!"
-                            else -> "Authentication failed: ${exception?.message}"
+                            is FirebaseAuthUserCollisionException -> getString(R.string.email_already_used)
+                            else -> getString(R.string.authentication_failedOne, exception?.message)
                         }
                         Toast.makeText(baseContext, errorMessage, Toast.LENGTH_LONG).show()
                     }
@@ -68,11 +75,11 @@ class RegisterPage : AppCompatActivity() {
 
     private fun isValidEmail(email: String): Boolean {
         if (email.isEmpty()) {
-            binding.emailEditText.error = "Email cannot be empty"
+            binding.emailEditText.error = getString(R.string.please_enter_an_email)
             return false
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailEditText.error = "Invalid email format"
+            binding.emailEditText.error = getString(R.string.please_enter_a_correct_email)
             return false
         }
         return true
@@ -80,11 +87,13 @@ class RegisterPage : AppCompatActivity() {
 
     private fun isValidPassword(password: String): Boolean {
         if (password.isEmpty()) {
-            binding.passwordEditText.error = "Password cannot be empty"
+            binding.passwordEditText.error = getString(R.string.please_enter_a_password)
             return false
         }
+
         if (password.length < 6) {
-            binding.passwordEditText.error = "Password must be at least 6 characters long"
+            binding.passwordEditText.error =
+                getString(R.string.password_must_be_at_least_8_characters_long)
             return false
         }
         return true

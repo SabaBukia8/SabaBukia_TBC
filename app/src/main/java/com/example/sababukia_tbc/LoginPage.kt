@@ -50,18 +50,24 @@ class LoginPage : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(baseContext, "Authentication successful.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            baseContext,
+                            getString(R.string.authentication_successful), Toast.LENGTH_SHORT
+                        ).show()
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
 
                     } else {
                         val exception = task.exception
-                        Log.e("LoginPage", "Authentication failed", exception)
+                        Log.e(
+                            getString(R.string.loginpage),
+                            getString(R.string.authentication_failed), exception
+                        )
                         val errorMessage = when (exception) {
-                            is FirebaseAuthInvalidUserException -> "Couldn't find a user with this nickname"
-                            is FirebaseAuthInvalidCredentialsException -> "Invalid password. Please try again."
-                            else -> "Authentication failed: ${exception?.message}"
+                            is FirebaseAuthInvalidUserException -> getString(R.string.couldn_t_find_a_user_with_this_nickname)
+                            is FirebaseAuthInvalidCredentialsException -> getString(R.string.invalid_password_please_try_again)
+                            else -> getString(R.string.authentication_failedOne, exception?.message)
                         }
                         Toast.makeText(baseContext, errorMessage, Toast.LENGTH_LONG).show()
                     }
@@ -71,11 +77,11 @@ class LoginPage : AppCompatActivity() {
 
     private fun isValidEmail(email: String): Boolean {
         if (email.isEmpty()) {
-            binding.emailEditText.error = "Please enter an email!"
+            binding.emailEditText.error = getString(R.string.please_enter_an_email)
             return false
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailEditText.error = "Please enter a correct email!"
+            binding.emailEditText.error = getString(R.string.please_enter_a_correct_email)
             return false
         }
         return true
@@ -83,11 +89,13 @@ class LoginPage : AppCompatActivity() {
 
     private fun isValidPassword(password: String): Boolean {
         if (password.isEmpty()) {
-            binding.passwordEditText.error = "Please enter a password"
+
+            binding.passwordEditText.error = getString(R.string.please_enter_a_password)
             return false
         }
         if (password.length < 6) {
-            binding.passwordEditText.error = "Password must be at least 8 characters long"
+            binding.passwordEditText.error =
+                getString(R.string.password_must_be_at_least_8_characters_long)
             return false
         }
         return true

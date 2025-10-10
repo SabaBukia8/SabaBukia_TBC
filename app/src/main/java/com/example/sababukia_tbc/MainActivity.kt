@@ -35,11 +35,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickListener(){
-        binding.loginBtnMain.setOnClickListener{
+    private fun clickListener() {
+        binding.loginBtnMain.setOnClickListener {
             goToLoginPage()
         }
-        binding.registerBtnMain.setOnClickListener{
+        binding.registerBtnMain.setOnClickListener {
             goToRegisterPage()
         }
         binding.logoutBtnMain.setOnClickListener {
@@ -47,14 +47,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToLoginPage(){
-            val intent = Intent(this, LoginPage::class.java)
-            startActivity(intent)
+    private fun goToLoginPage() {
+        val intent = Intent(this, LoginPage::class.java)
+        startActivity(intent)
     }
 
-    private fun goToRegisterPage(){
-            val intent = Intent(this, RegisterPage::class.java)
-            startActivity(intent)
+    private fun goToRegisterPage() {
+        val intent = Intent(this, RegisterPage::class.java)
+        startActivity(intent)
     }
 
     private fun logout() {

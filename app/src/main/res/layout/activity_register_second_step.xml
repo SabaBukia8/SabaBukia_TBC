@@ -63,6 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nicknameEditText" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_marginTop="32dp"
         android:layout_width="wrap_content"
@@ -70,6 +71,6 @@
         app:layout_constraintEnd_toEndOf="@id/nextButton"
         app:layout_constraintStart_toStartOf="@id/nextButton"
         app:layout_constraintTop_toBottomOf="@id/nextButton"
-        android:text="@string/by_signing_up_you_agree_to_photo_s_terms_of_service_and_privacy_policy"/>
+        android:text="@string/by_signing_up_you_agree_to_photo_s_terms_of_service_and_privacy_policy" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
