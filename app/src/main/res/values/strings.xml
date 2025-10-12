@@ -1,8 +1,29 @@
 <resources>
     <string name="app_name">SabaBukia_TBC</string>
-    <string name="enter_full_name">Enter full name</string>
-    <string name="enter_email">Enter Email</string>
-    <string name="add_user">Add user</string>
-    <string name="users_0"><![CDATA[Users -> 0]]></string>
-    <string name="get_user_info">Get user info</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="enter_your_last_name">Enter your last name</string>
+    <string name="enter_your_age">Enter your age</string>
+    <string name="enter_your_email_address">Enter your email address</string>
+    <string name="add_user">Add User</string>
+    <string name="update_user">Update User</string>
+    <string name="remove_user">Remove User</string>
+    <string name="active_users_0">Active Users: 0</string>
+    <string name="deleted_users_0">Deleted Users: 0</string>
+    <string name="please_enter_your_first_name">Please enter your first name</string>
+    <string name="please_enter_a_valid_last_name">Please enter a valid last name</string>
+    <string name="please_enter_a_valid_email_address">Please enter a valid email address</string>
+    <string name="users">Active Users: %1$d</string>
+    <string name="deleted_users">Deleted Users: %1$d</string>
+    <string name="error">Error</string>
+    <string name="user_already_exists">User already exists</string>
+    <string name="retry">Retry</string>
+    <string name="user_added_successfully">User added successfully</string>
+    <string name="please_enter_a_valid_email">Please enter a valid email</string>
+    <string name="user_deleted_successfully">User deleted successfully</string>
+    <string name="user_not_found">User not found</string>
+    <string name="show_info">Show Info</string>
+    <string name="please_enter_a_valid_age">Please enter a valid age</string>
+    <string name="user_updated_successfully">User updated successfully</string>
+    <string name="user_info_displayed">User info displayed</string>
+    <string name="user_info_format">First Name: %1$s\nLast Name: %2$s\nAge: %3$s\nEmail: %4$s</string>
 </resources>
