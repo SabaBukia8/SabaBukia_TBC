@@ -26,4 +26,15 @@
     <string name="user_updated_successfully">User updated successfully</string>
     <string name="user_info_displayed">User info displayed</string>
     <string name="user_info_format">First Name: %1$s\nLast Name: %2$s\nAge: %3$s\nEmail: %4$s</string>
+    <string name="user_first_name_key">USER_FIRST_NAME</string>
+    <string name="user_last_name_key">USER_LAST_NAME</string>
+    <string name="user_age_key">USER_AGE</string>
+    <string name="user_email_key">USER_EMAIL</string>
+    <string name="action_key">ACTION</string>
+    <string name="add_action">ADD</string>
+    <string name="update_action">UPDATE</string>
+    <string name="delete_action">DELETE</string>
+    <string name="user_does_not_exist">User does not exist</string>
+    <string name="user_list_is_empty">User list is empty. Please add a user first.</string>
+    <string name="active_users_count">Active Users: %d</string>
 </resources>
