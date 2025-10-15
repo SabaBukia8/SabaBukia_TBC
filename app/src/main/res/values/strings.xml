@@ -41,4 +41,22 @@
     <string name="age">Age</string>
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
+    <string name="search_for_a_user">Search for a user...</string>
+    <string name="save">Save</string>
+    <string name="address">Address</string>
+    <string name="birthday">Birthday</string>
+    <string name="user_info_details">ID: %1$s\n%2$s %3$s\n%4$s\n%5$s\n%6$s</string>
+    <string name="grisha_oniani_desc">კაცი, რომელმაც გააჩერა დრო</string>
+    <string name="jemal_kakauridze_desc">The one who knocks</string>
+    <string name="omger_kakauridze_desc">I am the danger</string>
+    <string name="boris_garuchava_desc">El Primo</string>
+    <string name="abtho_sikharulidze_desc">Say my name</string>
+    <string name="birthday_format">dd MMM yyyy</string>
+    <string name="date_parse_format">ddMMyyyy</string>
+    <string name="first_name_key">firstName</string>
+    <string name="last_name_key">lastName</string>
+    <string name="birthday_key">birthday</string>
+    <string name="address_key">address</string>
+    <string name="email_key">email</string>
+    <string name="desc_key">desc</string>
 </resources>

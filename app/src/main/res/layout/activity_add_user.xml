@@ -1,64 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    tools:context=".AddUserActivity">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etFirstName"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/first_name"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:padding="16dp">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etLastName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/last_name"
-        app:layout_constraintTop_toBottomOf="@id/etFirstName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/first_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etAge"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/age"
-        android:inputType="number"
-        app:layout_constraintTop_toBottomOf="@id/etLastName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/last_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/email"
-        app:layout_constraintTop_toBottomOf="@id/etAge"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/birthdayEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/birthday"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lastNameEditText" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAddUser"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/add_user"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/addressEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/birthdayEditText" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRemoveUser"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/remove_user"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/btnAddUser"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/emailEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addressEditText" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
