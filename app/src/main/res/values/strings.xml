@@ -25,7 +25,10 @@
     <string name="please_enter_a_valid_age">Please enter a valid age</string>
     <string name="user_updated_successfully">User updated successfully</string>
     <string name="user_info_displayed">User info displayed</string>
-    <string name="user_info_format">First Name: %1$s\nLast Name: %2$s\nAge: %3$s\nEmail: %4$s</string>
+    <string name="user_info_format">First Name: %1$s
+Last Name: %2$s
+Age: %3$s
+Email: %4$s</string>
     <string name="user_first_name_key">USER_FIRST_NAME</string>
     <string name="user_last_name_key">USER_LAST_NAME</string>
     <string name="user_age_key">USER_AGE</string>
@@ -45,8 +48,12 @@
     <string name="save">Save</string>
     <string name="address">Address</string>
     <string name="birthday">Birthday</string>
-    <string name="user_info_details">ID: %1$s\n%2$s %3$s\n%4$s\n%5$s\n%6$s</string>
-    <string name="grisha_oniani_desc">კაცი, რომელმაც გააჩერა დრო</string>
+    <string name="grisha_oniani_desc">huhuuu</string>
+    <string name="user_info_details">ID: %1$s\n
+%2$s\n %3$s\n
+%4$s\n
+%5$s\n
+%6$s</string>
     <string name="jemal_kakauridze_desc">The one who knocks</string>
     <string name="omger_kakauridze_desc">I am the danger</string>
     <string name="boris_garuchava_desc">El Primo</string>
@@ -59,4 +66,31 @@
     <string name="address_key">address</string>
     <string name="email_key">email</string>
     <string name="desc_key">desc</string>
+    <string name="user_id_1">1</string>
+    <string name="user_firstname_grisha">გრიშა</string>
+    <string name="user_lastname_oniani">ონიანი</string>
+    <string name="user_address_stalins_museum">სტალინის სახლმუზეუმი</string>
+    <string name="user_email_grisha">grisha@gmail.ru</string>
+    <string name="user_id_2">2</string>
+    <string name="user_firstname_jemal">Jemal</string>
+    <string name="user_lastname_kakauridze">Kakauridze</string>
+    <string name="user_address_lilo">თბილისი, ლილოს მიტოვებული ქარხანა</string>
+    <string name="user_email_jemal">jemal@gmail.com</string>
+    <string name="user_id_3">3</string>
+    <string name="user_firstname_omger">Omger</string>
+    <string name="user_address_asatiani">თბილისი, ასათიანი 18</string>
+    <string name="user_address_foti">ფოთი</string>
+    <string name="user_email_omger">omger@gmail.com</string>
+    <string name="user_email_abto">tebzi@gmail.com</string>
+    <string name="user_id_32">32</string>
+    <string name="user_id_34">34</string>
+    <string name="user_firstname_boris">ბორის</string>
+    <string name="user_firstname_abto">აბთო</string>
+    <string name="user_lastname_sixarulidze">სიხარულიძე</string>
+    <string name="user_lastname_garuchava">გარუჩავა</string>
+    <string name="user_address_iashvili">თბილისი, იაშვილი 14</string>
+    <string name="empty_string" />
+    <string name="existing_ids_key">existing_ids</string>
+    <string name="user_key">user</string>
+    <string name="please_fill_all_fields">Please fill all fields</string>
 </resources>

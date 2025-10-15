@@ -34,11 +34,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addUsers() {
-        users.add(User("1", "გრიშა", "ონიანი", 1724647601641, "სტალინის სახლმუზეუმი", "grisha@gmail.ru", getString(R.string.grisha_oniani_desc)))
-        users.add(User("2", "Jemal", "Kakauridze", 1714647601641, "თბილისი, ლილოს მიტოვებული ქარხანა", "jemal@gmail.com", getString(R.string.jemal_kakauridze_desc)))
-        users.add(User("3", "Omger", "Kakauridze", 1724647701641, "თბილისი, ასათიანი 18", "omger@gmail.com", getString(R.string.omger_kakauridze_desc)))
-        users.add(User("32", "ბორის", "გარუჩავა", 1714947701641, "თბილისი, იაშვილი 14", "", getString(R.string.boris_garuchava_desc)))
-        users.add(User("34", "აბთო", "სიხარულიძე", 1711947701641, "ფოთი ", "tebzi@gmail.com", getString(R.string.abtho_sikharulidze_desc)))
+        users.add(User(getString(R.string.user_id_1), getString(R.string.user_firstname_grisha), getString(R.string.user_lastname_oniani), 1724647601641, getString(R.string.user_address_stalins_museum), getString(R.string.user_email_grisha), getString(R.string.grisha_oniani_desc)))
+        users.add(User(getString(R.string.user_id_2), getString(R.string.user_firstname_jemal), getString(R.string.user_lastname_kakauridze), 1714647601641, getString(R.string.user_address_lilo), getString(R.string.user_email_jemal), getString(R.string.jemal_kakauridze_desc)))
+        users.add(User(getString(R.string.user_id_3), getString(R.string.user_firstname_omger), getString(R.string.user_lastname_kakauridze), 1724647701641, getString(R.string.user_address_asatiani), getString(R.string.user_email_omger), getString(R.string.omger_kakauridze_desc)))
+        users.add(User(getString(R.string.user_id_32), getString(R.string.user_firstname_boris), getString(R.string.user_lastname_garuchava), 1714947701641, getString(R.string.user_address_iashvili), getString(R.string.empty_string), getString(R.string.boris_garuchava_desc)))
+        users.add(User(getString(R.string.user_id_34), getString(R.string.user_firstname_abto), getString(R.string.user_lastname_sixarulidze), 1714947701641, getString(R.string.user_address_foti), getString(R.string.user_email_abto), getString(R.string.abtho_sikharulidze_desc)))
     }
 
     private fun listeners() {
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentText = s.toString()
                 if (currentText.isEmpty()) {
-                    binding.userInfoTextView.text = ""
+                    binding.userInfoTextView.text = getString(R.string.empty_string)
                     binding.addUserButton.visibility = View.GONE
                 } else {
                     searchUser(currentText)
@@ -60,6 +60,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.addUserButton.setOnClickListener {
             val intent = Intent(this, AddUserActivity::class.java)
+            val userIds = users.map { it.id }
+            intent.putStringArrayListExtra(getString(R.string.existing_ids_key), ArrayList(userIds))
             resultLauncher.launch(intent)
         }
     }
@@ -99,16 +101,25 @@ class MainActivity : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val data = result.data
                     val newUser = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        data?.getParcelableExtra("user", User::class.java)
+                        data?.getParcelableExtra(getString(R.string.user_key), User::class.java)
                     } else {
                         @Suppress("DEPRECATION")
-                        data?.getParcelableExtra<User>("user")
+                        data?.getParcelableExtra<User>(getString(R.string.user_key))
                     }
 
                     if (newUser != null) {
                         users.add(newUser)
                         binding.searchField.setText(newUser.id)
-                        searchUser(newUser.id)
+                        binding.userInfoTextView.text = getString(
+                            R.string.user_info_details,
+                            newUser.id,
+                            newUser.firstName,
+                            newUser.lastName,
+                            formatBirthday(newUser.birthday),
+                            newUser.address,
+                            newUser.email
+                        )
+                        binding.addUserButton.visibility = View.GONE
                     }
                 }
             }
