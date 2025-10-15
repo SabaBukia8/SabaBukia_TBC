@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/tbc_background">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addUserBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/updateUserBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addUserBtn" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/activeUsersText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

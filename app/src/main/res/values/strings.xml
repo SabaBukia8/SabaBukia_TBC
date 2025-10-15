@@ -37,4 +37,8 @@
     <string name="user_does_not_exist">User does not exist</string>
     <string name="user_list_is_empty">User list is empty. Please add a user first.</string>
     <string name="active_users_count">Active Users: %d</string>
+    <string name="email">Email</string>
+    <string name="age">Age</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
 </resources>
