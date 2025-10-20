@@ -16,11 +16,21 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun addUser(user: User) {
         val currentUsers = _users.value ?: mutableListOf()
         if (currentUsers.any { it.email.equals(user.email, ignoreCase = true) }) {
-            _snackbarMessage.value = Event(Pair(getApplication<Application>().getString(R.string.user_with_this_email_already_exists), false))
+            _snackbarMessage.value = Event(
+                Pair(
+                    getApplication<Application>().getString(R.string.user_with_this_email_already_exists),
+                    false
+                )
+            )
         } else {
             currentUsers.add(user)
             _users.value = currentUsers
-            _snackbarMessage.value = Event(Pair(getApplication<Application>().getString(R.string.user_added_successfully), true))
+            _snackbarMessage.value = Event(
+                Pair(
+                    getApplication<Application>().getString(R.string.user_added_successfully),
+                    true
+                )
+            )
         }
     }
 
@@ -30,9 +40,19 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         if (index != -1) {
             currentUsers[index] = user
             _users.value = currentUsers
-            _snackbarMessage.value = Event(Pair(getApplication<Application>().getString(R.string.user_updated_successfully), true))
+            _snackbarMessage.value = Event(
+                Pair(
+                    getApplication<Application>().getString(R.string.user_updated_successfully),
+                    true
+                )
+            )
         } else {
-            _snackbarMessage.value = Event(Pair(getApplication<Application>().getString(R.string.user_does_not_exist), false))
+            _snackbarMessage.value = Event(
+                Pair(
+                    getApplication<Application>().getString(R.string.user_does_not_exist),
+                    false
+                )
+            )
         }
     }
 
@@ -41,9 +61,19 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         val removed = currentUsers.removeIf { it.email.equals(user.email, ignoreCase = true) }
         if (removed) {
             _users.value = currentUsers
-            _snackbarMessage.value = Event(Pair(getApplication<Application>().getString(R.string.user_deleted_successfully), true))
+            _snackbarMessage.value = Event(
+                Pair(
+                    getApplication<Application>().getString(R.string.user_deleted_successfully),
+                    true
+                )
+            )
         } else {
-            _snackbarMessage.value = Event(Pair(getApplication<Application>().getString(R.string.user_does_not_exist), false))
+            _snackbarMessage.value = Event(
+                Pair(
+                    getApplication<Application>().getString(R.string.user_does_not_exist),
+                    false
+                )
+            )
         }
     }
 }

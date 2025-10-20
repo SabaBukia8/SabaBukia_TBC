@@ -34,7 +34,13 @@ class AddUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currentUser = args.user
+        pageSetup()
+        setupClickListeners()
 
+
+    }
+
+    private fun pageSetup() {
         if (currentUser != null) {
             binding.etFirstName.setText(currentUser!!.firstName)
             binding.etLastName.setText(currentUser!!.lastName)
@@ -47,7 +53,9 @@ class AddUserFragment : Fragment() {
             binding.btnAddUser.text = getString(R.string.add_user)
             binding.btnRemoveUser.isVisible = false
         }
+    }
 
+    private fun setupClickListeners() {
         binding.btnAddUser.setOnClickListener {
             if (validateInput()) {
                 val firstName = binding.etFirstName.text.toString().trim()

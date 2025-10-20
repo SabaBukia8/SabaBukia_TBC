@@ -10,18 +10,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/first_name"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etLastName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/last_name"
-        app:layout_constraintTop_toBottomOf="@id/etFirstName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/etFirstName" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etAge"
@@ -29,27 +29,27 @@
         android:layout_height="wrap_content"
         android:hint="@string/age"
         android:inputType="number"
-        app:layout_constraintTop_toBottomOf="@id/etLastName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/etLastName" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/email"
-        app:layout_constraintTop_toBottomOf="@id/etAge"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/etAge" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddUser"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/add_user"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnRemoveUser"
@@ -57,8 +57,8 @@
         android:layout_height="wrap_content"
         android:text="@string/remove_user"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/btnAddUser"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnAddUser" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

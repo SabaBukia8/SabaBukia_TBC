@@ -30,31 +30,47 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userViewModel.users.observe(viewLifecycleOwner) {
-            binding.activeUsersText.text = getString(R.string.active_users_count, it.size)
+        setupObservers()
+        setupClickListeners()
+    }
+
+    private fun setupObservers() {
+        userViewModel.users.observe(viewLifecycleOwner) { users ->
+            binding.activeUsersText.text = getString(R.string.active_users_count, users.size)
         }
 
         userViewModel.snackbarMessage.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                showSnackbar(it.first, it.second)
+            event.getContentIfNotHandled()?.let { (message, isSuccess) ->
+                showSnackbar(message, isSuccess)
             }
         }
+    }
 
+    private fun setupClickListeners() {
         binding.addUserBtn.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_addUserFragment)
         }
 
         binding.updateUserBtn.setOnClickListener {
-            val users = userViewModel.users.value
-            if (users.isNullOrEmpty()) {
+            handleUpdateUserClick()
+        }
+    }
+
+    private fun handleUpdateUserClick() {
+        val users = userViewModel.users.value
+        when {
+            users.isNullOrEmpty() -> {
                 showSnackbar(getString(R.string.user_list_is_empty), false)
-            } else {
+            }
+
+            else -> {
                 val randomUser = users.random()
                 val action = MainFragmentDirections.actionMainFragmentToAddUserFragment(randomUser)
                 findNavController().navigate(action)
             }
         }
     }
+
 
     private fun showSnackbar(message: String, isSuccess: Boolean) {
         val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
