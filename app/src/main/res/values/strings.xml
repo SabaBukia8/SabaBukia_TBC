@@ -1,5 +1,30 @@
 <resources>
     <string name="app_name">SabaBukia_TBC</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- General UI -->
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="age">Age</string>
+    <string name="email">Email</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+
+    <!-- User Page -->
+    <string name="user_count_format">Users: %d</string>
+
+    <!-- Validation Errors -->
+    <string name="error_fill_all_fields">Please fill all fields.</string>
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_email_exists">A user with this email already exists.</string>
+
+    <!-- Success Messages -->
+    <string name="success_user_added">User added successfully</string>
+    <string name="success_user_updated">User updated successfully</string>
+    <string name="success_user_deleted">User deleted successfully</string>
+    <string name="is_success">is_success</string>
+    <string name="result_message">result_message</string>
+    <string name="add_edit_user_request">add_edit_user_request</string>
+    <string name="sameparametervalue">SameParameterValue</string>
+
 </resources>
