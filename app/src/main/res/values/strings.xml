@@ -2,4 +2,29 @@
     <string name="app_name">SabaBukia_TBC</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="product_name_black_jacket">Black Jacket</string>
+    <string name="product_name_yellow_hoodie">Yellow hoodie</string>
+    <string name="product_name_blue_hoodie">Blue hoodie</string>
+    <string name="product_name_red_hoodie">Red hoodie</string>
+    <string name="product_name_hiking_equipment">Hiking equipment</string>
+    <string name="product_name_rugby_uniform">Rugby Uniform</string>
+    <string name="product_name_blue_dress">Blue Dress</string>
+    <string name="product_name_kostumchik">Kostumchik</string>
+
+    <string name="product_price_black_jacket">$60</string>
+    <string name="product_price_yellow_hoodie">$70</string>
+    <string name="product_price_blue_hoodie">$140</string>
+    <string name="product_price_red_hoodie">$50</string>
+    <string name="product_price_hiking_equipment">$180</string>
+    <string name="product_price_rugby_uniform">$150</string>
+    <string name="product_price_blue_dress">$8500</string>
+    <string name="product_price_kostumchik">$6000</string>
+
+    <string name="filter_all">All</string>
+    <string name="filter_party">🎉 Party</string>
+    <string name="filter_camping">🏕 Camping</string>
+    <string name="filter_sports">🏀 Sports</string>
+    <string name="filter_casual">👕 Casual</string>
+    <string name="filter_fancy">💎 Fancy</string>
 </resources>
