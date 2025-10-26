@@ -3,11 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/storeGalleryFragment">
+    app:startDestination="@id/deliveryAddressesFragment">
 
     <fragment
-        android:id="@+id/storeGalleryFragment"
-        android:name="screen.store_gallery.StoreGalleryFragment"
-        android:label="fragment_store_gallery"
-        tools:layout="@layout/fragment_store_gallery" />
+        android:id="@+id/deliveryAddressesFragment"
+        android:name="screen.address.DeliveryAddressesFragment"
+        android:label="Delivery Addresses"
+        tools:layout="@layout/fragment_delivery_addresses">
+        <action
+            android:id="@+id/action_deliveryAddressesFragment_to_addAddressFragment"
+            app:destination="@id/addAddressFragment" />
+        <action
+            android:id="@+id/action_deliveryAddressesFragment_to_editAddressFragment"
+            app:destination="@id/editAddressFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addAddressFragment"
+        android:name="screen.address.AddAddressFragment"
+        android:label="Add Address"
+        tools:layout="@layout/fragment_address_form" />
+
+    <fragment
+        android:id="@+id/editAddressFragment"
+        android:name="screen.address.EditAddressFragment"
+        android:label="Edit Address"
+        tools:layout="@layout/fragment_address_form">
+        <argument
+            android:name="address"
+            app:argType="model.Address" />
+    </fragment>
+
 </navigation>
