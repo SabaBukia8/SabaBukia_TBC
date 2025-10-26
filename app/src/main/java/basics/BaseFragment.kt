@@ -9,7 +9,7 @@ import androidx.viewbinding.ViewBinding
 
 abstract class BaseFragment <VB : ViewBinding>(private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB) : Fragment() {
     private var _binding: VB? = null
-    protected val binding get() = _binding!!
+    protected val binding get() = requireNotNull(_binding) { "ViewBinding accessed outside of view lifecycle (onCreateView–onDestroyView)." }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,13 +21,13 @@ abstract class BaseFragment <VB : ViewBinding>(private val inflate: (LayoutInfla
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listeners()
         bind()
+        listeners()
     }
 
-    open  fun listeners(){}
+    protected open  fun listeners(){}
 
-    open fun bind(){}
+    protected open fun bind(){}
 
     override fun onDestroyView() {
         _binding = null

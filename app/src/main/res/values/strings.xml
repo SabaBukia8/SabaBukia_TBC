@@ -1,30 +1,24 @@
 <resources>
     <string name="app_name">SabaBukia_TBC</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="delivery_address">Delivery address</string>
+    <string name="edit">Edit</string>
+    <string name="add_new_address">Add new address</string>
 
-    <string name="product_name_black_jacket">Black Jacket</string>
-    <string name="product_name_yellow_hoodie">Yellow hoodie</string>
-    <string name="product_name_blue_hoodie">Blue hoodie</string>
-    <string name="product_name_red_hoodie">Red hoodie</string>
-    <string name="product_name_hiking_equipment">Hiking equipment</string>
-    <string name="product_name_rugby_uniform">Rugby Uniform</string>
-    <string name="product_name_blue_dress">Blue Dress</string>
-    <string name="product_name_kostumchik">Kostumchik</string>
+    <!-- Address list item -->
+    <string name="send_to">SEND TO</string>
 
-    <string name="product_price_black_jacket">$60</string>
-    <string name="product_price_yellow_hoodie">$70</string>
-    <string name="product_price_blue_hoodie">$140</string>
-    <string name="product_price_red_hoodie">$50</string>
-    <string name="product_price_hiking_equipment">$180</string>
-    <string name="product_price_rugby_uniform">$150</string>
-    <string name="product_price_blue_dress">$8500</string>
-    <string name="product_price_kostumchik">$6000</string>
+    <!-- Form -->
+    <string name="hint_title">Title (e.g., My Office)</string>
+    <string name="hint_address_line">Address line</string>
+    <string name="address_type">Address type</string>
+    <string name="house">House</string>
+    <string name="apartment">Apartment</string>
+    <string name="save">Save</string>
+    <string name="save_changes">Save changes</string>
+    <string name="required">Required</string>
 
-    <string name="filter_all">All</string>
-    <string name="filter_party">🎉 Party</string>
-    <string name="filter_camping">🏕 Camping</string>
-    <string name="filter_sports">🏀 Sports</string>
-    <string name="filter_casual">👕 Casual</string>
-    <string name="filter_fancy">💎 Fancy</string>
+    <!-- Dialogs -->
+    <string name="delete_this_address">Delete this address?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>
