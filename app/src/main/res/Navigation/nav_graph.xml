@@ -3,35 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/deliveryAddressesFragment">
+    app:startDestination="@id/tictactoeConfigFragment">
 
     <fragment
-        android:id="@+id/deliveryAddressesFragment"
-        android:name="screen.address.DeliveryAddressesFragment"
-        android:label="Delivery Addresses"
-        tools:layout="@layout/fragment_delivery_addresses">
+        android:id="@+id/tictactoeConfigFragment"
+        android:name="screen.tictactoe.TicTacToeConfigFragment"
+        android:label="TicTacToe Config"
+        tools:layout="@layout/fragment_tictactoe_config">
         <action
-            android:id="@+id/action_deliveryAddressesFragment_to_addAddressFragment"
-            app:destination="@id/addAddressFragment" />
-        <action
-            android:id="@+id/action_deliveryAddressesFragment_to_editAddressFragment"
-            app:destination="@id/editAddressFragment" />
+            android:id="@+id/action_tictactoeConfigFragment_to_tictactoeGameFragment"
+            app:destination="@id/tictactoeGameFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/addAddressFragment"
-        android:name="screen.address.AddAddressFragment"
-        android:label="Add Address"
-        tools:layout="@layout/fragment_address_form" />
-
-    <fragment
-        android:id="@+id/editAddressFragment"
-        android:name="screen.address.EditAddressFragment"
-        android:label="Edit Address"
-        tools:layout="@layout/fragment_address_form">
+        android:id="@+id/tictactoeGameFragment"
+        android:name="screen.tictactoe.TicTacToeGameFragment"
+        android:label="TicTacToe Game"
+        tools:layout="@layout/fragment_tictactoe_game">
         <argument
-            android:name="address"
-            app:argType="model.Address" />
+            android:name="boardSize"
+            app:argType="integer" />
     </fragment>
 
 </navigation>
