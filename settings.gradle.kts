@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "SabaBukia_TBC"
 include(":app")
-include(":app:lib")
