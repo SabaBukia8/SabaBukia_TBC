@@ -5,7 +5,8 @@
     <color name="lightGrey">#DBD6D6</color>
     <color name="green">#3ED397</color>
     <color name="button_color">#30444E</color>
-    <color name="heart_red">#D9455B</color>
+    <color name="red">#D9455B</color>
     <color name="dark_green">#1F2E35</color>
     <color name="medium_grey">#96A7AF</color>
+    <color name="orange">#FFA726</color>
 </resources>

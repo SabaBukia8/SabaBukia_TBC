@@ -3,11 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/storeGalleryFragment">
+    app:startDestination="@id/ordersFragment">
 
     <fragment
-        android:id="@+id/storeGalleryFragment"
-        android:name="screen.store_gallery.StoreGalleryFragment"
-        android:label="fragment_store_gallery"
-        tools:layout="@layout/fragment_store_gallery" />
+        android:id="@+id/ordersFragment"
+        android:name="screen.orders.OrdersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_orders">
+        <action
+            android:id="@+id/action_ordersFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="screen.orders.OrderDetailsFragment"
+        android:label="Order Details"
+        tools:layout="@layout/fragment_order_details">
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+    </fragment>
 </navigation>
