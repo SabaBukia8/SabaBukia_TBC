@@ -9,4 +9,8 @@
     <color name="dark_green">#1F2E35</color>
     <color name="medium_grey">#96A7AF</color>
     <color name="orange">#FFA726</color>
+    <color name="appColor">#272A2E</color>
+    <color name="brown">#3E2E08</color>
+    <color name="text_secondary">#96A7AF</color>
+    <color name="surface_variant">#293035</color>
 </resources>

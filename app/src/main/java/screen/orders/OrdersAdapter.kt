@@ -9,11 +9,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.ItemOrderBinding
+import data.OrderConstants
 import model.Order
 import model.OrderStatus
+import java.util.Locale
 
 class OrdersAdapter(
-    private val onDetailsClick: (Order) -> Unit
+    private val onDetailsClick: (Order) -> Unit = {},
+    private val onReviewClick: (Order) -> Unit = {},
+    private val onBuyAgainClick: (Order) -> Unit = {}
 ) : ListAdapter<Order, OrdersAdapter.VH>(Diff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -27,38 +31,50 @@ class OrdersAdapter(
 
     inner class VH(private val binding: ItemOrderBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(order: Order) = with(binding) {
+            ivProduct.setImageResource(order.imageResId)
+            tvTitle.text = order.title
+            tvColorQty.text = itemView.context.getString(R.string.qty_equals, order.quantity)
+
+            vColorDot.backgroundTintList = ColorStateList.valueOf(order.colorArgb)
+            tvColorName.text = order.colorName
+
             tvStatus.text = when (order.status) {
-                OrderStatus.PENDING -> itemView.context.getString(R.string.status_pending)
-                OrderStatus.DELIVERED -> itemView.context.getString(R.string.status_delivered)
-                OrderStatus.CANCELLED -> itemView.context.getString(R.string.status_cancelled)
+                OrderStatus.ACTIVE -> itemView.context.getString(R.string.status_active)
+                OrderStatus.COMPLETED -> itemView.context.getString(R.string.status_completed)
             }
-
-            val colorRes = when (order.status) {
-                OrderStatus.PENDING -> R.color.orange
-                OrderStatus.DELIVERED -> R.color.green
-                OrderStatus.CANCELLED -> R.color.red
+            val statusColor = when (order.status) {
+                OrderStatus.ACTIVE -> R.color.orange
+                OrderStatus.COMPLETED -> R.color.green
             }
-            val color = ContextCompat.getColor(itemView.context, colorRes)
-            tvStatus.backgroundTintList = ColorStateList.valueOf(color)
+            tvStatus.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(itemView.context, statusColor))
 
-            tvOrderTitle.text = "Order #${order.id}"
-            tvTrackingNumber.text = order.trackingNumber
-            tvQuantity.text = order.quantity.toString()
-            tvSubtotal.text = formatPrice(order.subtotalCents)
-            tvDate.text = android.text.format.DateFormat.format("dd/MM/yyyy", order.dateMillis)
+            tvPrice.text = formatPrice(order.subtotalCents)
 
-            btnDetails.setOnClickListener { onDetailsClick(order) }
+            btnPrimary.text = when {
+                order.status == OrderStatus.COMPLETED && order.rating == null -> itemView.context.getString(
+                    R.string.action_leave_review
+                )
+
+                order.status == OrderStatus.COMPLETED && order.rating != null -> itemView.context.getString(
+                    R.string.action_buy_again
+                )
+
+                else -> itemView.context.getString(R.string.action_details)
+            }
+            btnPrimary.setOnClickListener {
+                when (btnPrimary.text) {
+                    itemView.context.getString(R.string.action_leave_review) -> onReviewClick(order)
+                    itemView.context.getString(R.string.action_buy_again) -> onBuyAgainClick(order)
+                    else -> onDetailsClick(order)
+                }
+            }
         }
     }
 
     private fun formatPrice(cents: Int): String {
-        val dollars = cents / 100
-        val remainder = cents % 100
-        return "$${dollars}${
-            if (remainder > 0) ".${
-                remainder.toString().padStart(2, '0')
-            }" else ""
-        }"
+        val dollars = cents.toDouble() / OrderConstants.CENTS_PER_DOLLAR
+        return String.format(Locale.US, "$%.${OrderConstants.PRICE_DECIMAL_PLACES}f", dollars)
     }
 
     private class Diff : DiffUtil.ItemCallback<Order>() {
