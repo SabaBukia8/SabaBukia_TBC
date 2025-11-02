@@ -179,7 +179,7 @@
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_button_background"
-        android:drawableEnd="@drawable/ic_heart"
+        android:drawableEnd="@drawable/ic_gallery"
         android:hint="@string/review_hint"
         android:maxLines="1"
         android:padding="16dp"

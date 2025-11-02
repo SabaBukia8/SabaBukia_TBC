@@ -8,12 +8,14 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:title="@string/orders_title"
+        app:title="@string/orders_title"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge.Emphasized"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_orders_host"
-        app:navigationIcon="@drawable/ic_heart" />
+        app:navigationIcon="@drawable/ic_three_lines" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
