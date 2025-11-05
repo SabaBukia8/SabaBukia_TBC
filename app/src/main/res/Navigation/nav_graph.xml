@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/ordersHostFragment">
+    app:startDestination="@id/chatFragment">
 
     <fragment
-        android:id="@+id/ordersHostFragment"
-        android:name="screen.orders.OrdersHostFragment"
-        android:label="Orders"
-        tools:layout="@layout/fragment_orders_host"/>
+        android:id="@+id/chatFragment"
+        android:name="screen.chat.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
 
 </navigation>
