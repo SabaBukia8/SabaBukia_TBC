@@ -12,7 +12,7 @@ import model.Card
 import model.CardType
 import java.util.UUID
 
-class AddCardViewModel(private val repository: CardRepository) : ViewModel() {
+class CardViewModel(private val repository: CardRepository) : ViewModel() {
 
     data class FormState(
         val holderName: String = "",
@@ -26,17 +26,44 @@ class AddCardViewModel(private val repository: CardRepository) : ViewModel() {
         val submitted: Boolean = false
     )
 
-    private val _state = MutableStateFlow(FormState())
-    val state: StateFlow<FormState> = _state.asStateFlow()
+    private val _cards = MutableStateFlow<List<Card>>(emptyList())
+    val cards: StateFlow<List<Card>> = _cards.asStateFlow()
 
-    fun updateName(value: String) = update { copy(holderName = value).validate() }
-    fun updateNumber(value: String) = update { copy(number = value.filter { it.isDigit() }.take(CardConstants.CARD_NUMBER_LENGTH)).validate() }
-    fun updateMonth(value: String) = update { copy(expiryMonth = value.filter { it.isDigit() }.take(2)).validate() }
-    fun updateYear(value: String) = update { copy(expiryYear = value.filter { it.isDigit() }.take(4)).validate() }
-    fun updateCvv(value: String) = update { copy(cvv = value.filter { it.isDigit() }.take(CardConstants.CVV_LENGTH)).validate() }
-    fun updateType(value: CardType) = update { copy(type = value).validate() }
+    private val _formState = MutableStateFlow(FormState())
+    val formState: StateFlow<FormState> = _formState.asStateFlow()
 
-    private inline fun update(block: FormState.() -> FormState) { _state.value = _state.value.block() }
+    init {
+        viewModelScope.launch {
+            repository.refresh()
+        }
+        viewModelScope.launch {
+            repository.cards.collect { _cards.value = it }
+        }
+    }
+
+    fun updateName(value: String) = updateForm { copy(holderName = value).validate() }
+
+    fun updateNumber(value: String) = updateForm {
+        copy(number = value.filter { it.isDigit() }.take(CardConstants.CARD_NUMBER_LENGTH)).validate()
+    }
+
+    fun updateMonth(value: String) = updateForm {
+        copy(expiryMonth = value.filter { it.isDigit() }.take(2)).validate()
+    }
+
+    fun updateYear(value: String) = updateForm {
+        copy(expiryYear = value.filter { it.isDigit() }.take(4)).validate()
+    }
+
+    fun updateCvv(value: String) = updateForm {
+        copy(cvv = value.filter { it.isDigit() }.take(CardConstants.CVV_LENGTH)).validate()
+    }
+
+    fun updateType(value: CardType) = updateForm { copy(type = value).validate() }
+
+    private inline fun updateForm(block: FormState.() -> FormState) {
+        _formState.value = _formState.value.block()
+    }
 
     private fun FormState.validate(): FormState {
         val nameOk = holderName.trim().length >= CardConstants.MIN_NAME_LENGTH
@@ -50,10 +77,10 @@ class AddCardViewModel(private val repository: CardRepository) : ViewModel() {
         return copy(isValid = ok, error = null)
     }
 
-    fun submit() {
-        val s = _state.value.validate()
+    fun submitCard() {
+        val s = _formState.value.validate()
         if (!s.isValid) {
-            _state.value = s.copy(error = "Form is not valid")
+            _formState.value = s.copy(error = "Form is not valid")
             return
         }
         viewModelScope.launch {
@@ -67,7 +94,17 @@ class AddCardViewModel(private val repository: CardRepository) : ViewModel() {
                 type = s.type
             )
             repository.add(card)
-            _state.value = s.copy(submitted = true)
+            _formState.value = s.copy(submitted = true)
+        }
+    }
+
+    fun resetForm() {
+        _formState.value = FormState()
+    }
+
+    fun deleteCard(id: String) {
+        viewModelScope.launch {
+            repository.delete(id)
         }
     }
 }

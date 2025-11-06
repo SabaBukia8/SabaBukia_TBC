@@ -1,6 +1,7 @@
 package screen.card
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -21,12 +22,36 @@ class CardPagerAdapter(
 
     inner class VH(private val binding: ItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(card: Card) = with(binding) {
+            // Update card number
             tvNumber.text = CardFormatters.maskNumber(card.number)
-            tvName.text = card.holderName
+
+            // Update cardholder name (uppercase to match design)
+            tvName.text = card.holderName.uppercase()
+
+            // Update expiry
             tvExpiry.text = CardFormatters.displayExpiry(card.expiryMonth, card.expiryYear)
-            logoVisa.alpha = if (card.type == CardType.VISA) 1f else 0.2f
-            logoMc.alpha = if (card.type == CardType.MASTERCARD) 1f else 0.2f
-            root.setOnLongClickListener { onLongPress(card); true }
+
+            // Show appropriate card type logo/circles
+            when (card.type) {
+                CardType.VISA -> {
+                    logoVisa.visibility = View.VISIBLE
+                    logoMc.visibility = View.GONE
+                    mcCircle1.visibility = View.GONE
+                    mcCircle2.visibility = View.GONE
+                }
+                CardType.MASTERCARD -> {
+                    logoVisa.visibility = View.GONE
+                    logoMc.visibility = View.VISIBLE
+                    mcCircle1.visibility = View.VISIBLE
+                    mcCircle2.visibility = View.VISIBLE
+                }
+            }
+
+            // Long press to delete
+            root.setOnLongClickListener {
+                onLongPress(card)
+                true
+            }
         }
     }
 

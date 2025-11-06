@@ -10,8 +10,7 @@ class VmFactory(private val app: Application) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val repo = RepositoryProvider.cards(app)
         return when {
-            modelClass.isAssignableFrom(CardListViewModel::class.java) -> CardListViewModel(repo) as T
-            modelClass.isAssignableFrom(AddCardViewModel::class.java) -> AddCardViewModel(repo) as T
+            modelClass.isAssignableFrom(CardViewModel::class.java) -> CardViewModel(repo) as T
             else -> throw IllegalArgumentException("Unknown ViewModel: ${modelClass.name}")
         }
     }
