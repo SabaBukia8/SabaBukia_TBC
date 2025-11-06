@@ -7,8 +7,7 @@
     android:background="@color/dark_background"
     tools:context="screen.card.CardListFragment">
 
-    <!-- Back Button -->
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -21,54 +20,50 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"/>
 
-    <!-- Title -->
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_payment"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="@color/white"
-        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnBack"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"/>
 
-    <!-- Section Header -->
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvSection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/section_card_management"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         android:textColor="@color/white"
-        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"/>
 
-    <!-- Add New Button -->
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btnAddNew"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_new"
+        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
         android:textColor="@color/orange"
         android:textStyle="bold"
-        android:textSize="14sp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@id/tvSection"
         android:layout_marginEnd="16dp"/>
 
-    <!-- ViewPager for Cards -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:clipChildren="false"
         android:paddingStart="40dp"
@@ -76,86 +71,81 @@
         app:layout_constraintTop_toBottomOf="@id/tvSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tvCheckout"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Empty State -->
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_cards_yet"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
         android:textColor="@color/text_secondary"
-        android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSection"
-        app:layout_constraintBottom_toTopOf="@id/tvCheckout"/>
+        app:layout_constraintTop_toTopOf="@id/viewPager"
+        app:layout_constraintBottom_toBottomOf="@id/viewPager"/>
 
-    <!-- Checkout Section -->
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCheckout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/checkout_with"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="@color/white"
-        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/paymentMethodsContainer"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Payment Methods -->
     <LinearLayout
         android:id="@+id/paymentMethodsContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tvCheckout"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="400dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_paypal"
-            android:contentDescription="PayPal"
+            android:contentDescription="@string/paypal"
             android:scaleType="fitCenter"
             android:layout_marginEnd="12dp"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_visa_logo"
-            android:contentDescription="Visa"
+            android:contentDescription="@string/visa"
             android:scaleType="fitCenter"
             android:layout_marginEnd="12dp"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_mastercard_logo"
-            android:contentDescription="Mastercard"
+            android:contentDescription="@string/mastercard"
             android:scaleType="fitCenter"
             android:layout_marginEnd="12dp"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_alipay"
-            android:contentDescription="Alipay"
+            android:contentDescription="@string/alipay"
             android:scaleType="fitCenter"
             android:layout_marginEnd="12dp"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_amex"
-            android:contentDescription="Amex"
+            android:contentDescription="@string/amex"
             android:scaleType="fitCenter"/>
 
     </LinearLayout>

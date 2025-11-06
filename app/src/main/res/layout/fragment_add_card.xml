@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,264 +10,265 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp">
 
-        <!-- Back Button -->
-        <ImageButton
+
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back"
             android:contentDescription="@string/back"
-            app:tint="@color/white"
+            android:src="@drawable/ic_back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"/>
+            app:tint="@color/white" />
 
-        <!-- Title -->
-        <TextView
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_add_card"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
             android:textColor="@color/white"
-            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/btnBack"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnBack"
-            app:layout_constraintBottom_toBottomOf="@id/btnBack"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnBack" />
 
-        <!-- Card Preview -->
+
         <include
             android:id="@+id/preview"
             layout="@layout/item_card"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            app:layout_constraintTop_toBottomOf="@id/btnBack"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="40dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginTop="32dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-        <!-- Form Container -->
-        <LinearLayout
-            android:id="@+id/formContainer"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvNameLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:paddingTop="32dp"
-            android:paddingBottom="24dp"
-            app:layout_constraintTop_toBottomOf="@id/preview"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/cardholder_name"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/preview" />
 
-            <!-- Cardholder Name Label -->
-            <TextView
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilName"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:boxBackgroundColor="@color/input_background"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/tvNameLabel"
+            app:layout_constraintStart_toStartOf="@id/tvNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvNameLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/placeholder_cardholder"
+                android:inputType="textPersonName"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/text_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvNumberLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/card_number"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintEnd_toEndOf="@id/tilName"
+            app:layout_constraintStart_toStartOf="@id/tilName"
+            app:layout_constraintTop_toBottomOf="@id/tilName" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilNumber"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:boxBackgroundColor="@color/input_background"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/tvNumberLabel"
+            app:layout_constraintStart_toStartOf="@id/tvNumberLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvNumberLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/_5412363272837284"
+                android:inputType="number"
+                android:maxLength="16"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/text_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvExpiryLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/expires"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintEnd_toStartOf="@id/tvCvvLabel"
+            app:layout_constraintStart_toStartOf="@id/tilNumber"
+            app:layout_constraintTop_toBottomOf="@id/tilNumber" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilExpiry"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            app:boxBackgroundColor="@color/input_background"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toStartOf="@id/tilCvv"
+            app:layout_constraintStart_toStartOf="@id/tvExpiryLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvExpiryLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etExpiry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_mmyy"
+                android:inputType="number"
+                android:maxLength="5"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/text_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvCvvLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cvv"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvExpiryLabel"
+            app:layout_constraintEnd_toEndOf="@id/tilNumber"
+            app:layout_constraintStart_toStartOf="@id/tilCvv" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCvv"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:boxBackgroundColor="@color/input_background"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/tilNumber"
+            app:layout_constraintStart_toEndOf="@id/tilExpiry"
+            app:layout_constraintTop_toTopOf="@id/tilExpiry">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCvv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/_999"
+                android:inputType="numberPassword"
+                android:maxLength="3"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/text_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTypeLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/card_type"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintEnd_toEndOf="@id/tilExpiry"
+            app:layout_constraintStart_toStartOf="@id/tilExpiry"
+            app:layout_constraintTop_toBottomOf="@id/tilExpiry" />
+
+        <RadioGroup
+            android:id="@+id/rgType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@id/tvTypeLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvTypeLabel">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbMc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cardholder_name"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp"/>
+                android:buttonTint="@color/white"
+                android:checked="true"
+                android:text="@string/mastercard"
+                android:textColor="@color/white" />
 
-            <!-- Cardholder Name Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/input_background"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintEnabled="false">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/text_secondary"
-                    android:hint="@string/placeholder_cardholder"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Card Number Label -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbVisa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_number"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginStart="16dp"
+                android:buttonTint="@color/white"
+                android:text="@string/visa"
+                android:textColor="@color/white" />
 
-            <!-- Card Number Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/input_background"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintEnabled="false">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="16"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/text_secondary"
-                    android:hint="5412363272837284"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"/>
-            </com.google.android.material.textfield.TextInputLayout>
+        </RadioGroup>
 
-            <!-- Expiry and CVV Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp"
-                android:weightSum="2">
-
-                <!-- Expires Column -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/expires"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxBackgroundColor="@color/input_background"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
-                        app:hintEnabled="false">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etExpiry"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:maxLength="5"
-                            android:textColor="@color/white"
-                            android:textColorHint="@color/text_secondary"
-                            android:hint="@string/hint_mmyy"
-                            android:paddingTop="16dp"
-                            android:paddingBottom="16dp"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <!-- CVV Column -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cvv"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxBackgroundColor="@color/input_background"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
-                        app:hintEnabled="false">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etCvv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberPassword"
-                            android:maxLength="3"
-                            android:textColor="@color/white"
-                            android:textColorHint="@color/text_secondary"
-                            android:hint="999"
-                            android:paddingTop="16dp"
-                            android:paddingBottom="16dp"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Card Type Label -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Card Type"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"/>
-
-            <!-- Card Type Radio Group -->
-            <RadioGroup
-                android:id="@+id/rgType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rbMc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mastercard"
-                    android:textColor="@color/white"
-                    android:buttonTint="@color/white"
-                    android:checked="true"/>
-
-                <RadioButton
-                    android:id="@+id/rbVisa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Visa"
-                    android:textColor="@color/white"
-                    android:buttonTint="@color/white"
-                    android:layout_marginStart="16dp"/>
-
-            </RadioGroup>
-
-            <!-- Add Card Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAdd"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="@string/btn_add_card"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/dark_background"
-                app:backgroundTint="@color/white"
-                app:cornerRadius="28dp"
-                android:layout_marginTop="32dp"
-                android:enabled="false"/>
-
-        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAdd"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:enabled="false"
+            android:text="@string/btn_add_card"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="@color/dark_background"
+            android:textStyle="bold"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="28dp"
+            app:layout_constraintEnd_toEndOf="@id/tilNumber"
+            app:layout_constraintStart_toStartOf="@id/tilNumber"
+            app:layout_constraintTop_toBottomOf="@id/rgType" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

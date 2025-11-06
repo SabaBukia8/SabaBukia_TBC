@@ -2,8 +2,8 @@ package screen.card
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import data.CardRepository
 import data.CardConstants
+import data.CardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +44,8 @@ class CardViewModel(private val repository: CardRepository) : ViewModel() {
     fun updateName(value: String) = updateForm { copy(holderName = value).validate() }
 
     fun updateNumber(value: String) = updateForm {
-        copy(number = value.filter { it.isDigit() }.take(CardConstants.CARD_NUMBER_LENGTH)).validate()
+        copy(number = value.filter { it.isDigit() }
+            .take(CardConstants.CARD_NUMBER_LENGTH)).validate()
     }
 
     fun updateMonth(value: String) = updateForm {
@@ -80,7 +81,7 @@ class CardViewModel(private val repository: CardRepository) : ViewModel() {
     fun submitCard() {
         val s = _formState.value.validate()
         if (!s.isValid) {
-            _formState.value = s.copy(error = "Form is not valid")
+            _formState.value = s.copy(error = CardConstants.FORM_NOT_VALID)
             return
         }
         viewModelScope.launch {

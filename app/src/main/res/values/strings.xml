@@ -38,4 +38,9 @@
     <string name="label_cardholder_name">CARDHOLDER NAME</string>
     <string name="label_valid_thru">VALID THRU</string>
     <string name="label_name">NAME</string>
+    <string name="_5412363272837284">5412363272837284</string>
+    <string name="_999">999</string>
+    <string name="paypal">PayPal</string>
+    <string name="alipay">Alipay</string>
+    <string name="amex">Amex</string>
 </resources>

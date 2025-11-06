@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.ItemCardBinding
 import model.Card
 import model.CardType
@@ -22,32 +23,29 @@ class CardPagerAdapter(
 
     inner class VH(private val binding: ItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(card: Card) = with(binding) {
-            // Update card number
+
             tvNumber.text = CardFormatters.maskNumber(card.number)
 
-            // Update cardholder name (uppercase to match design)
             tvName.text = card.holderName.uppercase()
 
-            // Update expiry
             tvExpiry.text = CardFormatters.displayExpiry(card.expiryMonth, card.expiryYear)
 
-            // Show appropriate card type logo/circles
             when (card.type) {
                 CardType.VISA -> {
+                    cardBackground.setBackgroundResource(R.drawable.card_gradient_blue)
                     logoVisa.visibility = View.VISIBLE
                     logoMc.visibility = View.GONE
-                    mcCircle1.visibility = View.GONE
-                    mcCircle2.visibility = View.GONE
+                    ivCreditOverlay.visibility = View.GONE
                 }
+
                 CardType.MASTERCARD -> {
+                    cardBackground.setBackgroundResource(R.drawable.card_gradient_background)
                     logoVisa.visibility = View.GONE
                     logoMc.visibility = View.VISIBLE
-                    mcCircle1.visibility = View.VISIBLE
-                    mcCircle2.visibility = View.VISIBLE
+                    ivCreditOverlay.visibility = View.VISIBLE
                 }
             }
 
-            // Long press to delete
             root.setOnLongClickListener {
                 onLongPress(card)
                 true

@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.sababukia_tbc.databinding.BottomsheetConfirmDeleteBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.example.sababukia_tbc.databinding.BottomsheetConfirmDeleteBinding
 
 class DeleteCardBottomSheet : BottomSheetDialogFragment() {
 

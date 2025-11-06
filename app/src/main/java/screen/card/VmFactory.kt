@@ -1,9 +1,9 @@
 package screen.card
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import data.RepositoryProvider
-import android.app.Application
 
 @Suppress("UNCHECKED_CAST")
 class VmFactory(private val app: Application) : ViewModelProvider.Factory {
