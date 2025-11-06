@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/orange">
+
+        <TextView
+            android:id="@+id/tvNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:letterSpacing="0.05"
+            android:text="**** **** **** 1234"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="32dp" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="CARDHOLDER NAME"
+            app:layout_constraintStart_toStartOf="@id/tvNumber"
+            app:layout_constraintTop_toBottomOf="@id/tvNumber"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:id="@+id/tvExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="MM/YY"
+            app:layout_constraintEnd_toEndOf="@id/tvNumber"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvName"/>
+
+        <TextView
+            android:id="@+id/logoVisa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VISA"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/logoMc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MC"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@id/logoVisa"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="16dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

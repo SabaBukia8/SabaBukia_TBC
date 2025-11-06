@@ -2,9 +2,10 @@ package model
 
 import kotlinx.datetime.Instant
 
-data class Message(
+data class essage(
     val id: Long,
     val text: String,
     val timestamp: Instant,
-    val onLeft: Boolean
+    val onLeft: Boolean,
+    val formattedTime: String
 )

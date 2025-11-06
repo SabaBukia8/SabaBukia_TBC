@@ -1,5 +1,27 @@
 <resources>
-    <string name="app_name">SabaBukia_TBC</string>
-    <string name="empty"></string>
-    <string name="very_good_product_amp_fast_delivery"><![CDATA[Very good product & fast delivery!]]></string>
+    <string name="app_name">Card Manager</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="empty"/>
+
+    <!-- Card list -->
+    <string name="title_payment">Payment</string>
+    <string name="add_new">Add new+</string>
+    <string name="section_card_management">Card Management</string>
+    <string name="confirm_delete">Do you really want to delete this card?</string>
+
+    <!-- Add card -->
+    <string name="title_add_card">Add new card</string>
+    <string name="cardholder_name">Cardholder Name</string>
+    <string name="card_number">Card Number</string>
+    <string name="expires">Expires</string>
+    <string name="cvv">CVV</string>
+    <string name="btn_add_card">Add card</string>
+    <string name="visa">Visa</string>
+    <string name="mastercard">Mastercard</string>
+    <string name="card_type">Card Type</string>
+    <string name="placeholder_cardholder">CARDHOLDER NAME</string>
 </resources>
