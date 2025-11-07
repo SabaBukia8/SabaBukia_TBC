@@ -1,46 +1,10 @@
 <resources>
     <string name="app_name">Card Manager</string>
-
-    <!-- Common -->
-    <string name="back">Back</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="empty"/>
-
-    <!-- Card list -->
-    <string name="title_payment">Payment</string>
-    <string name="add_new">Add new+</string>
-    <string name="section_card_management">Card Management</string>
-    <string name="confirm_delete">Do you really want to delete this card?</string>
-    <string name="no_cards_yet">No cards yet. Add your first card!</string>
-    <string name="checkout_with">or checkout with</string>
-
-    <!-- Add card -->
-    <string name="title_add_card">Add new card</string>
-    <string name="cardholder_name">Cardholder Name</string>
-    <string name="card_number">Card Number</string>
-    <string name="expires">Expires</string>
-    <string name="month">Month</string>
-    <string name="year">Year</string>
-    <string name="cvv">CVV</string>
-    <string name="btn_add_card">Add card</string>
-    <string name="visa">VISA</string>
-    <string name="mastercard">MASTERCARD</string>
-    <string name="mastercard_lower">mastercard</string>
-    <string name="mc_short">MC</string>
-    <string name="card_type">Card Type</string>
-    <string name="placeholder_cardholder">CARDHOLDER NAME</string>
-    <string name="card_number_placeholder">**** **** **** ****</string>
-    <string name="expiry_placeholder">MM/YY</string>
-    <string name="hint_mm">MM</string>
-    <string name="hint_yyyy">YYYY</string>
-    <string name="hint_mmyy">03/23</string>
-    <string name="label_cardholder_name">CARDHOLDER NAME</string>
-    <string name="label_valid_thru">VALID THRU</string>
-    <string name="label_name">NAME</string>
-    <string name="_5412363272837284">5412363272837284</string>
-    <string name="_999">999</string>
-    <string name="paypal">PayPal</string>
-    <string name="alipay">Alipay</string>
-    <string name="amex">Amex</string>
+    <string name="register">Register</string>
+    <string name="pin">PIN</string>
+    <string name="confirm_pin">CONFIRM PIN</string>
+    <string name="field_is_not_filled">%s is not filled</string>
+    <string name="registration_successful">Registration successful!</string>
+    <string name="pin_mismatch">PIN and Confirm PIN do not match</string>
+    <string name="cancel">Cancel</string>
 </resources>
