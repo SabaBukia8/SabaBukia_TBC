@@ -14,7 +14,6 @@ import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
-import util.AuthConstants
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
@@ -24,21 +23,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         super.onViewCreated(view, savedInstanceState)
         setupViews()
         observeUiState()
-        prefillTestCredentials() // Auto-fill for easy testing
-    }
-
-    private fun prefillTestCredentials() {
-        // Pre-fill with working test credentials for easy testing
-        binding.etEmail.setText(AuthConstants.VALID_EMAIL)
-        binding.etPassword.setText(AuthConstants.TEST_PASSWORD)
-        viewModel.updateEmail(AuthConstants.VALID_EMAIL)
-        viewModel.updatePassword(AuthConstants.TEST_PASSWORD)
     }
 
     private fun setupViews() = with(binding) {
         // Setup text watchers
-        etEmail.doAfterTextChanged { text ->
-            viewModel.updateEmail(text?.toString() ?: "")
+        etUsername.doAfterTextChanged { text ->
+            viewModel.updateUsername(text?.toString() ?: "")
         }
 
         etPassword.doAfterTextChanged { text ->
@@ -48,10 +38,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         // Setup click listeners
         btnLogin.setOnClickListener {
             viewModel.login()
-        }
-
-        tvSignUp.setOnClickListener {
-            navigateToRegister()
         }
     }
 
@@ -65,9 +51,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 }
 
                 launch {
-                    viewModel.emailText.collect { email ->
-                        if (binding.etEmail.text?.toString() != email) {
-                            binding.etEmail.setText(email)
+                    viewModel.usernameText.collect { username ->
+                        if (binding.etUsername.text?.toString() != username) {
+                            binding.etUsername.setText(username)
                         }
                     }
                 }
@@ -85,8 +71,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun updateUiState(state: AuthUiState) = with(binding) {
         // Update loading state
-        progressBar.isVisible = state.isLoading
-        btnLogin.text = if (state.isLoading) "" else getString(R.string.sign_in)
+        btnLogin.text =
+            if (state.isLoading) getString(R.string.loading) else getString(R.string.sign_in)
         btnLogin.isEnabled = !state.isLoading
 
         // Update error messages
@@ -101,8 +87,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         // Handle success
         if (state.isLoginSuccessful) {
             showSuccess(getString(R.string.login_successful))
-            // Navigate to success screen or main screen
-            viewModel.clearMessages()
+            // Navigate to success screen
+            navigateToSuccess()
         }
     }
 
@@ -121,13 +107,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             .show()
     }
 
-    private fun navigateToRegister() {
-        viewModel.resetForm()
+    private fun navigateToSuccess() {
         try {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_successFragment)
         } catch (e: Exception) {
             // Handle navigation error gracefully
-            showError("Navigation error: ${e.message}")
+            showError(getString(R.string.error_navigation, e.message ?: "Unknown error"))
         }
     }
 }

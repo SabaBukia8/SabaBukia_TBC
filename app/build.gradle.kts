@@ -53,6 +53,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
+    // DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
     // Networking
     implementation(libs.retrofit.v290)
     implementation(libs.converter.gson)

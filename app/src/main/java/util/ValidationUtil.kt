@@ -1,8 +1,21 @@
 package util
 
 import android.util.Patterns
+import android.content.Context
+import androidx.core.content.ContextCompat
 
 object ValidationUtil {
+
+    fun validateUsername(username: String): List<String> {
+        val errors = mutableListOf<String>()
+        when {
+            username.isBlank() -> errors.add("error_username_required")
+            username.length < 3 -> errors.add("error_username_min_length")
+            username.length > 20 -> errors.add("error_username_max_length")
+            !username.matches(Regex("^[a-zA-Z0-9_-]+$")) -> errors.add("error_username_invalid_format")
+        }
+        return errors
+    }
 
     fun validateEmail(email: String): String? {
         return when {
@@ -32,11 +45,15 @@ object ValidationUtil {
     }
 
     fun validateForm(
+        username: String,
         email: String,
         password: String,
         isRegistration: Boolean = false
     ): List<String> {
         val errors = mutableListOf<String>()
+
+        val usernameErrors = validateUsername(username)
+        errors.addAll(usernameErrors)
 
         val emailError = if (isRegistration) {
             validateEmailForRegistration(email)

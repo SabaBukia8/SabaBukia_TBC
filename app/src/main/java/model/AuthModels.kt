@@ -1,7 +1,7 @@
 package model
 
 data class LoginRequest(
-    val email: String,
+    val username: String,
     val password: String
 )
 
@@ -10,6 +10,7 @@ data class LoginResponse(
 )
 
 data class RegisterRequest(
+    val username: String,
     val email: String,
     val password: String
 )

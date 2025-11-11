@@ -11,7 +11,6 @@ class SuccessFragment : BaseFragment<FragmentSuccessBinding>(FragmentSuccessBind
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnContinue.setOnClickListener {
-            // Handle continue action - could navigate to main app or close
             requireActivity().finish()
         }
     }

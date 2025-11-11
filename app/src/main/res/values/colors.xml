@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <!-- Authentication App Theme Colors -->
     <color name="primary_color">#4169E1</color>
-    <color name="primary_variant">#3057C8</color>
-    <color name="secondary_color">#5D7BFF</color>
-
-    <!-- Background Colors -->
-    <color name="background_color">#FAFBFF</color>
-    <color name="surface_color">#FFFFFF</color>
-
-    <!-- Text Colors -->
-    <color name="text_primary">#1C1B1F</color>
-    <color name="text_secondary">#49454F</color>
-
-    <!-- Input Colors -->
+    <color name="background_color">#FFFFFF</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#757575</color>
     <color name="input_stroke_color">#E7E0EC</color>
-    <color name="input_background">#F7F2FA</color>
-
-    <!-- Status Colors -->
-    <color name="error_color">#BA1A1A</color>
+    <color name="error_color">#F44336</color>
     <color name="success_color">#00C851</color>
-    <color name="warning_color">#FF8800</color>
-
-    <!-- Old project colors (keeping for compatibility) -->
-    <color name="dark_green">#1F2E35</color>
-    <color name="medium_grey">#96A7AF</color>
-    <color name="orange">#FFA726</color>
-    <color name="appColor">#272A2E</color>
-    <color name="brown">#3E2E08</color>
-    <color name="surface_variant">#293035</color>
-    <color name="button_color">#4A5A64</color>
-    <color name="green">#4CAF50</color>
-    <color name="red">#F44336</color>
+    <color name="purple_700">#4CAF50</color>
+    <color name="purple_200">#F44336</color>
+    <color name="primary_purple">#6C3FE3</color>
+    <color name="light_purple">#D1B8FF</color>
+    <color name="input_background">#E8DEFF</color>
+    <color name="input_text">#9C7FDB</color>
+    <color name="input_hint">#B89EE6</color>
 </resources>

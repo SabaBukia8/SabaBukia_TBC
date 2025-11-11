@@ -1,6 +1,7 @@
 package repository
 
 import android.util.Log
+import com.example.sababukia_tbc.R
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -10,6 +11,7 @@ import model.LoginResponse
 import model.RegisterRequest
 import model.RegisterResponse
 import network.NetworkClient
+import util.StringResourceResolver
 
 sealed class AuthResult<out T> {
     data class Success<T>(val data: T) : AuthResult<T>()
@@ -26,10 +28,9 @@ class AuthRepository {
         private const val TAG = "AuthRepository"
     }
 
-    suspend fun login(email: String, password: String): AuthResult<LoginResponse> =
+    suspend fun login(request: LoginRequest): AuthResult<LoginResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val request = LoginRequest(email, password)
                 Log.d(TAG, "Login request: ${gson.toJson(request)}")
 
                 val response = apiService.login(request)
@@ -41,7 +42,7 @@ class AuthRepository {
 
                     loginResponse?.let {
                         AuthResult.Success(it)
-                    } ?: AuthResult.Error("Empty response from server")
+                    } ?: AuthResult.Error(StringResourceResolver.getString(R.string.error_empty_response))
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e(TAG, "Login error response: $errorBody")
@@ -50,26 +51,30 @@ class AuthRepository {
                         errorBody?.let {
                             val apiError = gson.fromJson(it, ApiError::class.java)
                             apiError.error
-                        } ?: "HTTP ${response.code()}: ${response.message()}"
+                        } ?: StringResourceResolver.getString(R.string.http_error_format, response.code(), response.message())
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing error response", e)
-                        "Login failed: HTTP ${response.code()}"
+                        StringResourceResolver.getString(R.string.error_login_failed, response.code())
                     }
                     AuthResult.Error(errorMessage)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Login network error", e)
-                AuthResult.Error("Network error: ${e.message}")
+                AuthResult.Error(StringResourceResolver.getString(R.string.error_network, e.message ?: "Unknown error"))
             }
         }
 
-    suspend fun register(email: String, password: String): AuthResult<RegisterResponse> =
+    suspend fun register(request: RegisterRequest): AuthResult<RegisterResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val request = RegisterRequest(email, password)
-                Log.d(TAG, "Register request: ${gson.toJson(request)}")
+                // Create API-compatible request (ReqRes API doesn't support username field)
+                val apiRequest = mapOf(
+                    "email" to request.email,
+                    "password" to request.password
+                )
+                Log.d(TAG, "Register request: ${gson.toJson(apiRequest)}")
 
-                val response = apiService.register(request)
+                val response = apiService.register(apiRequest)
                 Log.d(TAG, "Register response code: ${response.code()}")
 
                 if (response.isSuccessful) {
@@ -78,7 +83,7 @@ class AuthRepository {
 
                     registerResponse?.let {
                         AuthResult.Success(it)
-                    } ?: AuthResult.Error("Empty response from server")
+                    } ?: AuthResult.Error(StringResourceResolver.getString(R.string.error_empty_response))
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e(TAG, "Register error response: $errorBody")
@@ -87,16 +92,16 @@ class AuthRepository {
                         errorBody?.let {
                             val apiError = gson.fromJson(it, ApiError::class.java)
                             apiError.error
-                        } ?: "HTTP ${response.code()}: ${response.message()}"
+                        } ?: StringResourceResolver.getString(R.string.http_error_format, response.code(), response.message())
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing error response", e)
-                        "Registration failed: HTTP ${response.code()}"
+                        StringResourceResolver.getString(R.string.error_registration_failed, response.code())
                     }
                     AuthResult.Error(errorMessage)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Register network error", e)
-                AuthResult.Error("Network error: ${e.message}")
+                AuthResult.Error(StringResourceResolver.getString(R.string.error_network, e.message ?: "Unknown error"))
             }
         }
 }

@@ -14,7 +14,6 @@ import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.FragmentRegisterBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
-import util.AuthConstants
 
 class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterBinding::inflate) {
 
@@ -24,19 +23,14 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
         super.onViewCreated(view, savedInstanceState)
         setupViews()
         observeUiState()
-        prefillTestCredentials() // Auto-fill for easy testing
-    }
-
-    private fun prefillTestCredentials() {
-        // Pre-fill with working test credentials for easy testing
-        binding.etEmail.setText(AuthConstants.VALID_EMAIL)
-        binding.etPassword.setText(AuthConstants.TEST_PASSWORD_2) // Use "pistol" for registration
-        viewModel.updateEmail(AuthConstants.VALID_EMAIL)
-        viewModel.updatePassword(AuthConstants.TEST_PASSWORD_2)
     }
 
     private fun setupViews() = with(binding) {
         // Setup text watchers
+        etUsername.doAfterTextChanged { text ->
+            viewModel.updateUsername(text?.toString() ?: "")
+        }
+
         etEmail.doAfterTextChanged { text ->
             viewModel.updateEmail(text?.toString() ?: "")
         }
@@ -49,10 +43,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
         btnRegister.setOnClickListener {
             viewModel.register()
         }
-
-        tvSignIn.setOnClickListener {
-            navigateToLogin()
-        }
     }
 
     private fun observeUiState() {
@@ -61,6 +51,14 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
                 launch {
                     viewModel.uiState.collect { state ->
                         updateUiState(state)
+                    }
+                }
+
+                launch {
+                    viewModel.usernameText.collect { username ->
+                        if (binding.etUsername.text?.toString() != username) {
+                            binding.etUsername.setText(username)
+                        }
                     }
                 }
 
@@ -85,8 +83,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
 
     private fun updateUiState(state: AuthUiState) = with(binding) {
         // Update loading state
-        progressBar.isVisible = state.isLoading
-        btnRegister.text = if (state.isLoading) "" else getString(R.string.sign_up)
+        btnRegister.text = if (state.isLoading) getString(R.string.loading) else getString(R.string.sign_up)
         btnRegister.isEnabled = !state.isLoading
 
         // Update error messages
@@ -101,9 +98,8 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
         // Handle success
         if (state.isRegistrationSuccessful) {
             showSuccess(getString(R.string.registration_successful))
-            // Navigate back to login or to main screen
-            viewModel.clearMessages()
-            navigateToLogin()
+            // Navigate to login and prefill username
+            navigateToLoginPrefilled(viewModel.usernameText.value)
         }
     }
 
@@ -122,13 +118,15 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
             .show()
     }
 
-    private fun navigateToLogin() {
+    private fun navigateToLoginPrefilled(username: String) {
         viewModel.resetForm()
         try {
-            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            val action = R.id.action_registerFragment_to_loginFragment
+            // We don't have SafeArgs arg defined; set shared state in ViewModel instead
+            viewModel.setUsername(username)
+            findNavController().navigate(action)
         } catch (e: Exception) {
-            // Handle navigation error gracefully
-            showError("Navigation error: ${e.message}")
+            showError(getString(R.string.error_navigation, e.message ?: "Unknown error"))
         }
     }
 }

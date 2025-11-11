@@ -9,6 +9,7 @@
     <string name="sign_up_to_get_started">Sign up to get started</string>
 
     <!-- Form Fields -->
+    <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
@@ -16,7 +17,7 @@
     <string name="confirm_pin">CONFIRM PIN</string>
 
     <!-- Buttons -->
-    <string name="sign_in">Sign In</string>
+    <string name="sign_in">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="continue_text">Continue</string>
 
@@ -44,4 +45,32 @@
     <string name="retry">Retry</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Welcome Screen -->
+    <string name="welcome_title">Welcome</string>
+
+    <!-- Error Messages -->
+    <string name="error_username_required">Username is required</string>
+    <string name="error_username_min_length">Username must be at least 3 characters long</string>
+    <string name="error_username_max_length">Username must be less than 20 characters</string>
+    <string name="error_username_invalid_format">Username can only contain letters, numbers, underscores, and hyphens</string>
+    <string name="error_empty_email">Email cannot be empty</string>
+    <string name="error_empty_password">Password cannot be empty</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
+    <string name="error_invalid_email_for_registration">Registration is only allowed with eve.holt@reqres.in</string>
+    <string name="error_password_min_length">Password must be at least %d characters</string>
+    <string name="error_incorrect_password">Incorrect password for %s</string>
+    <string name="error_empty_response">Empty response from server</string>
+    <string name="error_login_failed">Login failed: %s</string>
+    <string name="error_registration_failed">Registration failed: %s</string>
+    <string name="error_navigation">Navigation error: %s</string>
+    <string name="error_network">Network error: %s</string>
+    <string name="error_loading_failed">Error loading</string>
+
+    <!-- API Messages -->
+    <string name="http_error_format">HTTP %d: %s</string>
+    <string name="empty_response_error">Empty response from server</string>
+
+    <!-- API Response Formats -->
+    <string name="api_error_format">HTTP %d: %s</string>
 </resources>
