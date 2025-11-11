@@ -2,25 +2,37 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="lightGrey">#DBD6D6</color>
-    <color name="green">#3ED397</color>
-    <color name="button_color">#30444E</color>
-    <color name="red">#D9455B</color>
+
+    <!-- Authentication App Theme Colors -->
+    <color name="primary_color">#4169E1</color>
+    <color name="primary_variant">#3057C8</color>
+    <color name="secondary_color">#5D7BFF</color>
+
+    <!-- Background Colors -->
+    <color name="background_color">#FAFBFF</color>
+    <color name="surface_color">#FFFFFF</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#1C1B1F</color>
+    <color name="text_secondary">#49454F</color>
+
+    <!-- Input Colors -->
+    <color name="input_stroke_color">#E7E0EC</color>
+    <color name="input_background">#F7F2FA</color>
+
+    <!-- Status Colors -->
+    <color name="error_color">#BA1A1A</color>
+    <color name="success_color">#00C851</color>
+    <color name="warning_color">#FF8800</color>
+
+    <!-- Old project colors (keeping for compatibility) -->
     <color name="dark_green">#1F2E35</color>
     <color name="medium_grey">#96A7AF</color>
     <color name="orange">#FFA726</color>
+    <color name="appColor">#272A2E</color>
     <color name="brown">#3E2E08</color>
-    <color name="text_secondary">#666666</color>
     <color name="surface_variant">#293035</color>
-    <color name="dark_background">#1A1A1A</color>
-    <color name="appColor">#1A1A1A</color>
-    <color name="input_background">#2C2C2E</color>
-    <color name="card_orange">#FFA726</color>
-    <color name="card_red">#FF5252</color>
-    <color name="card_blue">#4DD0E1</color>
-    <color name="primary_blue">#4169E1</color>
-    <color name="background_grey">#F5F7FA</color>
-    <color name="text_primary">#1E1E1E</color>
-    <color name="border_color">#E8ECF4</color>
-    <color name="icon_tint">#999999</color>
+    <color name="button_color">#4A5A64</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
 </resources>

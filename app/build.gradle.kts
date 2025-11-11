@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.navigation.safeargs.kotlin)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -53,10 +52,16 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.viewpager2)
-    implementation("io.coil-kt:coil:2.5.0")
+
+    // Networking
+    implementation(libs.retrofit.v290)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp.v4110)
+    implementation(libs.logging.interceptor.v4110)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
