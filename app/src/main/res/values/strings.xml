@@ -73,4 +73,16 @@
 
     <!-- API Response Formats -->
     <string name="api_error_format">HTTP %d: %s</string>
+
+    <!-- Home Screen -->
+    <string name="account_details">Account Details</string>
+    <string name="welcome_user">Welcome, %s!</string>
+    <string name="email_format">Email: %s</string>
+    <string name="user_id_format">User ID: %s</string>
+    <string name="logout">Logout</string>
+    <string name="logged_in_message">You are successfully logged in!\nYour session will persist until you logout.</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_loading">Loading your account…</string>
+    <string name="cool_application">Cool application</string>
 </resources>

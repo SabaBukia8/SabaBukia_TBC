@@ -1,22 +1,18 @@
 package screen.auth
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.R
-import data.DatastoreManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import domain.usecase.LoginUseCase
+import domain.usecase.RegisterUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import model.LoginRequest
-import model.RegisterRequest
-import repository.AuthRepository
 import repository.AuthResult
 import util.ValidationUtil
-import util.StringResourceResolver
+import javax.inject.Inject
 
 data class AuthUiState(
     val isLoading: Boolean = false,
@@ -26,14 +22,15 @@ data class AuthUiState(
     val validationErrors: List<String> = emptyList()
 )
 
-class AuthViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val loginUseCase: LoginUseCase,
+    private val registerUseCase: RegisterUseCase
+) : ViewModel() {
 
     companion object {
         private const val TAG = "AuthViewModel"
     }
-
-    private val datastore = DatastoreManager(application.applicationContext)
-    private val authRepository = AuthRepository()
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -49,12 +46,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setUsername(username: String) {
         _usernameText.value = username
-    }
-
-    fun setOnboarded(value: Boolean) {
-        viewModelScope.launch {
-            datastore.setOnboarded(value)
-        }
     }
 
     fun updateUsername(username: String) {
@@ -90,69 +81,27 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
-            try {
-                // Check local credentials first (prioritize locally registered users)
-                val savedUsername = datastore.registeredUsername.first()
-                val savedPassword = datastore.registeredPassword.first()
-
-                if (!savedUsername.isNullOrEmpty() && !savedPassword.isNullOrEmpty()) {
-                    Log.d(TAG, "Found saved credentials: $savedUsername")
-
-                    if (username.equals(savedUsername, ignoreCase = true)) {
-                        if (savedPassword == password) {
-                            Log.d(TAG, "Local login successful for: $username")
-                            _uiState.value = _uiState.value.copy(
-                                isLoading = false,
-                                isLoginSuccessful = true,
-                                errorMessage = null
-                            )
-                            return@launch
-                        } else {
-                            _uiState.value = _uiState.value.copy(
-                                isLoading = false,
-                                errorMessage = StringResourceResolver.getString(
-                                    R.string.error_incorrect_password, 
-                                    username
-                                )
-                            )
-                            return@launch
-                        }
-                    }
-                }
-
-                // Fallback to API for test users or external accounts
-                Log.d(TAG, "No local match found, trying API login")
-                when (val result = authRepository.login(LoginRequest(username, password))) {
-                    is AuthResult.Success -> {
-                        Log.d(TAG, "API login successful")
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            isLoginSuccessful = true,
-                            errorMessage = null
-                        )
-                    }
-
-                    is AuthResult.Error -> {
-                        Log.e(TAG, "Login failed: ${result.message}")
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            errorMessage = result.message
-                        )
-                    }
-
-                    is AuthResult.Loading -> {
-                        // Handle loading state if needed
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Login error", e)
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = StringResourceResolver.getString(
-                        R.string.error_login_failed, 
-                        e.message ?: "Unknown error"
+            when (val result = loginUseCase(username, password)) {
+                is AuthResult.Success -> {
+                    Log.d(TAG, "Login successful")
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isLoginSuccessful = true,
+                        errorMessage = null
                     )
-                )
+                }
+
+                is AuthResult.Error -> {
+                    Log.e(TAG, "Login failed: ${result.message}")
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                is AuthResult.Loading -> {
+                    // Handle loading state if needed
+                }
             }
         }
     }
@@ -177,17 +126,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
-            when (val result =
-                authRepository.register(RegisterRequest(username, email, password))) {
+            when (val result = registerUseCase(username, email, password)) {
                 is AuthResult.Success -> {
                     Log.d(TAG, "Registration successful")
-                    // Save credentials locally for future login enforcement
-                    try {
-                        datastore.saveRegisteredCredentials(username, email, password)
-                        Log.d(TAG, "Saved credentials locally: $username")
-                    } catch (_: Exception) {
-                        Log.e(TAG, "Failed to save credentials locally")
-                    }
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isRegistrationSuccessful = true,

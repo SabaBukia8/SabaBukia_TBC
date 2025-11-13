@@ -13,8 +13,10 @@ import basics.BaseFragment
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val viewModel: AuthViewModel by viewModels()
@@ -26,7 +28,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun setupViews() = with(binding) {
-        // Setup text watchers
         etUsername.doAfterTextChanged { text ->
             viewModel.updateUsername(text?.toString() ?: "")
         }
@@ -35,7 +36,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             viewModel.updatePassword(text?.toString() ?: "")
         }
 
-        // Setup click listeners
         btnLogin.setOnClickListener {
             viewModel.login()
         }
@@ -75,7 +75,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             if (state.isLoading) getString(R.string.loading) else getString(R.string.sign_in)
         btnLogin.isEnabled = !state.isLoading
 
-        // Update error messages
         if (state.validationErrors.isNotEmpty()) {
             showError(state.validationErrors.joinToString("\n"))
         } else if (state.errorMessage != null) {
@@ -87,7 +86,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         // Handle success
         if (state.isLoginSuccessful) {
             showSuccess(getString(R.string.login_successful))
-            // Navigate to success screen
             navigateToSuccess()
         }
     }
@@ -109,9 +107,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun navigateToSuccess() {
         try {
-            findNavController().navigate(R.id.action_loginFragment_to_successFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
         } catch (e: Exception) {
-            // Handle navigation error gracefully
             showError(getString(R.string.error_navigation, e.message ?: "Unknown error"))
         }
     }

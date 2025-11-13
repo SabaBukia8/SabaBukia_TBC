@@ -10,8 +10,10 @@ import model.LoginRequest
 import model.LoginResponse
 import model.RegisterRequest
 import model.RegisterResponse
-import network.NetworkClient
+import network.AuthApiService
 import util.StringResourceResolver
+import javax.inject.Inject
+import javax.inject.Singleton
 
 sealed class AuthResult<out T> {
     data class Success<T>(val data: T) : AuthResult<T>()
@@ -19,9 +21,11 @@ sealed class AuthResult<out T> {
     data class Loading(val isLoading: Boolean) : AuthResult<Nothing>()
 }
 
-class AuthRepository {
+@Singleton
+class AuthRepository @Inject constructor(
+    private val apiService: AuthApiService
+) {
 
-    private val apiService = NetworkClient.authApiService
     private val gson = Gson()
 
     companion object {

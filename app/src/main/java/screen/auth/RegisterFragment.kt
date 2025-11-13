@@ -13,8 +13,10 @@ import basics.BaseFragment
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.FragmentRegisterBinding
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterBinding::inflate) {
 
     private val viewModel: AuthViewModel by viewModels()
@@ -26,7 +28,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
     }
 
     private fun setupViews() = with(binding) {
-        // Setup text watchers
         etUsername.doAfterTextChanged { text ->
             viewModel.updateUsername(text?.toString() ?: "")
         }
@@ -39,7 +40,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
             viewModel.updatePassword(text?.toString() ?: "")
         }
 
-        // Setup click listeners
         btnRegister.setOnClickListener {
             viewModel.register()
         }
@@ -82,11 +82,9 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
     }
 
     private fun updateUiState(state: AuthUiState) = with(binding) {
-        // Update loading state
         btnRegister.text = if (state.isLoading) getString(R.string.loading) else getString(R.string.sign_up)
         btnRegister.isEnabled = !state.isLoading
 
-        // Update error messages
         if (state.validationErrors.isNotEmpty()) {
             showError(state.validationErrors.joinToString("\n"))
         } else if (state.errorMessage != null) {
