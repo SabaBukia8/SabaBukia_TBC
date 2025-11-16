@@ -2,37 +2,19 @@
 <resources>
     <string name="app_name">AuthApp</string>
 
-    <!-- Authentication Strings -->
-    <string name="welcome_back">Welcome Back</string>
-    <string name="sign_in_to_continue">Sign in to continue</string>
-    <string name="create_account">Create Account</string>
-    <string name="sign_up_to_get_started">Sign up to get started</string>
-
     <!-- Form Fields -->
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
-    <string name="pin">PIN</string>
-    <string name="confirm_pin">CONFIRM PIN</string>
 
     <!-- Buttons -->
     <string name="sign_in">Login</string>
     <string name="sign_up">Sign Up</string>
-    <string name="continue_text">Continue</string>
-
-    <!-- Links -->
-    <string name="dont_have_account">Don\'t have an account?</string>
-    <string name="already_have_account">Already have an account?</string>
 
     <!-- Messages -->
     <string name="login_successful">Login successful!</string>
     <string name="registration_successful">Registration successful!</string>
-    <string name="registration_email_note">Registration is only allowed with eve.holt@reqres.in</string>
-    <string name="field_is_not_filled">%s is not filled</string>
-    <string name="pin_mismatch">PIN and Confirm PIN do not match</string>
-
-    <!-- Success Screen -->
     <string name="success">Success</string>
     <string name="authentication_successful">Authentication Successful!</string>
     <string name="you_have_successfully_authenticated">You have successfully authenticated with the app</string>
@@ -42,11 +24,8 @@
 
     <!-- Generic -->
     <string name="loading">Loading…</string>
-    <string name="retry">Retry</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-
-    <!-- Welcome Screen -->
+    <string name="cool_application">Cool application</string>
+    <string name="continue_text">Continue</string>
     <string name="welcome_title">Welcome</string>
 
     <!-- Error Messages -->
@@ -57,22 +36,26 @@
     <string name="error_empty_email">Email cannot be empty</string>
     <string name="error_empty_password">Password cannot be empty</string>
     <string name="error_invalid_email">Please enter a valid email address</string>
-    <string name="error_invalid_email_for_registration">Registration is only allowed with eve.holt@reqres.in</string>
+    <string name="error_invalid_email_for_registration">Registration is only allowed with %s</string>
     <string name="error_password_min_length">Password must be at least %d characters</string>
-    <string name="error_incorrect_password">Incorrect password for %s</string>
     <string name="error_empty_response">Empty response from server</string>
     <string name="error_login_failed">Login failed: %s</string>
     <string name="error_registration_failed">Registration failed: %s</string>
     <string name="error_navigation">Navigation error: %s</string>
     <string name="error_network">Network error: %s</string>
     <string name="error_loading_failed">Error loading</string>
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_request_timeout">Request timeout</string>
+    <string name="error_network_io">Network I/O error</string>
+    <string name="error_invalid_response_format">Invalid response format</string>
+    <string name="error_unknown">Unknown error occurred</string>
+    <string name="error_access_forbidden">Access forbidden: %s</string>
+    <string name="error_resource_not_found">Resource not found</string>
+    <string name="error_incorrect_password">error_incorrect_password</string>
+    <string name="api_error_format">api_error_format</string>
 
     <!-- API Messages -->
-    <string name="http_error_format">HTTP %d: %s</string>
-    <string name="empty_response_error">Empty response from server</string>
-
-    <!-- API Response Formats -->
-    <string name="api_error_format">HTTP %d: %s</string>
+    <string name="http_error_format" formatted="false">HTTP %d: %s</string>
 
     <!-- Home Screen -->
     <string name="account_details">Account Details</string>
@@ -81,8 +64,4 @@
     <string name="user_id_format">User ID: %s</string>
     <string name="logout">Logout</string>
     <string name="logged_in_message">You are successfully logged in!\nYour session will persist until you logout.</string>
-
-    <!-- Splash Screen -->
-    <string name="splash_loading">Loading your account…</string>
-    <string name="cool_application">Cool application</string>
 </resources>
