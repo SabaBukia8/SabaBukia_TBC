@@ -4,8 +4,8 @@ import android.content.Context
 import com.example.sababukia_tbc.data.DatastoreManager
 import com.example.sababukia_tbc.data.local.ILocalDataSource
 import com.example.sababukia_tbc.data.local.datasource.LocalDataSourceImpl
-import com.example.sababukia_tbc.data.remote.IRemoteDataSource
-import com.example.sababukia_tbc.data.remote.RemoteDataSourceImpl
+import com.example.sababukia_tbc.data.remote.AuthRemoteDataSourceImpl
+import com.example.sababukia_tbc.data.remote.IAuthRemoteDataSource
 import com.example.sababukia_tbc.data.repository.AuthRepositoryImpl
 import com.example.sababukia_tbc.domain.repository.IAuthRepository
 import dagger.Binds
@@ -16,11 +16,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
-
 
     @Binds
     @Singleton
@@ -28,13 +26,11 @@ abstract class AppModule {
         authRepositoryImpl: AuthRepositoryImpl
     ): IAuthRepository
 
-
     @Binds
     @Singleton
-    abstract fun bindRemoteDataSource(
-        remoteDataSourceImpl: RemoteDataSourceImpl
-    ): IRemoteDataSource
-
+    abstract fun bindAuthRemoteDataSource(
+        authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
+    ): IAuthRemoteDataSource
 
     @Binds
     @Singleton
@@ -49,7 +45,6 @@ abstract class AppModule {
         fun provideContext(@ApplicationContext context: Context): Context {
             return context
         }
-
 
         @Provides
         @Singleton

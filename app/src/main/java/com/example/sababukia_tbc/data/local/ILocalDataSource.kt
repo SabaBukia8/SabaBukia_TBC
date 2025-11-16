@@ -14,5 +14,8 @@ interface ILocalDataSource {
     suspend fun saveEmail(email: String)
     suspend fun getEmail(): String?
 
+    suspend fun saveRememberMe(rememberMe: Boolean)
+    suspend fun getRememberMe(): Boolean
+
     suspend fun clearAll()
 }

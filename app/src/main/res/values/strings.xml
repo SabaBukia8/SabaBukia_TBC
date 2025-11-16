@@ -64,4 +64,12 @@
     <string name="user_id_format">User ID: %s</string>
     <string name="logout">Logout</string>
     <string name="logged_in_message">You are successfully logged in!\nYour session will persist until you logout.</string>
+    <string name="profile">Profile</string>
+    <string name="login">Login</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="profile_icon">Profile Icon</string>
+    <string name="email_example_com">email@example.com</string>
+    <string name="back">Back</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="user_avatar">User Avatar</string>
 </resources>

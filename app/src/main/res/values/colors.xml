@@ -10,7 +10,7 @@
     <color name="error_color">#F44336</color>
     <color name="success_color">#00C851</color>
     <color name="purple_700">#4CAF50</color>
-    <color name="purple_200">#F44336</color>
+    <color name="red">#F44336</color>
     <color name="primary_purple">#6C3FE3</color>
     <color name="light_purple">#D1B8FF</color>
     <color name="input_background">#E8DEFF</color>

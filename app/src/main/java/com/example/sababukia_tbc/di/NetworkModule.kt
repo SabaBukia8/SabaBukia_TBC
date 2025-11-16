@@ -1,14 +1,17 @@
 package com.example.sababukia_tbc.di
 
 import android.util.Log
+import com.example.sababukia_tbc.data.local.ILocalDataSource
+import com.example.sababukia_tbc.data.remote.network.AuthInterceptor
+import com.example.sababukia_tbc.data.remote.network.LoginApiService
+import com.example.sababukia_tbc.data.remote.network.RegisterApiService
+import com.example.sababukia_tbc.data.remote.network.UsersApiService
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.example.sababukia_tbc.data.local.ILocalDataSource
-import com.example.sababukia_tbc.data.remote.network.LoginApiService
-import com.example.sababukia_tbc.data.remote.network.RegisterApiService
-import com.example.sababukia_tbc.data.remote.network.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -23,6 +26,14 @@ object NetworkModule {
     private const val BASE_URL = "https://reqres.in/"
     private const val TAG = "NetworkModule"
     private const val API_KEY = "reqres-free-v1"
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder()
+            .setLenient()
+            .create()
+    }
 
     @Provides
     @Singleton
@@ -73,11 +84,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
@@ -91,5 +102,11 @@ object NetworkModule {
     @Singleton
     fun provideRegisterApiService(retrofit: Retrofit): RegisterApiService {
         return retrofit.create(RegisterApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUsersApiService(retrofit: Retrofit): UsersApiService {
+        return retrofit.create(UsersApiService::class.java)
     }
 }

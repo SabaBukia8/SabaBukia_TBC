@@ -30,7 +30,7 @@ class LocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveUsername(username: String) {
         val email = getEmail() ?: ""
-        val password = "" // We don't want to store password, but maintaining existing structure
+        val password = ""
         datastoreManager.saveRegisteredCredentials(username, email, password)
     }
 
@@ -40,12 +40,20 @@ class LocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveEmail(email: String) {
         val username = getUsername() ?: ""
-        val password = "" // We don't want to store password, but maintaining existing structure
+        val password = ""
         datastoreManager.saveRegisteredCredentials(username, email, password)
     }
 
     override suspend fun getEmail(): String? {
         return datastoreManager.registeredEmail.first()
+    }
+
+    override suspend fun saveRememberMe(rememberMe: Boolean) {
+        datastoreManager.saveRememberMe(rememberMe)
+    }
+
+    override suspend fun getRememberMe(): Boolean {
+        return datastoreManager.rememberMe.first() ?: false
     }
 
     override suspend fun clearAll() {

@@ -8,4 +8,5 @@ object DatastoreKeys {
     const val KEY_REGISTERED_PASSWORD = "key_registered_password"
     const val KEY_AUTH_TOKEN = "key_auth_token"
     const val KEY_USER_ID = "key_user_id"
+    const val KEY_REMEMBER_ME = "key_remember_me"
 }

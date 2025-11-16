@@ -65,12 +65,16 @@ dependencies {
     implementation(libs.okhttp.v4110)
     implementation(libs.logging.interceptor.v4110)
 
-    // Coroutinesc
+    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // Glide for image loading
+    implementation(libs.glide)
+    kapt(libs.glide.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
