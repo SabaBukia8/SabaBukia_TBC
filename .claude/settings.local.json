@@ -1,21 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:www.geeksforgeeks.org)",
-      "Bash(cd:*)",
-      "Bash(dir:*)",
-      "Bash(findstr:*)",
-      "Bash(find:*)",
-      "Bash(./gradlew assembleDebug:*)",
-      "WebSearch",
-      "WebFetch(domain:reqres.in)",
-      "Bash(cat:*)",
       "Bash(./gradlew build:*)",
-      "Bash(./gradlew clean:*)",
-      "Bash(./gradlew compileDebugKotlin:*)",
-      "Bash(for file in *.kt)",
-      "Bash(do mv \"$file\" \"Old$file.backup\")",
-      "Bash(done)"
+      "Bash(./gradlew clean build:*)"
     ],
     "deny": [],
     "ask": []

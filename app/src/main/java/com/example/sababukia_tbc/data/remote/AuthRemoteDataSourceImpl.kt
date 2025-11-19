@@ -10,8 +10,8 @@ import com.example.sababukia_tbc.data.remote.dto.UsersResponseDTO
 import com.example.sababukia_tbc.data.remote.network.LoginApiService
 import com.example.sababukia_tbc.data.remote.network.RegisterApiService
 import com.example.sababukia_tbc.data.remote.network.UsersApiService
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import retrofit2.Response
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -22,7 +22,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private val loginApiService: LoginApiService,
     private val registerApiService: RegisterApiService,
     private val usersApiService: UsersApiService,
-    private val gson: Gson
+    private val json: Json
 ) : IAuthRemoteDataSource {
 
     override suspend fun login(request: LoginRequestDTO): Result<LoginResponseDTO> {
@@ -83,8 +83,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         } catch (e: IOException) {
             Log.e("AuthRemoteDataSource", "Network error: ${e.message}", e)
             Result.failure(Exception("Network error: ${e.message}"))
-        } catch (e: JsonSyntaxException) {
-            Log.e("AuthRemoteDataSource", "JSON parsing error", e)
+        } catch (e: SerializationException) {
+            Log.e("AuthRemoteDataSource", "Serialization error", e)
             Result.failure(Exception("Failed to parse response"))
         } catch (e: Exception) {
             Log.e("AuthRemoteDataSource", "Unexpected error: ${e.message}", e)
@@ -95,8 +95,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private fun <T> parseErrorMessage(response: Response<T>): String {
         return try {
             val errorBody = response.errorBody()?.string()
-            val apiError = gson.fromJson(errorBody, ApiErrorDTO::class.java)
-            apiError.error ?: "Unknown error"
+            val apiError = json.decodeFromString<ApiErrorDTO>(errorBody ?: "")
+            apiError.error
         } catch (e: Exception) {
             Log.e("AuthRemoteDataSource", "Error parsing error message", e)
             "Unknown error occurred"

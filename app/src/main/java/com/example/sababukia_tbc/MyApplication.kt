@@ -8,7 +8,6 @@ import dagger.hilt.android.HiltAndroidApp
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        // Initialize StringResourceResolver for accessing resources from non-Activity classes
         StringResourceResolver.initialize(this)
     }
 }

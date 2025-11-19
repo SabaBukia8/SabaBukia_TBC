@@ -1,13 +1,15 @@
 package com.example.sababukia_tbc.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserDTO(
     val id: Int,
     val email: String,
-    @SerializedName("first_name")
+    @SerialName("first_name")
     val firstName: String,
-    @SerializedName("last_name")
+    @SerialName("last_name")
     val lastName: String,
     val avatar: String
 )

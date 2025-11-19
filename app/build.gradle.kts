@@ -2,9 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.navigation.safeargs.kotlin)
-    id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -43,6 +44,11 @@ android {
 
 }
 
+// KSP configuration for Hilt
+ksp {
+    arg("correctErrorTypes", "true")
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -59,22 +65,22 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     // Networking
-    implementation(libs.retrofit.v290)
-    implementation(libs.converter.gson)
-    implementation(libs.gson)
-    implementation(libs.okhttp.v4110)
-    implementation(libs.logging.interceptor.v4110)
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // Glide for image loading
     implementation(libs.glide)
-    kapt(libs.glide.compiler)
+    ksp(libs.glide.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

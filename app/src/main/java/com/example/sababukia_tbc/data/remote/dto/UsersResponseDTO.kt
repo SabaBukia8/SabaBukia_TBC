@@ -1,9 +1,15 @@
 package com.example.sababukia_tbc.data.remote.dto
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UsersResponseDTO(
     val page: Int,
-    val per_page: Int,
+    @SerialName("per_page")
+    val perPage: Int,
     val total: Int,
-    val total_pages: Int,
+    @SerialName("total_pages")
+    val totalPages: Int,
     val data: List<UserDTO>
 )
