@@ -2,17 +2,15 @@ package com.example.sababukia_tbc.presentation.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sababukia_tbc.data.common.Resource
+import com.example.sababukia_tbc.domain.repository.IAuthRepository
 import com.example.sababukia_tbc.domain.usecase.CheckSessionUseCase
 import com.example.sababukia_tbc.domain.usecase.LoginUseCase
 import com.example.sababukia_tbc.domain.usecase.SaveRememberMeUseCase
-import com.example.sababukia_tbc.domain.repository.IAuthRepository
-import com.example.sababukia_tbc.presentation.ui.navigation.NavigationEvent
-import com.example.sababukia_tbc.presentation.ui.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -26,75 +24,83 @@ class LoginViewModel @Inject constructor(
     private val repository: IAuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(LoginState())
+    val state = _state.asStateFlow()
 
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
-    val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<LoginSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
+
+    private var loginJob: Job? = null
 
     init {
         checkSession()
+    }
+
+    fun onEvent(event: LoginEvent) {
+        when (event) {
+            is LoginEvent.Login -> login(email = event.email, password = event.password)
+            is LoginEvent.OnRegister -> onRegister()
+        }
     }
 
     private fun checkSession() {
         viewModelScope.launch {
             val hasActiveSession = checkSessionUseCase()
             if (hasActiveSession) {
-                _navigationEvent.emit(NavigationEvent.NavigateToHome)
+                _sideEffect.emit(LoginSideEffect.NavigateToHome)
             }
         }
     }
 
-    fun onEmailChanged(email: String) {
-        _uiState.value = _uiState.value.copy(email = email, errorMessage = null)
-        validateForm()
-    }
+    private fun login(email: String, password: String) {
+        loginJob?.cancel()
+        loginJob = viewModelScope.launch {
+            _state.value = _state.value.copy(loader = Resource.Loading(isLoading = true))
 
-    fun onPasswordChanged(password: String) {
-        _uiState.value = _uiState.value.copy(password = password, errorMessage = null)
-        validateForm()
-    }
+            try {
+                val result = loginUseCase(email, password)
 
-    fun onRememberMeChanged(rememberMe: Boolean) {
-        _uiState.value = _uiState.value.copy(rememberMe = rememberMe)
-    }
+                result
+                    .onSuccess { authResponse ->
+                        repository.saveAuthToken(authResponse.token)
+                        repository.saveEmail(email)
+                        saveRememberMeUseCase(_state.value.rememberMe)
 
-    fun onLoginClicked() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+                        _state.value = _state.value.copy(
+                            loader = Resource.Success(data = authResponse.token)
+                        )
 
-            loginUseCase(_uiState.value.email, _uiState.value.password)
-                .onSuccess { authResponse ->
-                    repository.saveAuthToken(authResponse.token)
-                    repository.saveEmail(_uiState.value.email)
-                    saveRememberMeUseCase(_uiState.value.rememberMe)
-                    _uiState.value = _uiState.value.copy(isLoading = false)
-                    _navigationEvent.emit(NavigationEvent.NavigateToHome)
-                }
-                .onFailure { exception ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = exception.message ?: "Login failed"
-                    )
-                }
+                        _sideEffect.emit(LoginSideEffect.NavigateToHome)
+                    }
+                    .onFailure { exception ->
+                        val errorMessage = exception.message ?: "Login failed"
+                        _state.value = _state.value.copy(
+                            loader = Resource.Error(errorMessage = errorMessage)
+                        )
+                        _sideEffect.emit(LoginSideEffect.ShowError(errorMessage))
+                    }
+            } catch (e: Exception) {
+                val errorMessage = e.message ?: "Unknown error"
+                _state.value = _state.value.copy(
+                    loader = Resource.Error(errorMessage = errorMessage)
+                )
+                _sideEffect.emit(LoginSideEffect.ShowError(errorMessage))
+            }
         }
     }
 
-    fun onRegisterClicked() {
+    private fun onRegister() {
         viewModelScope.launch {
-            _navigationEvent.emit(NavigationEvent.NavigateToRegister)
+            _sideEffect.emit(LoginSideEffect.NavigateToRegister)
         }
     }
 
-    fun setCredentialsFromRegistration(email: String, password: String) {
-        _uiState.value = _uiState.value.copy(email = email, password = password)
-        validateForm()
+    fun updateRememberMe(rememberMe: Boolean) {
+        _state.value = _state.value.copy(rememberMe = rememberMe)
     }
 
-    private fun validateForm() {
-        val isValid = _uiState.value.email.isNotBlank() &&
-                _uiState.value.email == "eve.holt@reqres.in" &&
-                _uiState.value.password.isNotBlank()
-        _uiState.value = _uiState.value.copy(isLoginButtonEnabled = isValid)
+    override fun onCleared() {
+        super.onCleared()
+        loginJob?.cancel()
     }
 }

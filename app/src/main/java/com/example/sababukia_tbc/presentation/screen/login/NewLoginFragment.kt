@@ -2,7 +2,7 @@ package com.example.sababukia_tbc.presentation.screen.login
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.addTextChangedListener
+import android.widget.Toast
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -10,18 +10,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.sababukia_tbc.R
+import com.example.sababukia_tbc.data.common.Resource
 import com.example.sababukia_tbc.databinding.FragmentNewLoginBinding
 import com.example.sababukia_tbc.presentation.common.BaseFragment
-import com.example.sababukia_tbc.presentation.ui.navigation.NavigationEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NewLoginFragment : BaseFragment<FragmentNewLoginBinding>(FragmentNewLoginBinding::inflate) {
 
     private val viewModel: LoginViewModel by viewModels()
-    private var navigationJob: Job? = null
 
     companion object {
         const val REGISTRATION_KEY = "registration_result"
@@ -33,38 +31,34 @@ class NewLoginFragment : BaseFragment<FragmentNewLoginBinding>(FragmentNewLoginB
         super.onViewCreated(view, savedInstanceState)
         setupFragmentResultListener()
         setupListeners()
-        observeUiState()
-        observeNavigationEvents()
+        observeState()
+        observeSideEffects()
     }
 
     private fun setupFragmentResultListener() {
         setFragmentResultListener(REGISTRATION_KEY) { _, bundle ->
             val email = bundle.getString(EMAIL_KEY) ?: ""
             val password = bundle.getString(PASSWORD_KEY) ?: ""
-            viewModel.setCredentialsFromRegistration(email, password)
+            binding.etEmail.setText(email)
+            binding.etPassword.setText(password)
+            Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun listeners() {
         with(binding) {
-            etEmail.addTextChangedListener {
-                viewModel.onEmailChanged(it.toString())
-            }
-
-            etPassword.addTextChangedListener {
-                viewModel.onPasswordChanged(it.toString())
-            }
-
             cbRememberMe.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onRememberMeChanged(isChecked)
+                viewModel.updateRememberMe(isChecked)
             }
 
             btnLogin.setOnClickListener {
-                viewModel.onLoginClicked()
+                val email = etEmail.text.toString()
+                val password = etPassword.text.toString()
+                viewModel.onEvent(LoginEvent.Login(email, password))
             }
 
             btnRegister.setOnClickListener {
-                viewModel.onRegisterClicked()
+                viewModel.onEvent(LoginEvent.OnRegister)
             }
         }
     }
@@ -73,59 +67,66 @@ class NewLoginFragment : BaseFragment<FragmentNewLoginBinding>(FragmentNewLoginB
         listeners()
     }
 
-    private fun observeUiState() {
+    private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    with(binding) {
-                        progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-                        btnLogin.isEnabled = state.isLoginButtonEnabled && !state.isLoading
-                        btnRegister.isEnabled = !state.isLoading
-
-                        // Only set text if different to avoid cursor jumping
-                        if (etEmail.text.toString() != state.email) {
-                            etEmail.setText(state.email)
-                            etEmail.setSelection(state.email.length)
-                        }
-                        if (etPassword.text.toString() != state.password) {
-                            etPassword.setText(state.password)
-                            etPassword.setSelection(state.password.length)
-                        }
-                        cbRememberMe.isChecked = state.rememberMe
-
-                        if (state.errorMessage != null) {
-                            tvError.text = state.errorMessage
-                            tvError.visibility = View.VISIBLE
-                        } else {
-                            tvError.visibility = View.GONE
-                        }
-                    }
+                viewModel.state.collect { state ->
+                    handleLoader(state.loader)
+                    binding.cbRememberMe.isChecked = state.rememberMe
                 }
             }
         }
     }
 
-    private fun observeNavigationEvents() {
-        navigationJob = viewLifecycleOwner.lifecycleScope.launch {
+    private fun observeSideEffects() {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.navigationEvent.collect { event ->
-                    when (event) {
-                        is NavigationEvent.NavigateToHome -> {
-                            findNavController().navigate(R.id.action_newLoginFragment_to_newHomeFragment)
+                viewModel.sideEffect.collect { sideEffect ->
+                    when (sideEffect) {
+                        is LoginSideEffect.NavigateToHome -> {
+                            findNavController().navigate(
+                                R.id.action_newLoginFragment_to_newHomeFragment
+                            )
                         }
-                        is NavigationEvent.NavigateToRegister -> {
-                            findNavController().navigate(R.id.action_newLoginFragment_to_newRegisterFragment)
+                        is LoginSideEffect.NavigateToRegister -> {
+                            findNavController().navigate(
+                                R.id.action_newLoginFragment_to_newRegisterFragment
+                            )
                         }
-                        else -> {}
+                        is LoginSideEffect.ShowError -> {
+                            Toast.makeText(
+                                requireContext(),
+                                sideEffect.errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
             }
         }
     }
 
-    override fun onDestroyView() {
-        navigationJob?.cancel()
-        navigationJob = null
-        super.onDestroyView()
+    private fun handleLoader(resource: Resource<String>) {
+        when (resource) {
+            is Resource.Loading -> {
+                binding.progressBar.visibility = if (resource.isLoading) View.VISIBLE else View.GONE
+                binding.btnLogin.isEnabled = !resource.isLoading
+                binding.btnRegister.isEnabled = !resource.isLoading
+                binding.tvError.visibility = View.GONE
+            }
+            is Resource.Success -> {
+                binding.progressBar.visibility = View.GONE
+                binding.btnLogin.isEnabled = true
+                binding.btnRegister.isEnabled = true
+                binding.tvError.visibility = View.GONE
+            }
+            is Resource.Error -> {
+                binding.progressBar.visibility = View.GONE
+                binding.btnLogin.isEnabled = true
+                binding.btnRegister.isEnabled = true
+                binding.tvError.text = resource.errorMessage
+                binding.tvError.visibility = View.VISIBLE
+            }
+        }
     }
 }

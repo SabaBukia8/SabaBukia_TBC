@@ -2,12 +2,15 @@ package com.example.sababukia_tbc.presentation.screen.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sababukia_tbc.data.common.Resource
 import com.example.sababukia_tbc.domain.repository.IAuthRepository
 import com.example.sababukia_tbc.domain.usecase.LogoutUseCase
-import com.example.sababukia_tbc.presentation.ui.navigation.NavigationEvent
-import com.example.sababukia_tbc.presentation.ui.state.ProfileUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,29 +20,52 @@ class ProfileViewModel @Inject constructor(
     private val repository: IAuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(ProfileState())
+    val state = _state.asStateFlow()
 
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
-    val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<ProfileSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
+
+    private var logoutJob: Job? = null
 
     init {
         loadUserEmail()
     }
 
-    private fun loadUserEmail() {
-        viewModelScope.launch {
-            val email = repository.getEmail() ?: "No email"
-            _uiState.value = _uiState.value.copy(email = email)
+    fun onEvent(event: ProfileEvent) {
+        when (event) {
+            is ProfileEvent.OnLogout -> logout()
+            is ProfileEvent.OnBackPressed -> onBackPressed()
         }
     }
 
-    fun onLogoutClicked() {
+    private fun loadUserEmail() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            logoutUseCase()
-            _uiState.value = _uiState.value.copy(isLoading = false)
-            _navigationEvent.emit(NavigationEvent.NavigateToLogin)
+            val email = repository.getEmail() ?: "No email"
+            _state.value = _state.value.copy(userEmail = email)
         }
+    }
+
+    private fun logout() {
+        logoutJob?.cancel()
+        logoutJob = viewModelScope.launch {
+            _state.value = _state.value.copy(loader = Resource.Loading(isLoading = true))
+
+            logoutUseCase()
+
+            _state.value = _state.value.copy(loader = Resource.Success(data = "Logged out"))
+            _sideEffect.emit(ProfileSideEffect.NavigateToLogin)
+        }
+    }
+
+    private fun onBackPressed() {
+        viewModelScope.launch {
+            _sideEffect.emit(ProfileSideEffect.NavigateBack)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        logoutJob?.cancel()
     }
 }

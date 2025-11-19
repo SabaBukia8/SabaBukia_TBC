@@ -1,24 +1,20 @@
 package com.example.sababukia_tbc.presentation.screen.register
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.sababukia_tbc.R
+import com.example.sababukia_tbc.data.common.Resource
 import com.example.sababukia_tbc.databinding.FragmentNewRegisterBinding
 import com.example.sababukia_tbc.presentation.common.BaseFragment
 import com.example.sababukia_tbc.presentation.screen.login.NewLoginFragment
-import com.example.sababukia_tbc.presentation.ui.navigation.NavigationEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -26,35 +22,35 @@ class NewRegisterFragment :
     BaseFragment<FragmentNewRegisterBinding>(FragmentNewRegisterBinding::inflate) {
 
     private val viewModel: RegisterViewModel by viewModels()
-    private var navigationJob: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
-        observeUiState()
-        observeNavigationEvents()
+        observeState()
+        observeSideEffects()
     }
 
     override fun listeners() {
         with(binding) {
-            etEmail.addTextChangedListener {
-                viewModel.onEmailChanged(it.toString())
-            }
-
-            etPassword.addTextChangedListener {
-                viewModel.onPasswordChanged(it.toString())
-            }
-
-            etRepeatPassword.addTextChangedListener {
-                viewModel.onRepeatPasswordChanged(it.toString())
-            }
-
             btnRegister.setOnClickListener {
-                viewModel.onRegisterClicked()
+                val email = etEmail.text.toString()
+                val password = etPassword.text.toString()
+                val repeatPassword = etRepeatPassword.text.toString()
+
+                if (password != repeatPassword) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Passwords do not match",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+
+                viewModel.onEvent(RegisterEvent.Register(email, password))
             }
 
             btnBack.setOnClickListener {
-                viewModel.onBackClicked()
+                viewModel.onEvent(RegisterEvent.OnBackPressed)
             }
         }
     }
@@ -63,66 +59,70 @@ class NewRegisterFragment :
         listeners()
     }
 
-    private fun observeUiState() {
+    private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    with(binding) {
-                        progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-                        btnRegister.isEnabled = state.isRegisterButtonEnabled && !state.isLoading
-
-                        if (state.isRegisterButtonEnabled && !state.isLoading) {
-                            btnRegister.backgroundTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.primary_color)
-                            )
-                        } else {
-                            btnRegister.backgroundTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.text_secondary)
-                            )
-                        }
-
-                        if (state.errorMessage != null) {
-                            tvError.text = state.errorMessage
-                            tvError.visibility = View.VISIBLE
-                        } else {
-                            tvError.visibility = View.GONE
-                        }
-                    }
+                viewModel.state.collect { state ->
+                    handleLoader(state.loader)
                 }
             }
         }
     }
 
-    private fun observeNavigationEvents() {
-        navigationJob = viewLifecycleOwner.lifecycleScope.launch {
+    private fun observeSideEffects() {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.navigationEvent.collect { event ->
-                    when (event) {
-                        is NavigationEvent.NavigateBackToLoginWithCredentials -> {
+                viewModel.sideEffect.collect { sideEffect ->
+                    when (sideEffect) {
+                        is RegisterSideEffect.NavigateBackToLogin -> {
                             setFragmentResult(
                                 NewLoginFragment.REGISTRATION_KEY,
                                 bundleOf(
-                                    NewLoginFragment.EMAIL_KEY to event.email,
-                                    NewLoginFragment.PASSWORD_KEY to event.password
+                                    NewLoginFragment.EMAIL_KEY to sideEffect.email,
+                                    NewLoginFragment.PASSWORD_KEY to sideEffect.password
                                 )
                             )
                             findNavController().popBackStack()
                         }
 
-                        is NavigationEvent.NavigateBack -> {
+                        is RegisterSideEffect.NavigateBack -> {
                             findNavController().popBackStack()
                         }
 
-                        else -> {}
+                        is RegisterSideEffect.ShowError -> {
+                            Toast.makeText(
+                                requireContext(),
+                                sideEffect.errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
             }
         }
     }
 
-    override fun onDestroyView() {
-        navigationJob?.cancel()
-        navigationJob = null
-        super.onDestroyView()
+    private fun handleLoader(resource: Resource<String>) {
+        when (resource) {
+            is Resource.Loading -> {
+                binding.progressBar.visibility = if (resource.isLoading) View.VISIBLE else View.GONE
+                binding.btnRegister.isEnabled = !resource.isLoading
+                binding.btnBack.isEnabled = !resource.isLoading
+                binding.tvError.visibility = View.GONE
+            }
+            is Resource.Success -> {
+                binding.progressBar.visibility = View.GONE
+                binding.btnRegister.isEnabled = true
+                binding.btnBack.isEnabled = true
+                binding.tvError.visibility = View.GONE
+            }
+            is Resource.Error -> {
+                binding.progressBar.visibility = View.GONE
+                binding.btnRegister.isEnabled = true
+                binding.btnBack.isEnabled = true
+                binding.tvError.text = resource.errorMessage
+                binding.tvError.visibility = View.VISIBLE
+            }
+        }
     }
 }

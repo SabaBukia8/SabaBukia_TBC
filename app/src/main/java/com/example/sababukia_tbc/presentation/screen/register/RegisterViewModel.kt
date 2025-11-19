@@ -2,11 +2,14 @@ package com.example.sababukia_tbc.presentation.screen.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sababukia_tbc.data.common.Resource
 import com.example.sababukia_tbc.domain.usecase.RegisterUseCase
-import com.example.sababukia_tbc.presentation.ui.navigation.NavigationEvent
-import com.example.sababukia_tbc.presentation.ui.state.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,66 +18,67 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterUiState())
-    val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state.asStateFlow()
 
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
-    val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<RegisterSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
 
-    fun onEmailChanged(email: String) {
-        _uiState.value = _uiState.value.copy(email = email, errorMessage = null)
-        validateForm()
+    private var registerJob: Job? = null
+
+    fun onEvent(event: RegisterEvent) {
+        when (event) {
+            is RegisterEvent.Register -> register(email = event.email, password = event.password)
+            is RegisterEvent.OnBackPressed -> onBackPressed()
+        }
     }
 
-    fun onPasswordChanged(password: String) {
-        _uiState.value = _uiState.value.copy(password = password, errorMessage = null)
-        validateForm()
-    }
+    private fun register(email: String, password: String) {
+        registerJob?.cancel()
+        registerJob = viewModelScope.launch {
+            _state.value = _state.value.copy(loader = Resource.Loading(isLoading = true))
 
-    fun onRepeatPasswordChanged(repeatPassword: String) {
-        _uiState.value = _uiState.value.copy(repeatPassword = repeatPassword, errorMessage = null)
-        validateForm()
-    }
+            try {
+                val result = registerUseCase(email, password)
 
-    fun onRegisterClicked() {
-        viewModelScope.launch {
-            if (_uiState.value.password != _uiState.value.repeatPassword) {
-                _uiState.value = _uiState.value.copy(errorMessage = "Passwords do not match")
-                return@launch
-            }
-
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-
-            registerUseCase(_uiState.value.email, _uiState.value.password)
-                .onSuccess {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
-                    _navigationEvent.emit(
-                        NavigationEvent.NavigateBackToLoginWithCredentials(
-                            email = _uiState.value.email,
-                            password = _uiState.value.password
+                result
+                    .onSuccess { authResponse ->
+                        _state.value = _state.value.copy(
+                            loader = Resource.Success(data = authResponse.token)
                         )
-                    )
-                }
-                .onFailure { exception ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = exception.message ?: "Registration failed"
-                    )
-                }
+
+                        _sideEffect.emit(
+                            RegisterSideEffect.NavigateBackToLogin(
+                                email = email,
+                                password = password
+                            )
+                        )
+                    }
+                    .onFailure { exception ->
+                        val errorMessage = exception.message ?: "Registration failed"
+                        _state.value = _state.value.copy(
+                            loader = Resource.Error(errorMessage = errorMessage)
+                        )
+                        _sideEffect.emit(RegisterSideEffect.ShowError(errorMessage))
+                    }
+            } catch (e: Exception) {
+                val errorMessage = e.message ?: "Unknown error"
+                _state.value = _state.value.copy(
+                    loader = Resource.Error(errorMessage = errorMessage)
+                )
+                _sideEffect.emit(RegisterSideEffect.ShowError(errorMessage))
+            }
         }
     }
 
-    fun onBackClicked() {
+    private fun onBackPressed() {
         viewModelScope.launch {
-            _navigationEvent.emit(NavigationEvent.NavigateBack)
+            _sideEffect.emit(RegisterSideEffect.NavigateBack)
         }
     }
 
-    private fun validateForm() {
-        val isValid = _uiState.value.email.isNotBlank() &&
-                _uiState.value.email == "eve.holt@reqres.in" &&
-                _uiState.value.password.isNotBlank() &&
-                _uiState.value.repeatPassword.isNotBlank()
-        _uiState.value = _uiState.value.copy(isRegisterButtonEnabled = isValid)
+    override fun onCleared() {
+        super.onCleared()
+        registerJob?.cancel()
     }
 }
