@@ -16,4 +16,15 @@
     <color name="input_background">#E8DEFF</color>
     <color name="input_text">#9C7FDB</color>
     <color name="input_hint">#B89EE6</color>
+
+    <!-- Dark Theme Colors for Messenger -->
+    <color name="dark_background">#1C2126</color>
+    <color name="dark_surface">#252B33</color>
+    <color name="dark_text_primary">#FFFFFF</color>
+    <color name="dark_text_secondary">#8B949E</color>
+    <color name="search_background">#2D3139</color>
+    <color name="green_accent">#00D9A3</color>
+    <color name="avatar_yellow">#FFB950</color>
+    <color name="avatar_green">#00D9A3</color>
+    <color name="avatar_red">#FF6B6B</color>
 </resources>

@@ -1,16 +1,15 @@
 package com.example.sababukia_tbc.di
 
-import com.example.sababukia_tbc.data.local.ILocalDataSource
-import com.example.sababukia_tbc.data.local.datasource.LocalDataSourceImpl
-import com.example.sababukia_tbc.data.remote.AuthRemoteDataSourceImpl
-import com.example.sababukia_tbc.data.remote.IAuthRemoteDataSource
-import com.example.sababukia_tbc.data.repository.AuthRepositoryImpl
-import com.example.sababukia_tbc.domain.repository.IAuthRepository
+import com.example.sababukia_tbc.data.remote.datasource.IMessengerRemoteDataSource
+import com.example.sababukia_tbc.data.remote.datasource.MessengerRemoteDataSourceImpl
+import com.example.sababukia_tbc.data.repository.MessengerRepositoryImpl
+import com.example.sababukia_tbc.domain.repository.IMessengerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 @Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,19 +17,13 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
-    ): IAuthRepository
+    abstract fun bindMessengerRepository(
+        messengerRepositoryImpl: MessengerRepositoryImpl
+    ): IMessengerRepository
 
     @Binds
     @Singleton
-    abstract fun bindAuthRemoteDataSource(
-        authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
-    ): IAuthRemoteDataSource
-
-    @Binds
-    @Singleton
-    abstract fun bindLocalDataSource(
-        localDataSourceImpl: LocalDataSourceImpl
-    ): ILocalDataSource
+    abstract fun bindMessengerRemoteDataSource(
+        messengerRemoteDataSourceImpl: MessengerRemoteDataSourceImpl
+    ): IMessengerRemoteDataSource
 }

@@ -1,75 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AuthApp</string>
-
-    <!-- Form Fields -->
-    <string name="username">Username</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="register">Register</string>
-
-    <!-- Buttons -->
-    <string name="sign_in">Login</string>
-    <string name="sign_up">Sign Up</string>
-
-    <!-- Messages -->
-    <string name="login_successful">Login successful!</string>
-    <string name="registration_successful">Registration successful!</string>
-    <string name="success">Success</string>
-    <string name="authentication_successful">Authentication Successful!</string>
-    <string name="you_have_successfully_authenticated">You have successfully authenticated with the app</string>
+    <string name="app_name">Messenger</string>
 
     <!-- Content Descriptions -->
-    <string name="app_logo">App Logo</string>
-
-    <!-- Generic -->
-    <string name="loading">Loading…</string>
-    <string name="cool_application">Cool application</string>
-    <string name="continue_text">Continue</string>
-    <string name="welcome_title">Welcome</string>
-
-    <!-- Error Messages -->
-    <string name="error_username_required">Username is required</string>
-    <string name="error_username_min_length">Username must be at least 3 characters long</string>
-    <string name="error_username_max_length">Username must be less than 20 characters</string>
-    <string name="error_username_invalid_format">Username can only contain letters, numbers, underscores, and hyphens</string>
-    <string name="error_empty_email">Email cannot be empty</string>
-    <string name="error_empty_password">Password cannot be empty</string>
-    <string name="error_invalid_email">Please enter a valid email address</string>
-    <string name="error_invalid_email_for_registration">Registration is only allowed with %s</string>
-    <string name="error_password_min_length">Password must be at least %d characters</string>
-    <string name="error_empty_response">Empty response from server</string>
-    <string name="error_login_failed">Login failed: %s</string>
-    <string name="error_registration_failed">Registration failed: %s</string>
-    <string name="error_navigation">Navigation error: %s</string>
-    <string name="error_network">Network error: %s</string>
-    <string name="error_loading_failed">Error loading</string>
-    <string name="error_no_internet">No internet connection</string>
-    <string name="error_request_timeout">Request timeout</string>
-    <string name="error_network_io">Network I/O error</string>
-    <string name="error_invalid_response_format">Invalid response format</string>
-    <string name="error_unknown">Unknown error occurred</string>
-    <string name="error_access_forbidden">Access forbidden: %s</string>
-    <string name="error_resource_not_found">Resource not found</string>
-    <string name="error_incorrect_password">error_incorrect_password</string>
-    <string name="api_error_format">api_error_format</string>
-
-    <!-- API Messages -->
-    <string name="http_error_format" formatted="false">HTTP %d: %s</string>
-
-    <!-- Home Screen -->
-    <string name="account_details">Account Details</string>
-    <string name="welcome_user">Welcome, %s!</string>
-    <string name="email_format">Email: %s</string>
-    <string name="user_id_format">User ID: %s</string>
-    <string name="logout">Logout</string>
-    <string name="logged_in_message">You are successfully logged in!\nYour session will persist until you logout.</string>
-    <string name="profile">Profile</string>
-    <string name="login">Login</string>
-    <string name="remember_me">Remember Me</string>
-    <string name="profile_icon">Profile Icon</string>
-    <string name="email_example_com">email@example.com</string>
-    <string name="back">Back</string>
-    <string name="repeat_password">Repeat Password</string>
     <string name="user_avatar">User Avatar</string>
+
+    <!-- Messenger -->
+    <string name="search">Search</string>
+    <string name="typing">Typing...</string>
+    <string name="message_type_icon">Message type icon</string>
+    <string name="search_button">Search button</string>
+    <string name="sent_a_voice_message">Sent a voice message</string>
+    <string name="sent_an_attachment">Sent an attachment</string>
+    <string name="messenger">Messenger</string>
+    <string name="no_chats_found">No chats found</string>
+    <string name="error_loading_chats">Error loading chats</string>
 </resources>

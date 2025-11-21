@@ -1,11 +1,7 @@
 package com.example.sababukia_tbc.di
 
 import android.util.Log
-import com.example.sababukia_tbc.data.local.ILocalDataSource
-import com.example.sababukia_tbc.data.remote.network.AuthInterceptor
-import com.example.sababukia_tbc.data.remote.network.LoginApiService
-import com.example.sababukia_tbc.data.remote.network.RegisterApiService
-import com.example.sababukia_tbc.data.remote.network.UsersApiService
+import com.example.sababukia_tbc.data.remote.network.MessengerApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -23,9 +19,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://reqres.in/"
     private const val TAG = "NetworkModule"
-    private const val API_KEY = "reqres-free-v1"
 
     @Provides
     @Singleton
@@ -41,77 +35,28 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(localDataSource: ILocalDataSource): AuthInterceptor {
-        return AuthInterceptor(localDataSource)
-    }
+    fun provideMessengerApiService(json: Json): MessengerApiService {
+        val contentType = "application/json".toMediaType()
 
-    @Provides
-    @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor { message ->
+        val loggingInterceptor = HttpLoggingInterceptor { message ->
             Log.d(TAG, message)
         }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-    }
 
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-        authInterceptor: AuthInterceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
+        val messengerOkHttpClient = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(authInterceptor)
-            .addInterceptor { chain ->
-                val originalRequest = chain.request()
-                val newRequest = originalRequest.newBuilder()
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Accept", "application/json")
-                    .addHeader("x-api-key", API_KEY)
-                    .build()
-                try {
-                    val response = chain.proceed(newRequest)
-                    Log.d(TAG, "Response Code: ${response.code}")
-                    response
-                } catch (e: Exception) {
-                    Log.e(TAG, "Network request failed", e)
-                    throw e
-                }
-            }
             .build()
-    }
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit {
-        val contentType = "application/json".toMediaType()
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
+        val messengerRetrofit = Retrofit.Builder()
+            .baseUrl("https://mocki.io/v1/")
+            .client(messengerOkHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
-    }
 
-    @Provides
-    @Singleton
-    fun provideLoginApiService(retrofit: Retrofit): LoginApiService {
-        return retrofit.create(LoginApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideRegisterApiService(retrofit: Retrofit): RegisterApiService {
-        return retrofit.create(RegisterApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUsersApiService(retrofit: Retrofit): UsersApiService {
-        return retrofit.create(UsersApiService::class.java)
+        return messengerRetrofit.create(MessengerApiService::class.java)
     }
 }
