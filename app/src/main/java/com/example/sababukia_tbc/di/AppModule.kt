@@ -1,7 +1,5 @@
 package com.example.sababukia_tbc.di
 
-import com.example.sababukia_tbc.data.remote.datasource.IMessengerRemoteDataSource
-import com.example.sababukia_tbc.data.remote.datasource.MessengerRemoteDataSourceImpl
 import com.example.sababukia_tbc.data.repository.MessengerRepositoryImpl
 import com.example.sababukia_tbc.domain.repository.IMessengerRepository
 import dagger.Binds
@@ -20,10 +18,4 @@ abstract class AppModule {
     abstract fun bindMessengerRepository(
         messengerRepositoryImpl: MessengerRepositoryImpl
     ): IMessengerRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindMessengerRemoteDataSource(
-        messengerRemoteDataSourceImpl: MessengerRemoteDataSourceImpl
-    ): IMessengerRemoteDataSource
 }

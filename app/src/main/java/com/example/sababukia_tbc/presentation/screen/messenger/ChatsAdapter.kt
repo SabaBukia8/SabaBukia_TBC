@@ -1,9 +1,9 @@
-package com.example.sababukia_tbc.presentation.adapter
+package com.example.sababukia_tbc.presentation.screen.messenger
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -37,23 +37,18 @@ class ChatsAdapter(
 
         fun bind(chatItem: ChatItem) {
             with(binding) {
-                // Set owner name
                 tvOwnerName.text = chatItem.owner
 
-                // Set last message
                 tvLastMessage.text = chatItem.lastMessage
 
-                // Set time
                 tvTime.text = chatItem.lastActive
 
-                // Handle typing indicator
                 if (chatItem.isTyping) {
                     tvTyping.visibility = View.VISIBLE
                 } else {
                     tvTyping.visibility = View.GONE
                 }
 
-                // Handle message type icon
                 when (chatItem.messageType) {
                     MessageType.VOICE -> {
                         ivMessageTypeIcon.visibility = View.VISIBLE
@@ -70,7 +65,6 @@ class ChatsAdapter(
                     }
                 }
 
-                // Handle unread messages badge
                 if (chatItem.unreadMessages > 0) {
                     tvUnreadBadge.visibility = View.VISIBLE
                     tvUnreadBadge.text = chatItem.unreadMessages.toString()
@@ -78,7 +72,6 @@ class ChatsAdapter(
                     tvUnreadBadge.visibility = View.GONE
                 }
 
-                // Load avatar
                 if (!chatItem.image.isNullOrEmpty()) {
                     Glide.with(ivAvatar.context)
                         .load(chatItem.image)
@@ -87,12 +80,10 @@ class ChatsAdapter(
                         .circleCrop()
                         .into(ivAvatar)
                 } else {
-                    // Set colored background for avatar
                     ivAvatar.setBackgroundColor(getAvatarColorForId(chatItem.id))
                     ivAvatar.setImageDrawable(null)
                 }
 
-                // Set click listener
                 root.setOnClickListener {
                     onChatClick(chatItem.id)
                 }
@@ -101,11 +92,11 @@ class ChatsAdapter(
 
         private fun getAvatarColorForId(id: Int): Int {
             val colors = listOf(
-                Color.parseColor("#FFB950"), // Yellow
-                Color.parseColor("#00D9A3"), // Green
-                Color.parseColor("#FF6B6B")  // Red
+                R.color.avatar_yellow,
+                R.color.avatar_green,
+                R.color.avatar_red
             )
-            return colors[id % colors.size]
+            return ContextCompat.getColor(binding.root.context, colors[id % colors.size])
         }
     }
 

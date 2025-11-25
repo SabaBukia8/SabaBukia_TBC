@@ -1,31 +1,29 @@
 package com.example.sababukia_tbc.data.repository
 
-import com.example.sababukia_tbc.data.remote.datasource.IMessengerRemoteDataSource
+import com.example.sababukia_tbc.data.common.HandleResponse
+import com.example.sababukia_tbc.data.remote.dto.toDomain
+import com.example.sababukia_tbc.data.remote.network.MessengerApiService
+import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.model.ChatItem
-import com.example.sababukia_tbc.domain.model.MessageType
 import com.example.sababukia_tbc.domain.repository.IMessengerRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MessengerRepositoryImpl @Inject constructor(
-    private val remoteDataSource: IMessengerRemoteDataSource
+    private val apiService: MessengerApiService
 ) : IMessengerRepository {
 
-    override suspend fun getChats(): Result<List<ChatItem>> {
-        return remoteDataSource.getChats().map { dtoList ->
-            dtoList.map { dto ->
-                ChatItem(
-                    id = dto.id,
-                    image = dto.image,
-                    owner = dto.owner,
-                    lastMessage = dto.lastMessage,
-                    lastActive = dto.lastActive,
-                    unreadMessages = dto.unreadMessages,
-                    isTyping = dto.isTyping,
-                    messageType = MessageType.fromString(dto.lastMessageType)
-                )
+    override fun getChats(): Flow<Resource<List<ChatItem>>> =
+        HandleResponse.safeApiCall {
+            apiService.getChats()
+        }.map { resource ->
+            when (resource) {
+                is Resource.Success -> Resource.Success(resource.data.toDomain())
+                is Resource.Error -> resource
+                is Resource.Loading -> resource
             }
         }
-    }
 }

@@ -2,7 +2,7 @@ package com.example.sababukia_tbc.presentation.screen.messenger
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.data.common.Resource
+import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.usecase.GetChatsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -25,7 +25,7 @@ class MessengerViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<MessengerSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    private var loadChatsJob: Job? = null
+    private var searchJob: Job? = null
 
     init {
         onEvent(MessengerEvent.LoadChats)
@@ -40,49 +40,51 @@ class MessengerViewModel @Inject constructor(
     }
 
     private fun loadChats() {
-        loadChatsJob?.cancel()
-        loadChatsJob = viewModelScope.launch {
-            _state.update { it.copy(chatsResource = Resource.Loading(isLoading = true)) }
-
-            getChatsUseCase().fold(
-                onSuccess = { chats ->
-                    _state.update {
-                        it.copy(
-                            chatsResource = Resource.Success(chats),
-                            filteredChats = chats
-                        )
+        viewModelScope.launch {
+            getChatsUseCase().collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _state.update { it.copy(chatsResource = resource) }
                     }
-                },
-                onFailure = { exception ->
-                    val errorMessage = exception.message ?: "Unknown error occurred"
-                    _state.update {
-                        it.copy(chatsResource = Resource.Error(errorMessage))
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                chatsResource = resource,
+                                filteredChats = resource.data
+                            )
+                        }
                     }
-                    _sideEffect.emit(MessengerSideEffect.ShowError(errorMessage))
+                    is Resource.Error -> {
+                        _state.update { it.copy(chatsResource = resource) }
+                        _sideEffect.emit(MessengerSideEffect.ShowError(resource.errorMessage))
+                    }
                 }
-            )
+            }
         }
     }
 
     private fun searchChats(query: String) {
-        _state.update { currentState ->
-            val allChats = when (val resource = currentState.chatsResource) {
-                is Resource.Success -> resource.data
-                else -> emptyList()
-            }
-
-            val filtered = if (query.isBlank()) {
-                allChats
-            } else {
-                allChats.filter { chat ->
-                    chat.owner.contains(query, ignoreCase = true)
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            _state.update { currentState ->
+                val allChats = when (val resource = currentState.chatsResource) {
+                    is Resource.Success -> resource.data
+                    else -> emptyList()
                 }
-            }
 
-            currentState.copy(
-                searchQuery = query,
-                filteredChats = filtered
-            )
+                val filtered = if (query.isBlank()) {
+                    allChats
+                } else {
+                    allChats.filter { chat ->
+                        chat.owner.contains(query, ignoreCase = true)
+                    }
+                }
+
+                currentState.copy(
+                    searchQuery = query,
+                    filteredChats = filtered
+                )
+            }
         }
     }
 
@@ -94,6 +96,6 @@ class MessengerViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        loadChatsJob?.cancel()
+        searchJob?.cancel()
     }
 }

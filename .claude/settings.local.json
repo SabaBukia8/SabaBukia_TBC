@@ -4,7 +4,8 @@
       "Bash(./gradlew build:*)",
       "Bash(./gradlew clean build:*)",
       "Bash(./gradlew assembleDebug:*)",
-      "Bash(./gradlew clean:*)"
+      "Bash(./gradlew clean:*)",
+      "Bash(git clone:*)"
     ],
     "deny": [],
     "ask": []
