@@ -72,4 +72,6 @@
     <string name="back">Back</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="user_avatar">User Avatar</string>
+    <string name="welcome_to_home">Welcome to Home!</string>
+    <string name="view_users">View Users</string>
 </resources>

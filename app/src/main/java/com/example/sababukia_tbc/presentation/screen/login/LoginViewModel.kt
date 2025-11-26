@@ -2,8 +2,8 @@ package com.example.sababukia_tbc.presentation.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.data.common.Resource
-import com.example.sababukia_tbc.domain.repository.IAuthRepository
+import com.example.sababukia_tbc.domain.common.Resource
+import com.example.sababukia_tbc.domain.repository.AuthRepository
 import com.example.sababukia_tbc.domain.usecase.CheckSessionUseCase
 import com.example.sababukia_tbc.domain.usecase.LoginUseCase
 import com.example.sababukia_tbc.domain.usecase.SaveRememberMeUseCase
@@ -21,7 +21,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val checkSessionUseCase: CheckSessionUseCase,
     private val saveRememberMeUseCase: SaveRememberMeUseCase,
-    private val repository: IAuthRepository
+    private val repository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -55,36 +55,27 @@ class LoginViewModel @Inject constructor(
     private fun login(email: String, password: String) {
         loginJob?.cancel()
         loginJob = viewModelScope.launch {
-            _state.value = _state.value.copy(loader = Resource.Loading(isLoading = true))
-
-            try {
-                val result = loginUseCase(email, password)
-
-                result
-                    .onSuccess { authResponse ->
-                        repository.saveAuthToken(authResponse.token)
+            loginUseCase(email, password).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(loader = resource)
+                    }
+                    is Resource.Success -> {
+                        repository.saveAuthToken(resource.data.token)
                         repository.saveEmail(email)
                         saveRememberMeUseCase(_state.value.rememberMe)
 
                         _state.value = _state.value.copy(
-                            loader = Resource.Success(data = authResponse.token)
+                            loader = Resource.Success(data = resource.data.token)
                         )
 
                         _sideEffect.emit(LoginSideEffect.NavigateToHome)
                     }
-                    .onFailure { exception ->
-                        val errorMessage = exception.message ?: "Login failed"
-                        _state.value = _state.value.copy(
-                            loader = Resource.Error(errorMessage = errorMessage)
-                        )
-                        _sideEffect.emit(LoginSideEffect.ShowError(errorMessage))
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(loader = resource)
+                        _sideEffect.emit(LoginSideEffect.ShowError(resource.errorMessage))
                     }
-            } catch (e: Exception) {
-                val errorMessage = e.message ?: "Unknown error"
-                _state.value = _state.value.copy(
-                    loader = Resource.Error(errorMessage = errorMessage)
-                )
-                _sideEffect.emit(LoginSideEffect.ShowError(errorMessage))
+                }
             }
         }
     }

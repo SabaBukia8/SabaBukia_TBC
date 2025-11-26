@@ -10,9 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.sababukia_tbc.R
-import com.example.sababukia_tbc.data.common.Resource
+import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.databinding.FragmentNewLoginBinding
 import com.example.sababukia_tbc.presentation.common.BaseFragment
+import com.example.sababukia_tbc.presentation.common.hide
+import com.example.sababukia_tbc.presentation.common.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -107,25 +109,27 @@ class NewLoginFragment : BaseFragment<FragmentNewLoginBinding>(FragmentNewLoginB
     }
 
     private fun handleLoader(resource: Resource<String>) {
-        when (resource) {
-            is Resource.Loading -> {
-                binding.progressBar.visibility = if (resource.isLoading) View.VISIBLE else View.GONE
-                binding.btnLogin.isEnabled = !resource.isLoading
-                binding.btnRegister.isEnabled = !resource.isLoading
-                binding.tvError.visibility = View.GONE
-            }
-            is Resource.Success -> {
-                binding.progressBar.visibility = View.GONE
-                binding.btnLogin.isEnabled = true
-                binding.btnRegister.isEnabled = true
-                binding.tvError.visibility = View.GONE
-            }
-            is Resource.Error -> {
-                binding.progressBar.visibility = View.GONE
-                binding.btnLogin.isEnabled = true
-                binding.btnRegister.isEnabled = true
-                binding.tvError.text = resource.errorMessage
-                binding.tvError.visibility = View.VISIBLE
+        binding.apply {
+            when (resource) {
+                is Resource.Loading -> {
+                    if (resource.isLoading) progressBar.show() else progressBar.hide()
+                    btnLogin.isEnabled = !resource.isLoading
+                    btnRegister.isEnabled = !resource.isLoading
+                    tvError.hide()
+                }
+                is Resource.Success -> {
+                    progressBar.hide()
+                    btnLogin.isEnabled = true
+                    btnRegister.isEnabled = true
+                    tvError.hide()
+                }
+                is Resource.Error -> {
+                    progressBar.hide()
+                    btnLogin.isEnabled = true
+                    btnRegister.isEnabled = true
+                    tvError.text = resource.errorMessage
+                    tvError.show()
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.example.sababukia_tbc.di
 
 import android.util.Log
-import com.example.sababukia_tbc.data.local.ILocalDataSource
+import com.example.sababukia_tbc.data.DatastoreManager
 import com.example.sababukia_tbc.data.remote.network.AuthInterceptor
 import com.example.sababukia_tbc.data.remote.network.LoginApiService
 import com.example.sababukia_tbc.data.remote.network.RegisterApiService
@@ -41,8 +41,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(localDataSource: ILocalDataSource): AuthInterceptor {
-        return AuthInterceptor(localDataSource)
+    fun provideAuthInterceptor(datastoreManager: DatastoreManager): AuthInterceptor {
+        return AuthInterceptor(datastoreManager)
     }
 
     @Provides

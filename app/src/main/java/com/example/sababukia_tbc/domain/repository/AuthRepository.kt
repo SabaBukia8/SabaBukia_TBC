@@ -1,18 +1,24 @@
 package com.example.sababukia_tbc.domain.repository
 
+import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.model.AuthResponse
 import com.example.sababukia_tbc.domain.model.LoginRequest
 import com.example.sababukia_tbc.domain.model.RegisterRequest
 import com.example.sababukia_tbc.domain.model.User
+import kotlinx.coroutines.flow.Flow
 
-interface IAuthRepository {
-    suspend fun login(request: LoginRequest): Result<AuthResponse>
-    suspend fun register(request: RegisterRequest): Result<AuthResponse>
-    suspend fun getUsers(page: Int): Result<List<User>>
+interface AuthRepository {
+    fun login(request: LoginRequest): Flow<Resource<AuthResponse>>
+    fun register(request: RegisterRequest): Flow<Resource<AuthResponse>>
+    fun getUsers(page: Int): Flow<Resource<List<User>>>
 
     suspend fun saveAuthToken(token: String)
     suspend fun getAuthToken(): String?
+    fun getAuthTokenFlow(): Flow<String?>
     suspend fun clearAuthToken()
+
+    suspend fun saveUsername(username: String)
+    suspend fun getUsername(): String?
 
     suspend fun saveEmail(email: String)
     suspend fun getEmail(): String?

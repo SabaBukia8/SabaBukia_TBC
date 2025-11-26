@@ -1,13 +1,13 @@
 package com.example.sababukia_tbc.domain.usecase
 
+import androidx.paging.PagingData
 import com.example.sababukia_tbc.domain.model.User
-import com.example.sababukia_tbc.domain.repository.IAuthRepository
+import com.example.sababukia_tbc.domain.repository.UsersRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetUsersUseCase @Inject constructor(
-    private val repository: IAuthRepository
+    private val repository: UsersRepository
 ) {
-    suspend operator fun invoke(page: Int = 1): Result<List<User>> {
-        return repository.getUsers(page)
-    }
+    operator fun invoke(): Flow<PagingData<User>> = repository.getUsers()
 }

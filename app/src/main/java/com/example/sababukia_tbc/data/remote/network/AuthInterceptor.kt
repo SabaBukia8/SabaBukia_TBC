@@ -1,13 +1,14 @@
 package com.example.sababukia_tbc.data.remote.network
 
-import com.example.sababukia_tbc.data.local.ILocalDataSource
+import com.example.sababukia_tbc.data.DatastoreManager
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    private val localDataSource: ILocalDataSource
+    private val datastoreManager: DatastoreManager
 ) : Interceptor {
 
     @Volatile
@@ -17,7 +18,7 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
 
         val token = cachedToken ?: runBlocking {
-            localDataSource.getAuthToken().also { cachedToken = it }
+            datastoreManager.authToken.first().also { cachedToken = it }
         }
 
         val newRequest = if (!token.isNullOrEmpty()) {

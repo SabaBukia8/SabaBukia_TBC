@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(./gradlew build:*)",
-      "Bash(./gradlew clean build:*)"
+      "Bash(./gradlew clean build:*)",
+      "Bash(git clone:*)",
+      "Bash(\"app/src/main/java/com/example/sababukia_tbc/domain/model/User.kt\")",
+      "Bash(./gradlew clean:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

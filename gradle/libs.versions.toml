@@ -10,6 +10,7 @@ constraintlayout = "2.2.1"
 lifecycle = "2.9.4"
 datastorePreferences = "1.1.7"
 navigationVersion = "2.9.6"
+paging = "3.3.6"
 material = "1.13.0"
 viewpager2 = "1.1.0"
 retrofit = "3.0.0"
@@ -35,6 +36,9 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationVersion" }
+
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+androidx-paging-common = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
 
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }

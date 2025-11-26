@@ -2,8 +2,8 @@ package com.example.sababukia_tbc.presentation.screen.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.data.common.Resource
-import com.example.sababukia_tbc.domain.repository.IAuthRepository
+import com.example.sababukia_tbc.domain.common.Resource
+import com.example.sababukia_tbc.domain.repository.AuthRepository
 import com.example.sababukia_tbc.domain.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    private val repository: IAuthRepository
+    private val repository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())

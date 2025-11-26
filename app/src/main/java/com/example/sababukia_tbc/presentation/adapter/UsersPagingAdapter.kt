@@ -2,15 +2,17 @@ package com.example.sababukia_tbc.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.ItemUserBinding
 import com.example.sababukia_tbc.domain.model.User
 
-class UsersAdapter : ListAdapter<User, UsersAdapter.UserViewHolder>(UserDiffCallback()) {
+class UsersPagingAdapter(
+    private val onUserClick: (Int) -> Unit
+) : PagingDataAdapter<User, UsersPagingAdapter.UserViewHolder>(UserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(
@@ -18,28 +20,33 @@ class UsersAdapter : ListAdapter<User, UsersAdapter.UserViewHolder>(UserDiffCall
             parent,
             false
         )
-        return UserViewHolder(binding)
+        return UserViewHolder(binding, onUserClick)
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        getItem(position)?.let { holder.bind(it) }
     }
 
-    class UserViewHolder(private val binding: ItemUserBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class UserViewHolder(
+        private val binding: ItemUserBinding,
+        private val onUserClick: (Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User) {
-            with(binding) {
-                tvName.text = "${user.firstName} ${user.lastName}"
-                tvEmail.text = user.email
-                tvUserId.text = "ID: ${user.id}"
+            binding.apply {
+                tvUserName.text = user.fullName
+                tvUserEmail.text = user.email
 
-                Glide.with(ivAvatar.context)
+                Glide.with(ivUserAvatar.context)
                     .load(user.avatar)
                     .placeholder(R.drawable.ic_person)
                     .error(R.drawable.ic_person)
                     .circleCrop()
-                    .into(ivAvatar)
+                    .into(ivUserAvatar)
+
+                root.setOnClickListener {
+                    onUserClick(user.id)
+                }
             }
         }
     }

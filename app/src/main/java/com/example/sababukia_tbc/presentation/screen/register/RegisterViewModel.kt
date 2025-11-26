@@ -2,7 +2,7 @@ package com.example.sababukia_tbc.presentation.screen.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.data.common.Resource
+import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -36,15 +36,14 @@ class RegisterViewModel @Inject constructor(
     private fun register(email: String, password: String) {
         registerJob?.cancel()
         registerJob = viewModelScope.launch {
-            _state.value = _state.value.copy(loader = Resource.Loading(isLoading = true))
-
-            try {
-                val result = registerUseCase(email, password)
-
-                result
-                    .onSuccess { authResponse ->
+            registerUseCase(email, password).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(loader = resource)
+                    }
+                    is Resource.Success -> {
                         _state.value = _state.value.copy(
-                            loader = Resource.Success(data = authResponse.token)
+                            loader = Resource.Success(data = resource.data.token)
                         )
 
                         _sideEffect.emit(
@@ -54,19 +53,11 @@ class RegisterViewModel @Inject constructor(
                             )
                         )
                     }
-                    .onFailure { exception ->
-                        val errorMessage = exception.message ?: "Registration failed"
-                        _state.value = _state.value.copy(
-                            loader = Resource.Error(errorMessage = errorMessage)
-                        )
-                        _sideEffect.emit(RegisterSideEffect.ShowError(errorMessage))
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(loader = resource)
+                        _sideEffect.emit(RegisterSideEffect.ShowError(resource.errorMessage))
                     }
-            } catch (e: Exception) {
-                val errorMessage = e.message ?: "Unknown error"
-                _state.value = _state.value.copy(
-                    loader = Resource.Error(errorMessage = errorMessage)
-                )
-                _sideEffect.emit(RegisterSideEffect.ShowError(errorMessage))
+                }
             }
         }
     }

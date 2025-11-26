@@ -8,9 +8,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.sababukia_tbc.R
-import com.example.sababukia_tbc.data.common.Resource
+import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.databinding.FragmentNewProfileBinding
 import com.example.sababukia_tbc.presentation.common.BaseFragment
+import com.example.sababukia_tbc.presentation.common.hide
+import com.example.sababukia_tbc.presentation.common.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -73,21 +75,23 @@ class NewProfileFragment : BaseFragment<FragmentNewProfileBinding>(FragmentNewPr
     }
 
     private fun handleLoader(resource: Resource<String>) {
-        when (resource) {
-            is Resource.Loading -> {
-                binding.progressBar.visibility = if (resource.isLoading) View.VISIBLE else View.GONE
-                binding.btnLogout.isEnabled = !resource.isLoading
-                binding.btnBack.isEnabled = !resource.isLoading
-            }
-            is Resource.Success -> {
-                binding.progressBar.visibility = View.GONE
-                binding.btnLogout.isEnabled = true
-                binding.btnBack.isEnabled = true
-            }
-            is Resource.Error -> {
-                binding.progressBar.visibility = View.GONE
-                binding.btnLogout.isEnabled = true
-                binding.btnBack.isEnabled = true
+        binding.apply {
+            when (resource) {
+                is Resource.Loading -> {
+                    if (resource.isLoading) progressBar.show() else progressBar.hide()
+                    btnLogout.isEnabled = !resource.isLoading
+                    btnBack.isEnabled = !resource.isLoading
+                }
+                is Resource.Success -> {
+                    progressBar.hide()
+                    btnLogout.isEnabled = true
+                    btnBack.isEnabled = true
+                }
+                is Resource.Error -> {
+                    progressBar.hide()
+                    btnLogout.isEnabled = true
+                    btnBack.isEnabled = true
+                }
             }
         }
     }
