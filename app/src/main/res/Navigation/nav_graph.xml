@@ -50,6 +50,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_newHomeFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -69,5 +76,11 @@
         android:name="com.example.sababukia_tbc.presentation.screen.users.UsersFragment"
         android:label="Users"
         tools:layout="@layout/fragment_users" />
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.sababukia_tbc.presentation.screen.userprofile.UserProfileFragment"
+        android:label="User Profile"
+        tools:layout="@layout/fragment_user_profile" />
 
 </navigation>

@@ -74,4 +74,11 @@
     <string name="user_avatar">User Avatar</string>
     <string name="welcome_to_home">Welcome to Home!</string>
     <string name="view_users">View Users</string>
+    <string name="add_new_profile">Add New Profile</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="saved_profiles">Saved Profiles</string>
+    <string name="read">Read</string>
+    <string name="no_profiles_saved_yet">No profiles saved yet</string>
 </resources>

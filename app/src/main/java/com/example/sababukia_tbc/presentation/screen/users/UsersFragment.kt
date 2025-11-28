@@ -8,7 +8,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.sababukia_tbc.databinding.FragmentUsersBinding
-import com.example.sababukia_tbc.presentation.adapter.UsersPagingAdapter
 import com.example.sababukia_tbc.presentation.common.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_package = "com.example.sababukia_tbc";
+option java_multiple_files = true;
+
+message UserProfile {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  int64 id = 4;
+}
+
+message UserProfiles {
+  repeated UserProfile profiles = 1;
+  int64 next_id = 2;
+}

@@ -1,4 +1,4 @@
-package com.example.sababukia_tbc.presentation.adapter
+package com.example.sababukia_tbc.presentation.screen.users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

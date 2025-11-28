@@ -7,6 +7,7 @@ import com.example.sababukia_tbc.domain.repository.AuthRepository
 import com.example.sababukia_tbc.domain.usecase.CheckSessionUseCase
 import com.example.sababukia_tbc.domain.usecase.LoginUseCase
 import com.example.sababukia_tbc.domain.usecase.SaveRememberMeUseCase
+import com.example.sababukia_tbc.presentation.common.ValidationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -53,6 +54,19 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login(email: String, password: String) {
+        // Validate inputs first
+        val emailError = ValidationUtils.getEmailErrorMessage(email)
+        val passwordError = ValidationUtils.getPasswordErrorMessage(password)
+
+        _state.value = _state.value.copy(
+            emailError = emailError,
+            passwordError = passwordError
+        )
+
+        if (emailError != null || passwordError != null) {
+            return
+        }
+
         loginJob?.cancel()
         loginJob = viewModelScope.launch {
             loginUseCase(email, password).collect { resource ->

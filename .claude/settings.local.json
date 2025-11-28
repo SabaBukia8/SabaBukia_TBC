@@ -7,7 +7,8 @@
       "Bash(\"app/src/main/java/com/example/sababukia_tbc/domain/model/User.kt\")",
       "Bash(./gradlew clean:*)",
       "Bash(./gradlew assembleDebug:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebFetch(domain:blog.stackademic.com)"
     ],
     "deny": [],
     "ask": []

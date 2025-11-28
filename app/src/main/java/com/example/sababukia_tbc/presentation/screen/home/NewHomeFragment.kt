@@ -34,6 +34,9 @@ class NewHomeFragment : BaseFragment<FragmentNewHomeBinding>(FragmentNewHomeBind
                     R.id.action_newHomeFragment_to_usersFragment
                 )
             }
+            btnUserProfile.setOnClickListener {
+                viewModel.onEvent(HomeEvent.OnUserProfileClicked)
+            }
         }
     }
 
@@ -49,6 +52,11 @@ class NewHomeFragment : BaseFragment<FragmentNewHomeBinding>(FragmentNewHomeBind
                         is HomeSideEffect.NavigateToProfile -> {
                             findNavController().navigate(
                                 R.id.action_newHomeFragment_to_newProfileFragment
+                            )
+                        }
+                        is HomeSideEffect.NavigateToUserProfile -> {
+                            findNavController().navigate(
+                                R.id.action_newHomeFragment_to_userProfileFragment
                             )
                         }
                         is HomeSideEffect.ShowError -> {

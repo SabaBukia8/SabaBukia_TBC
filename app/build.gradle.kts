@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.navigation.safeargs.kotlin)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -49,6 +50,25 @@ ksp {
     arg("correctErrorTypes", "true")
 }
 
+// Protobuf configuration
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+                create("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -65,8 +85,9 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.common)
 
-    // DataStore Preferences
-    implementation(libs.androidx.datastore.preferences)
+    // Proto DataStore
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.protobuf.kotlin.lite)
 
     // Networking
     implementation(libs.retrofit)

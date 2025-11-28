@@ -39,16 +39,7 @@ class NewRegisterFragment :
                 val password = etPassword.text.toString()
                 val repeatPassword = etRepeatPassword.text.toString()
 
-                if (password != repeatPassword) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Passwords do not match",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.onEvent(RegisterEvent.Register(email, password))
+                viewModel.onEvent(RegisterEvent.Register(email, password, repeatPassword))
             }
 
             btnBack.setOnClickListener {
@@ -66,6 +57,9 @@ class NewRegisterFragment :
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     handleLoader(state.loader)
+                    binding.tilEmail.error = state.emailError
+                    binding.tilPassword.error = state.passwordError
+                    binding.tilRepeatPassword.error = state.repeatPasswordError
                 }
             }
         }

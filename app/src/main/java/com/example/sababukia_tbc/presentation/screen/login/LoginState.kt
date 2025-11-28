@@ -4,5 +4,7 @@ import com.example.sababukia_tbc.domain.common.Resource
 
 data class LoginState(
     val loader: Resource<String> = Resource.Loading(isLoading = false),
-    val rememberMe: Boolean = false
+    val rememberMe: Boolean = false,
+    val emailError: String? = null,
+    val passwordError: String? = null
 )

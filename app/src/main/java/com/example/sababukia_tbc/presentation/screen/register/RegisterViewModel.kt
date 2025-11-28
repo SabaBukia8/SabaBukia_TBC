@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.usecase.RegisterUseCase
+import com.example.sababukia_tbc.presentation.common.ValidationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,12 +29,35 @@ class RegisterViewModel @Inject constructor(
 
     fun onEvent(event: RegisterEvent) {
         when (event) {
-            is RegisterEvent.Register -> register(email = event.email, password = event.password)
+            is RegisterEvent.Register -> register(
+                email = event.email,
+                password = event.password,
+                repeatPassword = event.repeatPassword
+            )
             is RegisterEvent.OnBackPressed -> onBackPressed()
         }
     }
 
-    private fun register(email: String, password: String) {
+    private fun register(email: String, password: String, repeatPassword: String) {
+        // Validate inputs first
+        val emailError = ValidationUtils.getEmailErrorMessage(email)
+        val passwordError = ValidationUtils.getPasswordErrorMessage(password)
+        val repeatPasswordError = when {
+            repeatPassword.isBlank() -> "Please confirm your password"
+            password != repeatPassword -> "Passwords do not match"
+            else -> null
+        }
+
+        _state.value = _state.value.copy(
+            emailError = emailError,
+            passwordError = passwordError,
+            repeatPasswordError = repeatPasswordError
+        )
+
+        if (emailError != null || passwordError != null || repeatPasswordError != null) {
+            return
+        }
+
         registerJob?.cancel()
         registerJob = viewModelScope.launch {
             registerUseCase(email, password).collect { resource ->

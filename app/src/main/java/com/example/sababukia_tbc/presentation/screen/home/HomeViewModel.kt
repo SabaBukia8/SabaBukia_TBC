@@ -22,6 +22,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.OnProfileClicked -> onProfileClicked()
+            is HomeEvent.OnUserProfileClicked -> onUserProfileClicked()
             is HomeEvent.OnRetry -> {}
         }
     }
@@ -29,6 +30,12 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun onProfileClicked() {
         viewModelScope.launch {
             _sideEffect.emit(HomeSideEffect.NavigateToProfile)
+        }
+    }
+
+    private fun onUserProfileClicked() {
+        viewModelScope.launch {
+            _sideEffect.emit(HomeSideEffect.NavigateToUserProfile)
         }
     }
 }

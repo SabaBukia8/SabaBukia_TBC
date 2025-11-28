@@ -75,6 +75,8 @@ class NewLoginFragment : BaseFragment<FragmentNewLoginBinding>(FragmentNewLoginB
                 viewModel.state.collect { state ->
                     handleLoader(state.loader)
                     binding.cbRememberMe.isChecked = state.rememberMe
+                    binding.tilEmail.error = state.emailError
+                    binding.tilPassword.error = state.passwordError
                 }
             }
         }

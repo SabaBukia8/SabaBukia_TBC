@@ -103,8 +103,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun saveUsername(username: String) {
         val email = getEmail() ?: ""
-        val password = ""
-        datastoreManager.saveRegisteredCredentials(username, email, password)
+        datastoreManager.saveRegisteredCredentials(username, email)
     }
 
     override suspend fun getUsername(): String? {
@@ -113,8 +112,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun saveEmail(email: String) {
         val username = getUsername() ?: ""
-        val password = ""
-        datastoreManager.saveRegisteredCredentials(username, email, password)
+        datastoreManager.saveRegisteredCredentials(username, email)
     }
 
     override suspend fun getEmail(): String? {
