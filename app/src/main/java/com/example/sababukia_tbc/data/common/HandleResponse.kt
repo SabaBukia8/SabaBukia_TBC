@@ -6,8 +6,11 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object HandleResponse {
+@Singleton
+class HandleResponse @Inject constructor() {
 
     fun <T> safeApiCall(call: suspend () -> Response<T>): Flow<Resource<T>> = flow {
         emit(Resource.Loading(isLoading = true))

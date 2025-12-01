@@ -2,10 +2,10 @@ package com.example.sababukia_tbc.di
 
 import android.util.Log
 import com.example.sababukia_tbc.data.DatastoreManager
-import com.example.sababukia_tbc.data.remote.network.AuthInterceptor
-import com.example.sababukia_tbc.data.remote.network.LoginApiService
-import com.example.sababukia_tbc.data.remote.network.RegisterApiService
-import com.example.sababukia_tbc.data.remote.network.UsersApiService
+import com.example.sababukia_tbc.data.model.remote.network.AuthInterceptor
+import com.example.sababukia_tbc.data.model.remote.network.LoginApiService
+import com.example.sababukia_tbc.data.model.remote.network.RegisterApiService
+import com.example.sababukia_tbc.data.model.remote.network.UsersApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides

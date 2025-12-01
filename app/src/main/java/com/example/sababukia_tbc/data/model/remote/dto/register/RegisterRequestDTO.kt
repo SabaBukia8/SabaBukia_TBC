@@ -1,4 +1,4 @@
-package com.example.sababukia_tbc.data.remote.dto
+package com.example.sababukia_tbc.data.model.remote.dto.register
 
 import kotlinx.serialization.Serializable
 

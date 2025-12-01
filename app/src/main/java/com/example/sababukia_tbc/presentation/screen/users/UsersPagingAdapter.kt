@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.ItemUserBinding
-import com.example.sababukia_tbc.domain.model.User
+import com.example.sababukia_tbc.presentation.screen.users.model.UserUiModel
 
 class UsersPagingAdapter(
     private val onUserClick: (Int) -> Unit
-) : PagingDataAdapter<User, UsersPagingAdapter.UserViewHolder>(UserDiffCallback()) {
+) : PagingDataAdapter<UserUiModel, UsersPagingAdapter.UserViewHolder>(UserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(
@@ -32,7 +32,7 @@ class UsersPagingAdapter(
         private val onUserClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: User) {
+        fun bind(user: UserUiModel) {
             binding.apply {
                 tvUserName.text = user.fullName
                 tvUserEmail.text = user.email
@@ -51,12 +51,12 @@ class UsersPagingAdapter(
         }
     }
 
-    private class UserDiffCallback : DiffUtil.ItemCallback<User>() {
-        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+    private class UserDiffCallback : DiffUtil.ItemCallback<UserUiModel>() {
+        override fun areItemsTheSame(oldItem: UserUiModel, newItem: UserUiModel): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+        override fun areContentsTheSame(oldItem: UserUiModel, newItem: UserUiModel): Boolean {
             return oldItem == newItem
         }
     }

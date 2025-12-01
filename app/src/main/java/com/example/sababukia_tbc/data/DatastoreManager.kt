@@ -1,7 +1,7 @@
 package com.example.sababukia_tbc.data
 
 import com.example.sababukia_tbc.AppPreferences
-import com.example.sababukia_tbc.data.local.datastore.ProtoDataStoreManager
+import com.example.sababukia_tbc.data.model.local.datastore.ProtoDataStoreManager
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

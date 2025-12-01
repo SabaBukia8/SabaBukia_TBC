@@ -1,4 +1,4 @@
-package com.example.sababukia_tbc.data.local.datastore
+package com.example.sababukia_tbc.data.model.local.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

@@ -1,7 +1,7 @@
-package com.example.sababukia_tbc.data.remote.network
+package com.example.sababukia_tbc.data.model.remote.network
 
-import com.example.sababukia_tbc.data.remote.dto.RegisterRequestDTO
-import com.example.sababukia_tbc.data.remote.dto.RegisterResponseDTO
+import com.example.sababukia_tbc.data.model.remote.dto.register.RegisterRequestDTO
+import com.example.sababukia_tbc.data.model.remote.dto.register.RegisterResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

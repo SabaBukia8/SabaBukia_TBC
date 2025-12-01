@@ -2,21 +2,19 @@ package com.example.sababukia_tbc.data.repository
 
 import com.example.sababukia_tbc.data.DatastoreManager
 import com.example.sababukia_tbc.data.common.HandleResponse
-import com.example.sababukia_tbc.data.remote.dto.LoginRequestDTO
-import com.example.sababukia_tbc.data.remote.dto.RegisterRequestDTO
-import com.example.sababukia_tbc.data.remote.dto.toDomain
-import com.example.sababukia_tbc.data.remote.network.LoginApiService
-import com.example.sababukia_tbc.data.remote.network.RegisterApiService
-import com.example.sababukia_tbc.data.remote.network.UsersApiService
+import com.example.sababukia_tbc.data.model.remote.dto.login.LoginRequestDTO
+import com.example.sababukia_tbc.data.model.remote.dto.register.RegisterRequestDTO
+import com.example.sababukia_tbc.data.mapper.toDomain
+import com.example.sababukia_tbc.data.model.remote.network.LoginApiService
+import com.example.sababukia_tbc.data.model.remote.network.RegisterApiService
+import com.example.sababukia_tbc.data.model.remote.network.UsersApiService
 import com.example.sababukia_tbc.domain.common.Resource
+import com.example.sababukia_tbc.domain.common.asResource
 import com.example.sababukia_tbc.domain.model.AuthResponse
-import com.example.sababukia_tbc.domain.model.LoginRequest
-import com.example.sababukia_tbc.domain.model.RegisterRequest
 import com.example.sababukia_tbc.domain.model.User
 import com.example.sababukia_tbc.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,64 +23,36 @@ class AuthRepositoryImpl @Inject constructor(
     private val loginApiService: LoginApiService,
     private val registerApiService: RegisterApiService,
     private val usersApiService: UsersApiService,
-    private val datastoreManager: DatastoreManager
+    private val datastoreManager: DatastoreManager,
+    private val handleResponse: HandleResponse
 ) : AuthRepository {
 
-    override fun login(request: LoginRequest): Flow<Resource<AuthResponse>> {
+    override fun login(email: String, password: String): Flow<Resource<AuthResponse>> {
         val loginRequestDTO = LoginRequestDTO(
-            email = request.email,
-            password = request.password
+            email = email,
+            password = password
         )
 
-        return HandleResponse.safeApiCall {
+        return handleResponse.safeApiCall {
             loginApiService.login(loginRequestDTO)
-        }.map { resource ->
-            when (resource) {
-                is Resource.Success -> Resource.Success(resource.data.toDomain())
-                is Resource.Error -> Resource.Error(resource.errorMessage)
-                is Resource.Loading -> Resource.Loading(resource.isLoading)
-            }
-        }
+        }.asResource { it.toDomain() }
     }
 
-    override fun register(request: RegisterRequest): Flow<Resource<AuthResponse>> {
+    override fun register(email: String, password: String): Flow<Resource<AuthResponse>> {
         val registerRequestDTO = RegisterRequestDTO(
-            email = request.email,
-            password = request.password
+            email = email,
+            password = password
         )
 
-        return HandleResponse.safeApiCall {
+        return handleResponse.safeApiCall {
             registerApiService.register(registerRequestDTO)
-        }.map { resource ->
-            when (resource) {
-                is Resource.Success -> Resource.Success(resource.data.toDomain())
-                is Resource.Error -> Resource.Error(resource.errorMessage)
-                is Resource.Loading -> Resource.Loading(resource.isLoading)
-            }
-        }
+        }.asResource { it.toDomain() }
     }
 
     override fun getUsers(page: Int): Flow<Resource<List<User>>> {
-        return HandleResponse.safeApiCall {
+        return handleResponse.safeApiCall {
             usersApiService.getUsers(page)
-        }.map { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    val users = resource.data.data.map { userDTO ->
-                        User(
-                            id = userDTO.id,
-                            email = userDTO.email,
-                            firstName = userDTO.firstName,
-                            lastName = userDTO.lastName,
-                            avatar = userDTO.avatar
-                        )
-                    }
-                    Resource.Success(users)
-                }
-                is Resource.Error -> Resource.Error(resource.errorMessage)
-                is Resource.Loading -> Resource.Loading(resource.isLoading)
-            }
-        }
+        }.asResource { response -> response.data.toDomain() }
     }
 
     override suspend fun saveAuthToken(token: String) {
@@ -124,7 +94,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getRememberMe(): Boolean {
-        return datastoreManager.rememberMe.first() ?: false
+        return datastoreManager.rememberMe.first()
     }
 
     override suspend fun clearAll() {

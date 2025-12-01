@@ -8,7 +8,8 @@
       "Bash(./gradlew clean:*)",
       "Bash(./gradlew assembleDebug:*)",
       "Bash(find:*)",
-      "WebFetch(domain:blog.stackademic.com)"
+      "WebFetch(domain:blog.stackademic.com)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

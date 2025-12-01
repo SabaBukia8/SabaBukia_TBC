@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sababukia_tbc.UserProfile
 import com.example.sababukia_tbc.UserProfiles
-import com.example.sababukia_tbc.data.local.datastore.ProtoDataStoreManager
+import com.example.sababukia_tbc.data.model.local.datastore.ProtoDataStoreManager
 import com.example.sababukia_tbc.di.UserProfileDataStore
 import com.example.sababukia_tbc.presentation.common.ValidationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel

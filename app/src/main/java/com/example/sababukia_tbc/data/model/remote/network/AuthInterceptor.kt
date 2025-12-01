@@ -1,4 +1,4 @@
-package com.example.sababukia_tbc.data.remote.network
+package com.example.sababukia_tbc.data.model.remote.network
 
 import com.example.sababukia_tbc.data.DatastoreManager
 import kotlinx.coroutines.flow.first

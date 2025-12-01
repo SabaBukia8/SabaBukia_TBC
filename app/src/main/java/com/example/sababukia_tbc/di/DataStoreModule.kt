@@ -4,9 +4,9 @@ import android.content.Context
 import com.example.sababukia_tbc.AppPreferences
 import com.example.sababukia_tbc.UserProfiles
 import com.example.sababukia_tbc.data.DatastoreManager
-import com.example.sababukia_tbc.data.local.datastore.AppPreferencesSerializer
-import com.example.sababukia_tbc.data.local.datastore.ProtoDataStoreManager
-import com.example.sababukia_tbc.data.local.datastore.UserProfileSerializer
+import com.example.sababukia_tbc.data.model.local.datastore.AppPreferencesSerializer
+import com.example.sababukia_tbc.data.model.local.datastore.ProtoDataStoreManager
+import com.example.sababukia_tbc.data.model.local.datastore.UserProfileSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

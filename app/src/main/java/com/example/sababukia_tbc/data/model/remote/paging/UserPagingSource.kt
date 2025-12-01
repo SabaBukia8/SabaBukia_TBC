@@ -1,9 +1,9 @@
-package com.example.sababukia_tbc.data.remote.paging
+package com.example.sababukia_tbc.data.model.remote.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.sababukia_tbc.data.remote.dto.toDomain
-import com.example.sababukia_tbc.data.remote.network.UsersApiService
+import com.example.sababukia_tbc.data.mapper.toDomain
+import com.example.sababukia_tbc.data.model.remote.network.UsersApiService
 import com.example.sababukia_tbc.domain.model.User
 
 class UserPagingSource(
