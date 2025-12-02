@@ -9,7 +9,14 @@
       "Bash(./gradlew assembleDebug:*)",
       "Bash(find:*)",
       "WebFetch(domain:blog.stackademic.com)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "WebFetch(domain:johncodeos.com)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\login\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\register\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\profile\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\home\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\users\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\userprofile\" -Recurse -Force)"
     ],
     "deny": [],
     "ask": []

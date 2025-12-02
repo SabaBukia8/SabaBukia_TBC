@@ -107,6 +107,9 @@ dependencies {
     implementation(libs.glide)
     ksp(libs.glide.compiler)
 
+    // Biometric authentication
+    implementation(libs.androidx.biometric)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
