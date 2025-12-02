@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.usecase.RegisterUseCase
-import com.example.sababukia_tbc.presentation.common.ValidationUtils
+import com.example.sababukia_tbc.domain.usecase.ValidateEmailUseCase
+import com.example.sababukia_tbc.domain.usecase.ValidatePasswordUseCase
+import com.example.sababukia_tbc.domain.validator.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterState())
@@ -39,25 +43,39 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun register(email: String, password: String, repeatPassword: String) {
-        // Validate inputs first
-        val emailError = ValidationUtils.getEmailErrorMessage(email)
-        val passwordError = ValidationUtils.getPasswordErrorMessage(password)
+        // Validate inputs using dedicated use cases
+        val emailValidation = validateEmailUseCase(email)
+        val passwordValidation = validatePasswordUseCase(password)
+
+        if (emailValidation is ValidationResult.Invalid) {
+            viewModelScope.launch {
+                _sideEffect.emit(RegisterSideEffect.ShowError(emailValidation.errorMessage))
+            }
+            return
+        }
+
+        if (passwordValidation is ValidationResult.Invalid) {
+            viewModelScope.launch {
+                _sideEffect.emit(RegisterSideEffect.ShowError(passwordValidation.errorMessage))
+            }
+            return
+        }
+
+        // Validate repeat password (UI-specific concern)
         val repeatPasswordError = when {
             repeatPassword.isBlank() -> "Please confirm your password"
             password != repeatPassword -> "Passwords do not match"
             else -> null
         }
 
-        _state.value = _state.value.copy(
-            emailError = emailError,
-            passwordError = passwordError,
-            repeatPasswordError = repeatPasswordError
-        )
-
-        if (emailError != null || passwordError != null || repeatPasswordError != null) {
+        if (repeatPasswordError != null) {
+            viewModelScope.launch {
+                _sideEffect.emit(RegisterSideEffect.ShowError(repeatPasswordError))
+            }
             return
         }
 
+        // All validations passed, proceed with registration
         registerJob?.cancel()
         registerJob = viewModelScope.launch {
             registerUseCase(email, password).collect { resource ->

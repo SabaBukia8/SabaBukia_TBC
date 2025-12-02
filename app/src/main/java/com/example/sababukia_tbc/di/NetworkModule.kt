@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
+//BaseUrl gradleshi gavitanot
     private const val BASE_URL = "https://reqres.in/"
     private const val TAG = "NetworkModule"
     private const val API_KEY = "reqres-free-v1"

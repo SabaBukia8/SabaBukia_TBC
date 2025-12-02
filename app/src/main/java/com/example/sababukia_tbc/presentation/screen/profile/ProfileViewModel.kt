@@ -3,7 +3,7 @@ package com.example.sababukia_tbc.presentation.screen.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sababukia_tbc.domain.common.Resource
-import com.example.sababukia_tbc.domain.repository.AuthRepository
+import com.example.sababukia_tbc.domain.repository.UserPreferencesRepository
 import com.example.sababukia_tbc.domain.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    private val repository: AuthRepository
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -41,7 +41,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun loadUserEmail() {
         viewModelScope.launch {
-            val email = repository.getEmail() ?: "No email"
+            val email = userPreferencesRepository.getEmail() ?: "No email"
             _state.value = _state.value.copy(userEmail = email)
         }
     }

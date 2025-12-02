@@ -2,12 +2,12 @@ package com.example.sababukia_tbc.domain.usecase
 
 import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.model.AuthResponse
-import com.example.sababukia_tbc.domain.repository.AuthRepository
+import com.example.sababukia_tbc.domain.repository.RegisterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: RegisterRepository
 ) {
     operator fun invoke(email: String, password: String): Flow<Resource<AuthResponse>> {
         return repository.register(email, password)

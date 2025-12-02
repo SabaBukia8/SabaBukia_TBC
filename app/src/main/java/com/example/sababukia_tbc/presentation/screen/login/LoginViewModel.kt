@@ -3,11 +3,13 @@ package com.example.sababukia_tbc.presentation.screen.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sababukia_tbc.domain.common.Resource
-import com.example.sababukia_tbc.domain.repository.AuthRepository
+import com.example.sababukia_tbc.domain.repository.UserPreferencesRepository
 import com.example.sababukia_tbc.domain.usecase.CheckSessionUseCase
 import com.example.sababukia_tbc.domain.usecase.LoginUseCase
 import com.example.sababukia_tbc.domain.usecase.SaveRememberMeUseCase
-import com.example.sababukia_tbc.presentation.common.ValidationUtils
+import com.example.sababukia_tbc.domain.usecase.ValidateEmailUseCase
+import com.example.sababukia_tbc.domain.usecase.ValidatePasswordUseCase
+import com.example.sababukia_tbc.domain.validator.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,9 +22,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val checkSessionUseCase: CheckSessionUseCase,
     private val saveRememberMeUseCase: SaveRememberMeUseCase,
-    private val repository: AuthRepository
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -54,19 +58,25 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login(email: String, password: String) {
-        // Validate inputs first
-        val emailError = ValidationUtils.getEmailErrorMessage(email)
-        val passwordError = ValidationUtils.getPasswordErrorMessage(password)
+        // Validate inputs using dedicated use cases
+        val emailValidation = validateEmailUseCase(email)
+        val passwordValidation = validatePasswordUseCase(password)
 
-        _state.value = _state.value.copy(
-            emailError = emailError,
-            passwordError = passwordError
-        )
-
-        if (emailError != null || passwordError != null) {
+        if (emailValidation is ValidationResult.Invalid) {
+            viewModelScope.launch {
+                _sideEffect.emit(LoginSideEffect.ShowError(emailValidation.errorMessage))
+            }
             return
         }
 
+        if (passwordValidation is ValidationResult.Invalid) {
+            viewModelScope.launch {
+                _sideEffect.emit(LoginSideEffect.ShowError(passwordValidation.errorMessage))
+            }
+            return
+        }
+
+        // All validations passed, proceed with login
         loginJob?.cancel()
         loginJob = viewModelScope.launch {
             loginUseCase(email, password).collect { resource ->
@@ -75,8 +85,8 @@ class LoginViewModel @Inject constructor(
                         _state.value = _state.value.copy(loader = resource)
                     }
                     is Resource.Success -> {
-                        repository.saveAuthToken(resource.data.token)
-                        repository.saveEmail(email)
+                        userPreferencesRepository.saveAuthToken(resource.data.token)
+                        userPreferencesRepository.saveEmail(email)
                         saveRememberMeUseCase(_state.value.rememberMe)
 
                         _state.value = _state.value.copy(
