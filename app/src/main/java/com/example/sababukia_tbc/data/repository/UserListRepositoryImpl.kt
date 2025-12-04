@@ -45,7 +45,7 @@ class UserListRepositoryImpl @Inject constructor(
             entities.map { it.toDomain() }
         }
 
-    override fun refreshUsers(): Flow<Resource<Unit>> = flow {
+    override fun refreshUsers() = flow {
         val isOnline = connectivityMonitor.isOnline.first()
         if (!isOnline) {
             emit(Resource.Error("No internet connection"))
@@ -57,7 +57,7 @@ class UserListRepositoryImpl @Inject constructor(
                 is Resource.Success -> {
                     val entities = resource.data.map { it.toEntity() }
                     userDao.insertUsers(entities)
-                    emit(Resource.Success(Unit))
+                    emit(Resource.Success(resource.data))
                 }
                 is Resource.Error -> emit(resource)
                 is Resource.Loading -> emit(resource)

@@ -1,6 +1,6 @@
 package com.example.sababukia_tbc.data.remote.api
 
-import com.example.sababukia_tbc.data.remote.dto.UserDto
+import com.example.sababukia_tbc.data.model.remote.UserDto
 import retrofit2.Response
 import retrofit2.http.GET
 

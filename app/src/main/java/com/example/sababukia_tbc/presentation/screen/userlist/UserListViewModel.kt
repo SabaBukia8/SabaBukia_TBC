@@ -7,10 +7,12 @@ import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.usecase.GetUserListUseCase
 import com.example.sababukia_tbc.domain.usecase.RefreshUserListUseCase
 import com.example.sababukia_tbc.presentation.common.BaseViewModel
+import com.example.sababukia_tbc.presentation.mapper.toUi
 import com.example.sababukia_tbc.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +33,7 @@ class UserListViewModel @Inject constructor(
     private fun observeUsers() {
         viewModelScope.launch {
             getUserListUseCase()
+                .map { domainUsers -> domainUsers.map { it.toUi() } }
                 .catch { exception ->
                     val errorMessage = exception.message?.let {
                         UiText.DynamicString(it)
@@ -47,7 +50,7 @@ class UserListViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 connectivityMonitor.isOnline,
-                getUserListUseCase()
+                getUserListUseCase().map { domainUsers -> domainUsers.map { it.toUi() } }
             ) { isOnline, users ->
                 Pair(isOnline, users)
             }.collect { (isOnline, users) ->
@@ -74,10 +77,7 @@ class UserListViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoadingFromServer = resource.isLoading) }
                     }
-                    is Resource.Success -> {
-                        // Data is already in DB, will be reflected via Flow
-                        // Loading will be set to false by Loading(false) emission
-                    }
+                    is Resource.Success -> {}
                     is Resource.Error -> {
                         emitSideEffect(
                             UserListSideEffect.ShowError(

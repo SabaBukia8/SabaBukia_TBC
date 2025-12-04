@@ -1,4 +1,4 @@
-package com.example.sababukia_tbc.data.local.entity
+package com.example.sababukia_tbc.data.model.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
