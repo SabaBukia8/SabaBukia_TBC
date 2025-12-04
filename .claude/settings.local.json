@@ -9,7 +9,13 @@
       "Bash(./gradlew assembleDebug:*)",
       "Bash(find:*)",
       "WebFetch(domain:blog.stackademic.com)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(git checkout:*)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\data\\remote\\util\\NetworkConstants.kt\" -Force)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch",
+      "WebFetch(domain:medium.com)"
     ],
     "deny": [],
     "ask": []

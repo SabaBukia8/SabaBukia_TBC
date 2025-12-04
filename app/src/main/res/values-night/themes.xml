@@ -1,7 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.SabaBukia_TBC" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.AuthApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.AuthApp.Starting" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background color -->
+        <item name="windowSplashScreenBackground">@color/primary_color</item>
+
+        <!-- Set the splash screen icon -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
+
+        <!-- Optional: Set icon background color for better contrast -->
+        <item name="windowSplashScreenIconBackgroundColor">@color/white</item>
+
+        <!-- Set animation duration (max 1000ms) -->
+        <item name="windowSplashScreenAnimationDuration">500</item>
+
+        <!-- Set post-splash screen theme -->
+        <item name="postSplashScreenTheme">@style/Theme.AuthApp</item>
     </style>
 </resources>
