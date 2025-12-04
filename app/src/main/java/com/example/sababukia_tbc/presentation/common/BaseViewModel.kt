@@ -2,7 +2,6 @@ package com.example.sababukia_tbc.presentation.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,9 +18,9 @@ abstract class BaseViewModel<State, Event, SideEffect>(
     private val _sideEffect = MutableSharedFlow<SideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    private val jobs = mutableListOf<Job>()
-
     abstract fun onEvent(event: Event)
+    //ar aris kargi praqtika
+    //sheidzleba ar qondes
 
     protected fun updateState(update: (State) -> State) {
         _state.value = update(_state.value)
@@ -33,26 +32,5 @@ abstract class BaseViewModel<State, Event, SideEffect>(
         }
     }
 
-    protected fun launchJob(block: suspend () -> Unit): Job {
-        val job = viewModelScope.launch {
-            block()
-        }
-        jobs.add(job)
-        return job
-    }
 
-    protected fun cancelJob(job: Job?) {
-        job?.cancel()
-        jobs.remove(job)
-    }
-
-    protected fun cancelAllJobs() {
-        jobs.forEach { it.cancel() }
-        jobs.clear()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cancelAllJobs()
-    }
 }

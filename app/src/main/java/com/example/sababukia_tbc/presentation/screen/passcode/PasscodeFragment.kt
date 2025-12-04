@@ -1,6 +1,5 @@
 package com.example.sababukia_tbc.presentation.screen.passcode
 
-import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,6 +10,7 @@ import com.example.sababukia_tbc.databinding.FragmentPasscodeBinding
 import com.example.sababukia_tbc.presentation.common.BaseFragment
 import com.example.sababukia_tbc.presentation.common.hide
 import com.example.sababukia_tbc.presentation.common.show
+import com.example.sababukia_tbc.presentation.util.BiometricHelper
 import com.example.sababukia_tbc.presentation.util.ViewUtils.hideViews
 import com.example.sababukia_tbc.presentation.util.ViewUtils.showViews
 import com.google.android.material.snackbar.Snackbar
@@ -46,14 +46,11 @@ class PasscodeFragment : BaseFragment<FragmentPasscodeBinding>(FragmentPasscodeB
             )
         }
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun bind(){
         setupListeners()
         observeState()
         observeSideEffects()
     }
-
     override fun listeners() {
         with(binding) {
             btn0.setOnClickListener { viewModel.onEvent(PasscodeEvent.OnDigitClick("0")) }
@@ -70,7 +67,7 @@ class PasscodeFragment : BaseFragment<FragmentPasscodeBinding>(FragmentPasscodeB
             btnDelete.setOnClickListener { viewModel.onEvent(PasscodeEvent.OnDeleteClick) }
 
             btnBiometric.setOnClickListener {
-                viewModel.authenticateWithBiometric(requireActivity())
+                viewModel.onEvent(PasscodeEvent.OnBiometricClick)
             }
 
             tvForgotPassword.setOnClickListener {
@@ -127,21 +124,23 @@ class PasscodeFragment : BaseFragment<FragmentPasscodeBinding>(FragmentPasscodeB
                         is PasscodeSideEffect.ShowSuccess -> Unit
 
                         is PasscodeSideEffect.ShowError -> {
-                            showSnackbar(
-                                sideEffect.message.asString(requireContext()),
-                                Snackbar.LENGTH_SHORT
-                            )
+                            showSnackbar(sideEffect.message, Snackbar.LENGTH_SHORT)
+                        }
+
+                        is PasscodeSideEffect.ShowErrorRes -> {
+                            showSnackbar(getString(sideEffect.messageResId), Snackbar.LENGTH_SHORT)
                         }
 
                         is PasscodeSideEffect.ShowSnackbar -> {
-                            showSnackbar(
-                                sideEffect.message.asString(requireContext()),
-                                Snackbar.LENGTH_LONG
-                            )
+                            showSnackbar(getString(sideEffect.messageResId), Snackbar.LENGTH_LONG)
                         }
 
                         is PasscodeSideEffect.ClearPasscode -> {
                             updatePasscodeIndicators(0)
+                        }
+
+                        is PasscodeSideEffect.TriggerBiometricAuth -> {
+                            handleBiometricAuthentication()
                         }
                     }
                 }
@@ -153,13 +152,29 @@ class PasscodeFragment : BaseFragment<FragmentPasscodeBinding>(FragmentPasscodeB
         Snackbar.make(binding.root, message, duration).show()
     }
 
+    private fun handleBiometricAuthentication() {
+        BiometricHelper.authenticate(
+            activity = requireActivity(),
+            onSuccess = {
+                viewModel.onEvent(PasscodeEvent.OnBiometricSuccess)
+            },
+            onError = { errorMessage ->
+                viewModel.onEvent(PasscodeEvent.OnBiometricError(errorMessage))
+            },
+            onFailed = {
+                viewModel.onEvent(PasscodeEvent.OnBiometricFailed)
+            }
+        )
+    }
+
     private fun updatePasscodeIndicators(filledCount: Int) {
         dotViews.forEachIndexed { index, view ->
-            if (index < filledCount) {
-                view.setBackgroundResource(R.drawable.passcode_dot_filled)
+            val drawableRes = if (index < filledCount) {
+                R.drawable.passcode_dot_filled
             } else {
-                view.setBackgroundResource(R.drawable.passcode_dot_empty)
+                R.drawable.passcode_dot_empty
             }
+            view.setBackgroundResource(drawableRes)
         }
     }
 }

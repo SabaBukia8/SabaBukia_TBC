@@ -1,13 +1,11 @@
 package com.example.sababukia_tbc.presentation.screen.passcode
 
-import androidx.fragment.app.FragmentActivity
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.domain.repository.BiometricAuthRepository
 import com.example.sababukia_tbc.domain.usecase.CheckPasscodeUseCase
 import com.example.sababukia_tbc.domain.usecase.ValidatePasscodeUseCase
 import com.example.sababukia_tbc.domain.validator.ValidationResult
 import com.example.sababukia_tbc.presentation.common.BaseViewModel
-import com.example.sababukia_tbc.presentation.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -31,6 +29,9 @@ class PasscodeViewModel @Inject constructor(
             is PasscodeEvent.OnBiometricClick -> onBiometricClick()
             is PasscodeEvent.OnForgotPasswordClick -> onForgotPasswordClick()
             is PasscodeEvent.OnTryAgainClick -> onTryAgainClick()
+            is PasscodeEvent.OnBiometricSuccess -> onBiometricSuccess()
+            is PasscodeEvent.OnBiometricError -> onBiometricError(event.message)
+            is PasscodeEvent.OnBiometricFailed -> onBiometricFailed()
         }
     }
 
@@ -56,9 +57,7 @@ class PasscodeViewModel @Inject constructor(
 
     private fun onForgotPasswordClick() {
         emitSideEffect(
-            PasscodeSideEffect.ShowSnackbar(
-                UiText.StringResource(R.string.passcode_reminder)
-            )
+            PasscodeSideEffect.ShowSnackbar(R.string.passcode_reminder)
         )
     }
 
@@ -66,31 +65,21 @@ class PasscodeViewModel @Inject constructor(
         updateState { PasscodeState() }
     }
 
-    fun onBiometricClick() {
+    private fun onBiometricClick() {
+        emitSideEffect(PasscodeSideEffect.TriggerBiometricAuth)
     }
 
-    fun authenticateWithBiometric(activity: FragmentActivity) {
-        biometricAuthRepository.authenticateWithBiometric(
-            activity = activity,
-            onSuccess = {
-                updateState { it.copy(showSuccess = true) }
-                emitSideEffect(PasscodeSideEffect.ShowSuccess)
-            },
-            onError = { errorMessage ->
-                emitSideEffect(
-                    PasscodeSideEffect.ShowError(
-                        UiText.DynamicString(errorMessage)
-                    )
-                )
-            },
-            onFailed = {
-                emitSideEffect(
-                    PasscodeSideEffect.ShowError(
-                        UiText.StringResource(R.string.biometric_error)
-                    )
-                )
-            }
-        )
+    private fun onBiometricSuccess() {
+        updateState { it.copy(showSuccess = true) }
+        emitSideEffect(PasscodeSideEffect.ShowSuccess)
+    }
+
+    private fun onBiometricError(message: String) {
+        emitSideEffect(PasscodeSideEffect.ShowError(message))
+    }
+
+    private fun onBiometricFailed() {
+        emitSideEffect(PasscodeSideEffect.ShowErrorRes(R.string.biometric_error))
     }
 
     private fun validateAndCheckPasscode(passcode: String) {
@@ -98,11 +87,7 @@ class PasscodeViewModel @Inject constructor(
 
         when (validationResult) {
             is ValidationResult.Invalid -> {
-                emitSideEffect(
-                    PasscodeSideEffect.ShowError(
-                        UiText.DynamicString(validationResult.errorMessage)
-                    )
-                )
+                emitSideEffect(PasscodeSideEffect.ShowError(validationResult.errorMessage))
                 clearPasscode()
             }
             is ValidationResult.Valid -> {
@@ -111,11 +96,7 @@ class PasscodeViewModel @Inject constructor(
                     updateState { it.copy(showSuccess = true) }
                     emitSideEffect(PasscodeSideEffect.ShowSuccess)
                 } else {
-                    emitSideEffect(
-                        PasscodeSideEffect.ShowError(
-                            UiText.StringResource(R.string.error_invalid_passcode)
-                        )
-                    )
+                    emitSideEffect(PasscodeSideEffect.ShowErrorRes(R.string.error_invalid_passcode))
                     clearPasscode()
                 }
             }

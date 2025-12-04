@@ -19,6 +19,9 @@
     <string name="biometric_not_available">Biometric authentication not available</string>
     <string name="biometric_no_hardware">No biometric hardware available</string>
     <string name="biometric_not_enrolled">No biometric credentials enrolled</string>
+    <string name="biometric_security_update_required">Biometric security update required</string>
+    <string name="biometric_unsupported">Biometric authentication is not supported</string>
+    <string name="biometric_status_unknown">Biometric status is unknown</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
