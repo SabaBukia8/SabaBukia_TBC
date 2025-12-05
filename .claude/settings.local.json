@@ -16,7 +16,13 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebSearch",
       "WebFetch(domain:medium.com)",
-      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\data\\local\\entity\" -Recurse -Force)"
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\data\\local\\entity\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\screen\\userlist\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\model\\UserListItem.kt\" -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\usecase\\GetUserListUseCase.kt\" -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\usecase\\RefreshUserListUseCase.kt\" -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\repository\\UserListRepository.kt\" -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\model\\UserListItemUi.kt\" -Force)"
     ],
     "deny": [],
     "ask": []

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AuthApp</string>
+    <string name="app_name">Workspace Statistics</string>
 
-    <!-- User List Screen -->
-    <string name="you_are_online">You are online</string>
-    <string name="you_are_offline">You are offline</string>
-    <string name="profile_image">Profile Image</string>
-    <string name="user_status_online">ONLINE</string>
-    <string name="user_status_active_minutes">ACTIVE</string>
-    <string name="user_status_active_hours">HOURS AGO</string>
-    <string name="user_status_inactive">INACTIVE</string>
-    <string name="user_status_not_activated">NOT ACTIVATED</string>
-    <string name="loading_users">Loading users from server…</string>
-    <string name="error_loading_image">Error loading image</string>
+    <!-- Statistics Screen -->
+    <string name="statistics">Statistics</string>
+    <string name="workspace_image">Workspace Image</string>
+    <string name="location_icon">Location Icon</string>
+    <string name="altitude_icon">Altitude Icon</string>
 
     <!-- Error Messages -->
     <string name="error_unknown">Unknown error occurred</string>
-    <string name="error_refresh_failed">Failed to refresh user list</string>
+    <string name="error_loading_workspaces">Failed to load workspaces</string>
+
+    <!-- Bottom Navigation -->
+    <string name="favorite">Favorite</string>
+    <string name="home">Home</string>
+    <string name="messages">Messages</string>
 </resources>

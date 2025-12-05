@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/userListFragment">
+    app:startDestination="@id/statisticsFragment">
 
     <fragment
-        android:id="@+id/userListFragment"
-        android:name="com.example.sababukia_tbc.presentation.screen.userlist.UserListFragment"
-        android:label="User List"
-        tools:layout="@layout/fragment_user_list" />
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.sababukia_tbc.presentation.screen.statistics.StatisticsFragment"
+        android:label="Statistics"
+        tools:layout="@layout/fragment_statistics" />
 
 </navigation>
