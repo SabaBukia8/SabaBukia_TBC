@@ -5,7 +5,7 @@
     </style>
 
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/bottom_nav_selected</item>
-        <item name="android:background">@drawable/circular_home_button</item>
+        <item name="itemFillColor">@color/green</item>
+        <item name="itemActiveIndicatorStyle">@color/green</item>
     </style>
 </resources>

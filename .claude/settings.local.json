@@ -22,7 +22,17 @@
       "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\usecase\\GetUserListUseCase.kt\" -Force)",
       "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\usecase\\RefreshUserListUseCase.kt\" -Force)",
       "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\domain\\repository\\UserListRepository.kt\" -Force)",
-      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\model\\UserListItemUi.kt\" -Force)"
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\model\\UserListItemUi.kt\" -Force)",
+      "Bash(.gradlew.bat assembleDebug)",
+      "Bash(gradlew.bat assembleDebug:*)",
+      "Bash(if [ -d \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\extension\" ])",
+      "Bash(then rmdir \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\\presentation\\extension\")",
+      "Bash(fi)",
+      "WebFetch(domain:www.figma.com)",
+      "Bash(cat:*)",
+      "Bash(if [ -f \"nul\" ])",
+      "Bash(then rm -f \"nul\")",
+      "Bash(.gradlew.bat build)"
     ],
     "deny": [],
     "ask": []

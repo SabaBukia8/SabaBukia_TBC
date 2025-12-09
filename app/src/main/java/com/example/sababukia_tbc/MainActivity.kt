@@ -17,5 +17,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() = with(binding) {
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_heart -> {
+                    true
+                }
+                R.id.nav_home -> {
+                    true
+                }
+                R.id.nav_message -> {
+                    true
+                }
+                R.id.nav_notifications -> {
+                    true
+                }
+                else -> false
+            }
+        }
+        bottomNavigation.selectedItemId = R.id.nav_home
     }
 }

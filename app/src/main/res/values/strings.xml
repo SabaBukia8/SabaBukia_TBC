@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Workspace Statistics</string>
+    <string name="app_name">Feed</string>
 
-    <!-- Statistics Screen -->
-    <string name="statistics">Statistics</string>
-    <string name="workspace_image">Workspace Image</string>
-    <string name="location_icon">Location Icon</string>
-    <string name="altitude_icon">Altitude Icon</string>
+    <!-- Feed Screen -->
+    <string name="story_cover_description">Story cover image</string>
+    <string name="user_avatar_description">User avatar</string>
+    <string name="post_image_description">Post image</string>
+    <string name="comments_icon_description">Comments icon</string>
+    <string name="likes_icon_description">Likes icon</string>
+    <string name="share_icon_description">Share icon</string>
+    <string name="share">Share</string>
+    <string name="write_comment">Write a comment…</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_add">Add</string>
+    <string name="nav_notifications">Notifications</string>
 
     <!-- Error Messages -->
     <string name="error_unknown">Unknown error occurred</string>
-    <string name="error_loading_workspaces">Failed to load workspaces</string>
-
-    <!-- Bottom Navigation -->
-    <string name="favorite">Favorite</string>
-    <string name="home">Home</string>
-    <string name="messages">Messages</string>
 </resources>

@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary_color">#4169E1</color>
     <color name="background_color">#FFFFFF</color>
-    <color name="text_primary">#000000</color>
     <color name="text_secondary">#757575</color>
-    <color name="darker_gray">#A9A9A9</color>
-    <color name="input_stroke_color">#E7E0EC</color>
-    <color name="error_color">#F44336</color>
-    <color name="success_color">#00C851</color>
-    <color name="purple_700">#4CAF50</color>
-    <color name="red">#F44336</color>
-    <color name="primary_purple">#6C3FE3</color>
-    <color name="light_purple">#D1B8FF</color>
-    <color name="input_background">#E8DEFF</color>
-    <color name="input_text">#9C7FDB</color>
-    <color name="input_hint">#B89EE6</color>
-    <color name="status_online">#006400</color>
-    <color name="status_active_minutes">#FF8C00</color>
-    <color name="status_active_hours">#FFA500</color>
-    <color name="status_inactive">#2F4F4F</color>
-    <color name="status_not_activated">#808080</color>
-    <color name="app_background">#1F2E35</color>
-    <color name="bottom_nav_selected">#4DB6AC</color>
+
+    <color name="green">#289528</color>
+    <color name="background_primary">#1C2127</color>
+    <color name="card_background">#2A3139</color>
+    <color name="text_secondary_feed">#8A9199</color>
 </resources>
