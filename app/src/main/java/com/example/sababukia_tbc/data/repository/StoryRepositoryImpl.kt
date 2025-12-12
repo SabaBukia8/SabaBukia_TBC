@@ -17,8 +17,7 @@ import javax.inject.Singleton
 class StoryRepositoryImpl @Inject constructor(
     private val apiService: FeedApiService,
     private val storyDao: StoryDao,
-    private val handleResponse: HandleResponse,
-    private val networkRepository: com.example.sababukia_tbc.domain.repository.NetworkRepository
+    private val handleResponse: HandleResponse
 ) : StoryRepository {
 
     override fun getStories(): Flow<Resource<List<Story>>> =
@@ -27,12 +26,6 @@ class StoryRepositoryImpl @Inject constructor(
         }
 
     override suspend fun refreshStories() {
-        // Check connectivity before making API call
-        if (!networkRepository.isConnected.value) {
-            // Skip API call if offline - just use cached data
-            return
-        }
-
         handleResponse.safeApiCall { apiService.getStories() }.collect { resource ->
             if (resource is Resource.Success) {
                 storyDao.apply {

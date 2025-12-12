@@ -17,8 +17,7 @@ import javax.inject.Singleton
 class PostRepositoryImpl @Inject constructor(
     private val apiService: FeedApiService,
     private val postDao: PostDao,
-    private val handleResponse: HandleResponse,
-    private val networkRepository: com.example.sababukia_tbc.domain.repository.NetworkRepository
+    private val handleResponse: HandleResponse
 ) : PostRepository {
 
     override fun getPosts(): Flow<Resource<List<Post>>> =
@@ -27,12 +26,6 @@ class PostRepositoryImpl @Inject constructor(
         }
 
     override suspend fun refreshPosts() {
-        // Check connectivity before making API call
-        if (!networkRepository.isConnected.value) {
-            // Skip API call if offline - just use cached data
-            return
-        }
-
         handleResponse.safeApiCall { apiService.getPosts() }.collect { resource ->
             if (resource is Resource.Success) {
                 postDao.apply {

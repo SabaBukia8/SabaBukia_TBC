@@ -21,11 +21,13 @@ class MyApplication : Application() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) {
                 // App moved to foreground - start monitoring
+                android.util.Log.d("MyApplication", "App moved to foreground, starting network monitoring")
                 networkRepository.startMonitoring()
             }
 
             override fun onStop(owner: LifecycleOwner) {
                 // App moved to background - stop monitoring
+                android.util.Log.d("MyApplication", "App moved to background, stopping network monitoring")
                 networkRepository.stopMonitoring()
             }
         })

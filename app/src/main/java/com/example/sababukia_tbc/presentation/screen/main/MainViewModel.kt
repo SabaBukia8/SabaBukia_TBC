@@ -35,14 +35,21 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             networkRepository.isConnected.collect { isConnected ->
                 val previousState = state.value.isConnected
+                android.util.Log.d("MainViewModel", "Network status change - Previous: $previousState, Current: $isConnected")
+
                 updateState { it.copy(isConnected = isConnected) }
 
                 if (previousState != isConnected) {
+                    android.util.Log.d("MainViewModel", "State changed! Emitting side effect")
                     if (isConnected) {
                         emitSideEffect(SideEffect.ShowConnectedMessage)
+                        android.util.Log.d("MainViewModel", "Emitted ShowConnectedMessage")
                     } else {
                         emitSideEffect(SideEffect.ShowDisconnectedMessage)
+                        android.util.Log.d("MainViewModel", "Emitted ShowDisconnectedMessage")
                     }
+                } else {
+                    android.util.Log.d("MainViewModel", "State unchanged, no side effect emitted")
                 }
             }
         }

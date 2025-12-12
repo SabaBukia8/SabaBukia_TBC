@@ -34,7 +34,8 @@ class NetworkRepositoryImpl @Inject constructor(
 
         override fun onLost(network: Network) {
             Log.d(TAG, "Network lost: $network")
-            val hasConnection = connectivityManager.activeNetwork != null
+            val hasConnection = checkCurrentNetworkState()
+            Log.d(TAG, "After network lost, connection status: $hasConnection")
             _isConnected.value = hasConnection
         }
 
@@ -62,6 +63,11 @@ class NetworkRepositoryImpl @Inject constructor(
     }
 
     override fun startMonitoring() {
+        // Check initial network state
+        val initialState = checkCurrentNetworkState()
+        _isConnected.value = initialState
+        Log.d(TAG, "Initial network state: $initialState")
+
         val request = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
@@ -69,6 +75,14 @@ class NetworkRepositoryImpl @Inject constructor(
 
         connectivityManager.registerNetworkCallback(request, networkCallback)
         Log.d(TAG, "Network monitoring started")
+    }
+
+    private fun checkCurrentNetworkState(): Boolean {
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     override fun stopMonitoring() {
