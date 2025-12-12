@@ -1,33 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AuthApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary colors -->
-        <item name="colorPrimary">@color/primary_color</item>
+<resources>
+    <style name="Theme.MTGCollectionManager" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@android:color/holo_blue_dark</item>
+        <item name="colorPrimaryVariant">@android:color/holo_blue_light</item>
         <item name="colorOnPrimary">@android:color/white</item>
-
-        <!-- Status bar -->
-        <item name="android:statusBarColor">@color/background_color</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
-
-    <style name="Theme.AuthApp" parent="Base.Theme.AuthApp" />
-
-    <!-- Splash Screen Theme -->
-    <style name="Theme.AuthApp.Starting" parent="Theme.SplashScreen">
-        <!-- Set the splash screen background color -->
-        <item name="windowSplashScreenBackground">@color/primary_color</item>
-
-        <!-- Set the splash screen icon -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
-
-        <!-- Optional: Set icon background color for better contrast -->
-        <item name="windowSplashScreenIconBackgroundColor">@color/white</item>
-
-        <!-- Set animation duration (max 1000ms) -->
-        <item name="windowSplashScreenAnimationDuration">500</item>
-
-        <!-- Set post-splash screen theme -->
-        <item name="postSplashScreenTheme">@style/Theme.AuthApp</item>
     </style>
 </resources>

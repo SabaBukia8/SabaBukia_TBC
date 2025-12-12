@@ -4,16 +4,17 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.navigation.safeargs.kotlin)
+    alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.example.sababukia_tbc"
+    namespace = "com.example.mtgcollectionmanager"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.sababukia_tbc"
+        applicationId = "com.example.mtgcollectionmanager"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -27,14 +28,14 @@ android {
             buildConfigField(
                 "String",
                 "BASE_URL",
-                "\"https://mocki.io/\""
+                "\"https://api.scryfall.com/\""
             )
         }
         release {
             buildConfigField(
                 "String",
                 "BASE_URL",
-                "\"https://mocki.io/\""
+                "\"https://api.scryfall.com/\""
             )
             isMinifyEnabled = false
             proguardFiles(
@@ -99,6 +100,9 @@ dependencies {
 
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
+
+    // Firebase
+    implementation(libs.firebase.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

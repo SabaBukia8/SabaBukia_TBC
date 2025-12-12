@@ -33,7 +33,15 @@
       "Bash(if [ -f \"nul\" ])",
       "Bash(then rm -f \"nul\")",
       "Bash(.gradlew.bat build)",
-      "Bash(./gradlew.bat build:*)"
+      "Bash(./gradlew.bat build:*)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\app\\src\\main\\java\\com\\example\\sababukia_tbc\" -Recurse -Force)",
+      "Bash(Remove-Item \"D:\\AndroidProjects\\SabaBukia_TBC\\NETWORK_MONITORING_IMPLEMENTATION.md\" -Force -ErrorAction SilentlyContinue)",
+      "Bash(./gradlew :app:compileDebugKotlin:*)",
+      "Bash(./gradlew:*)",
+      "Bash(./gradlew.bat assembleDebug)",
+      "Bash(./gradlew.bat clean:*)",
+      "Bash(Remove-Item -Recurse -Force .gradle -ErrorAction SilentlyContinue)",
+      "Bash(Remove-Item -Recurse -Force app/build -ErrorAction SilentlyContinue)"
     ],
     "deny": [],
     "ask": []
