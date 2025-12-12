@@ -33,7 +33,8 @@
       "Bash(if [ -f \"nul\" ])",
       "Bash(then rm -f \"nul\")",
       "Bash(.gradlew.bat build)",
-      "Bash(./gradlew.bat build:*)"
+      "Bash(./gradlew.bat build:*)",
+      "Bash(./gradlew :app:compileDebugKotlin:*)"
     ],
     "deny": [],
     "ask": []
