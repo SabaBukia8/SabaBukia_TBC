@@ -2,7 +2,6 @@ package com.example.mtgcollectionmanager.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.mtgcollectionmanager.data.local.dao.CollectionCardDao
 import com.example.mtgcollectionmanager.data.local.database.MTGDatabase
 import dagger.Module
 import dagger.Provides
@@ -23,7 +22,7 @@ object DatabaseModule {
             MTGDatabase::class.java,
             "mtg_database"
         )
-            .fallbackToDestructiveMigration() // Start fresh with new schema
+            .fallbackToDestructiveMigration(false)
             .build()
 
     @Provides

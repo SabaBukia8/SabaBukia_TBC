@@ -4,71 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:fillViewport="true">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="@dimen/screen_padding_horizontal">
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/primary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ivCardImage"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardImageContainer"
         android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:contentDescription="@string/card_details_title"
-        android:scaleType="fitCenter"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="@dimen/corner_radius_lg"
+        app:cardElevation="@dimen/elevation_md"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@android:color/darker_gray" />
+        app:strokeColor="@color/outline_variant"
+        app:strokeWidth="@dimen/card_border_width">
+
+        <ImageView
+            android:id="@+id/ivCardImage"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:contentDescription="@string/card_details_title"
+            android:scaleType="fitCenter"
+            tools:src="@android:color/darker_gray" />
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/tvCardName"
+        style="@style/MTG.Text.CardName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivCardImage"
+        app:layout_constraintTop_toBottomOf="@id/cardImageContainer"
         tools:text="Lightning Bolt" />
 
-    <TextView
-        android:id="@+id/tvManaCost"
+    <LinearLayout
+        android:id="@+id/llManaCostContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/spacing_md"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCardName"
-        tools:text="Mana Cost: {R}" />
+        app:layout_constraintTop_toBottomOf="@id/tvCardName">
+
+        <TextView
+            android:id="@+id/labelManaCost"
+            style="@style/MTG.Text.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:text="@string/mana_cost" />
+
+        <LinearLayout
+            android:id="@+id/llManaSymbols"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvType"
+        style="@style/MTG.Text.Metadata"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/spacing_sm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvManaCost"
+        app:layout_constraintTop_toBottomOf="@id/llManaCostContainer"
         tools:text="Type: Instant" />
 
     <TextView
         android:id="@+id/tvSetInfo"
+        style="@style/MTG.Text.SetInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/spacing_xs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvType"
@@ -76,71 +108,87 @@
 
     <TextView
         android:id="@+id/tvPrice"
+        style="@style/MTG.Text.Price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_marginTop="@dimen/spacing_md"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSetInfo"
-        tools:text="Price: $2.50" />
+        tools:text="$2.50" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnViewOtherPrintings"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+    <View
+        android:id="@+id/divider"
+        style="@style/MTG.Divider.Bright"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="View Other Printings"
-        app:icon="@android:drawable/ic_menu_view"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPrice" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnViewOtherPrintings"
+        style="@style/Widget.MTG.Button.Outlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:text="View Other Printings"
+        app:icon="@drawable/ic_grid_outlined"
+        app:iconGravity="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
     <TextView
         android:id="@+id/labelQuantity"
+        style="@style/MTG.Text.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/spacing_xxl"
         android:text="@string/quantity"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnViewOtherPrintings" />
 
     <Spinner
         android:id="@+id/spinnerQuantity"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="@dimen/input_height_md"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:background="@drawable/bg_spinner"
+        android:paddingHorizontal="@dimen/spacing_md"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/labelQuantity" />
 
     <TextView
         android:id="@+id/labelCondition"
+        style="@style/MTG.Text.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         android:text="@string/condition"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerQuantity" />
 
     <Spinner
         android:id="@+id/spinnerCondition"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="@dimen/input_height_md"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:background="@drawable/bg_spinner"
+        android:paddingHorizontal="@dimen/spacing_md"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/labelCondition" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilNotes"
+        style="@style/Widget.MTG.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         android:hint="@string/notes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,16 +199,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:maxLines="3" />
+            android:maxLines="3"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddToCollection"
+        style="@style/Widget.MTG.Button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="@dimen/button_height_lg"
+        android:layout_marginTop="@dimen/spacing_xxl"
+        android:layout_marginBottom="@dimen/spacing_lg"
         android:text="@string/add_to_collection"
+        app:icon="@drawable/ic_add_outlined"
+        app:iconGravity="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilNotes" />

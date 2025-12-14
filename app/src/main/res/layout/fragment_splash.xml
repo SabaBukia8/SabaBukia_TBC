@@ -3,25 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
+    android:background="@color/mtg_black">
+
+    <!-- MTG Logo -->
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_mtg_logo"
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/spacing_xxl"
+        android:indeterminateTint="@color/primary"
+        app:layout_constraintBottom_toTopOf="@id/tvLoading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
     <TextView
         android:id="@+id/tvLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/splash_loading"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_size_body_large"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/progressBar" />

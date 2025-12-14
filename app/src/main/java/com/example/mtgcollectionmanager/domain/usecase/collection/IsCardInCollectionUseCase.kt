@@ -6,6 +6,6 @@ import javax.inject.Inject
 class IsCardInCollectionUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    suspend operator fun invoke(cardId: String): Boolean =
-        repository.isCardInCollection(cardId)
+    suspend operator fun invoke(collectionId: Long, cardId: String): Boolean =
+        repository.isCardInCollection(collectionId, cardId)
 }

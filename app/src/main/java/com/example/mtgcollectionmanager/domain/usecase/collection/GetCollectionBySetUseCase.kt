@@ -9,6 +9,6 @@ import javax.inject.Inject
 class GetCollectionBySetUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    operator fun invoke(setCode: String): Flow<Resource<List<CollectionCard>>> =
-        repository.getCardsBySet(setCode)
+    operator fun invoke(collectionId: Long, setCode: String): Flow<Resource<List<CollectionCard>>> =
+        repository.getCardsBySet(collectionId, setCode)
 }

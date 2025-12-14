@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface"
+    android:paddingHorizontal="@dimen/bottom_sheet_padding"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingBottom="@dimen/bottom_sheet_padding">
+
+    <View
+        android:id="@+id/dragHandle"
+        android:layout_width="32dp"
+        android:layout_height="4dp"
+        android:background="@drawable/bg_bottom_sheet_handle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/MTG.Text.SectionHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:text="@string/edit_card_title"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dragHandle" />
+
+    <ImageView
+        android:id="@+id/ivCardImage"
+        android:layout_width="120dp"
+        android:layout_height="168dp"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:contentDescription="@string/card_details_title"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        tools:src="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/tvCardName"
+        style="@style/MTG.Text.CardNameSmall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_md"
+        android:gravity="center"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivCardImage"
+        tools:text="Lightning Bolt" />
+
+    <TextView
+        android:id="@+id/tvSetName"
+        style="@style/MTG.Text.SetInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xs"
+        android:gravity="center"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCardName"
+        tools:text="Limited Edition Alpha" />
+
+    <TextView
+        android:id="@+id/tvQuantityLabel"
+        style="@style/MTG.Text.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xxl"
+        android:text="@string/quantity"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSetName" />
+
+    <Spinner
+        android:id="@+id/spinnerQuantity"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/input_height_md"
+        android:layout_marginStart="@dimen/spacing_lg"
+        android:background="@drawable/bg_spinner"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvQuantityLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvQuantityLabel" />
+
+    <TextView
+        android:id="@+id/tvConditionLabel"
+        style="@style/MTG.Text.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:text="@string/condition"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinnerQuantity" />
+
+    <Spinner
+        android:id="@+id/spinnerCondition"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/input_height_md"
+        android:layout_marginStart="@dimen/spacing_lg"
+        android:background="@drawable/bg_spinner"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvConditionLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvConditionLabel" />
+
+    <TextView
+        android:id="@+id/tvCategoryLabel"
+        style="@style/MTG.Text.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:text="@string/move_to_category"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinnerCondition" />
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/input_height_md"
+        android:layout_marginStart="@dimen/spacing_lg"
+        android:background="@drawable/bg_spinner"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvCategoryLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvCategoryLabel" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilNotes"
+        style="@style/Widget.MTG.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:hint="@string/notes"
+        app:counterEnabled="true"
+        app:counterMaxLength="200"
+        app:counterTextColor="@color/text_tertiary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinnerCategory">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLength="200"
+            android:minLines="3"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            tools:text="From collection since 2020" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.MTG.Button.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xxl"
+        android:text="@string/cancel"
+        app:layout_constraintEnd_toStartOf="@id/btnSave"
+        app:layout_constraintTop_toBottomOf="@id/tilNotes" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        style="@style/Widget.MTG.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="@id/btnCancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnCancel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

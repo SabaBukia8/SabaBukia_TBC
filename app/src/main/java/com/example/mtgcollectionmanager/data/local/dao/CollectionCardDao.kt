@@ -65,4 +65,10 @@ interface CollectionCardDao {
 
     @Query("DELETE FROM collection_cards WHERE userId = :userId")
     suspend fun deleteAllCards(userId: String)
+
+    @Query("SELECT SUM(quantity) FROM collection_cards WHERE userId = :userId")
+    suspend fun getTotalCardCountForUser(userId: String): Int?
+
+    @Query("DELETE FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId")
+    suspend fun deleteAllCardsForCollection(collectionId: Long, userId: String)
 }

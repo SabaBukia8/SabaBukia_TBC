@@ -3,79 +3,137 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/background"
+    android:padding="@dimen/screen_padding_horizontal">
+
+    <!-- MTG Icon -->
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="@dimen/spacing_xxxl"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_mtg_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:fontFamily="sans-serif-black"
+        android:letterSpacing="0.02"
         android:text="@string/register_title"
-        android:textSize="32sp"
+        android:textColor="@color/text_primary"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ivIcon" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilNickname"
+        style="@style/Widget.MTG.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xxl"
+        android:hint="@string/nickname_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:startIconDrawable="@drawable/ic_person"
+        app:startIconTint="@color/text_tertiary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilEmail"
+        style="@style/Widget.MTG.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         android:hint="@string/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        app:layout_constraintTop_toBottomOf="@id/tilNickname"
+        app:startIconDrawable="@drawable/ic_email_outlined"
+        app:startIconTint="@color/text_tertiary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
+        style="@style/Widget.MTG.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         android:hint="@string/password"
         app:endIconMode="password_toggle"
+        app:endIconTint="@color/text_tertiary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tilEmail">
+        app:layout_constraintTop_toBottomOf="@id/tilEmail"
+        app:startIconDrawable="@drawable/ic_lock_outlined"
+        app:startIconTint="@color/text_tertiary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilConfirmPassword"
+        style="@style/Widget.MTG.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         android:hint="@string/confirm_password"
         app:endIconMode="password_toggle"
+        app:endIconTint="@color/text_tertiary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tilPassword">
+        app:layout_constraintTop_toBottomOf="@id/tilPassword"
+        app:startIconDrawable="@drawable/ic_lock_outlined"
+        app:startIconTint="@color/text_tertiary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegister"
+        style="@style/Widget.MTG.Button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_height="@dimen/button_height_lg"
+        android:layout_marginTop="@dimen/spacing_xxl"
         android:text="@string/register_button"
+        app:icon="@drawable/ic_arrow_forward_outlined"
+        app:iconGravity="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilConfirmPassword" />
@@ -84,19 +142,22 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/on_primary"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/btnRegister"
         app:layout_constraintEnd_toEndOf="@id/btnRegister"
         app:layout_constraintStart_toStartOf="@id/btnRegister"
-        app:layout_constraintTop_toTopOf="@id/btnRegister"
-        app:layout_constraintBottom_toBottomOf="@id/btnRegister" />
+        app:layout_constraintTop_toTopOf="@id/btnRegister" />
 
     <TextView
         android:id="@+id/tvLoginLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/have_account"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="@color/mtg_gold_light"
+        android:textSize="@dimen/text_size_body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnRegister" />

@@ -62,8 +62,8 @@ fun CollectionCardEntity.toDomain(): CollectionCard = CollectionCard(
         rarity = rarity,
         setCode = setCode,
         setName = setName,
-        collectorNumber = "",  // Not stored in entity currently
-        releasedAt = "",  // Not stored in entity currently
+        collectorNumber = "",
+        releasedAt = "",
         colors = Json.decodeFromString(colorsJson),
         price = price
     ),

@@ -1,5 +1,6 @@
 package com.example.mtgcollectionmanager.presentation.screen.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.domain.common.Resource
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CardDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getCardDetailsUseCase: GetCardDetailsUseCase,
     private val addCardToCollectionUseCase: AddCardToCollectionUseCase,
     private val isCardInCollectionUseCase: IsCardInCollectionUseCase
@@ -22,6 +24,7 @@ class CardDetailsViewModel @Inject constructor(
     CardDetailsContract.State()
 ) {
 
+    private val collectionId: Long = savedStateHandle.get<Long>("collectionId") ?: 1L
     private var domainCard: com.example.mtgcollectionmanager.domain.model.Card? = null
 
     override fun onEvent(event: CardDetailsContract.Event) {
@@ -50,7 +53,7 @@ class CardDetailsViewModel @Inject constructor(
                     is Resource.Success -> {
                         resource.data?.let { card ->
                             domainCard = card
-                            val isInCollection = isCardInCollectionUseCase(cardId)
+                            val isInCollection = isCardInCollectionUseCase(collectionId, cardId)
                             updateState {
                                 it.copy(
                                     card = card.toUi(),
@@ -74,6 +77,7 @@ class CardDetailsViewModel @Inject constructor(
             with(state.value) {
                 domainCard?.let { card ->
                     addCardToCollectionUseCase(
+                        collectionId = collectionId,
                         card = card,
                         quantity = quantity,
                         condition = selectedCondition,

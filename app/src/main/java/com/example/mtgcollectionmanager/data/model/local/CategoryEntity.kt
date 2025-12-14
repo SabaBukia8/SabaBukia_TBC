@@ -21,6 +21,6 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val collectionId: Long,
     val name: String,
-    val color: String, // Hex color code for visual distinction
+    val color: String,
     val createdDate: Long
 )

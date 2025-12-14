@@ -7,6 +7,8 @@ import com.example.mtgcollectionmanager.domain.usecase.collection.CreateCollecti
 import com.example.mtgcollectionmanager.domain.usecase.collection.DeleteCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.EnsureDefaultCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.GetUserCollectionsUseCase
+import com.example.mtgcollectionmanager.domain.usecase.collection.UpdateCollectionUseCase
+import com.example.mtgcollectionmanager.presentation.mapper.toDomain
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class CollectionsListViewModel @Inject constructor(
     private val getUserCollectionsUseCase: GetUserCollectionsUseCase,
     private val createCollectionUseCase: CreateCollectionUseCase,
+    private val updateCollectionUseCase: UpdateCollectionUseCase,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
     private val ensureDefaultCollectionUseCase: EnsureDefaultCollectionUseCase
 ) : ViewModel() {
@@ -79,6 +82,9 @@ class CollectionsListViewModel @Inject constructor(
                     _sideEffect.send(CollectionsListContract.SideEffect.ShowEditCollectionDialog(event.collectionId))
                 }
             }
+            is CollectionsListContract.Event.UpdateCollection -> {
+                updateCollection(event.collectionId, event.name, event.description)
+            }
         }
     }
 
@@ -115,6 +121,34 @@ class CollectionsListViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         _sideEffect.send(CollectionsListContract.SideEffect.ShowSuccess("Collection created"))
+                        loadCollections() // Reload collections
+                    }
+                    is Resource.Error -> {
+                        _sideEffect.send(CollectionsListContract.SideEffect.ShowError(resource.errorMessage))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateCollection(collectionId: Long, name: String, description: String) {
+        viewModelScope.launch {
+            // Get the current collection from state to preserve other fields
+            val collection = _state.value.collections.find { it.id == collectionId } ?: return@launch
+
+            // Convert to domain model with updated name/description
+            val domainCollection = collection.copy(
+                name = name,
+                description = description
+            ).toDomain()
+
+            updateCollectionUseCase(domainCollection).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _state.update { it.copy(isLoading = resource.isLoading) }
+                    }
+                    is Resource.Success -> {
+                        _sideEffect.send(CollectionsListContract.SideEffect.ShowSuccess("Collection updated"))
                         loadCollections() // Reload collections
                     }
                     is Resource.Error -> {

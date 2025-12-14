@@ -34,6 +34,22 @@ class CardSearchAdapter(
             with(binding) {
                 ivCardImage.loadImage(card.imageUrl, cornerRadius = 8f)
                 tvCardName.text = card.name
+
+                // Render mana symbols
+                com.example.mtgcollectionmanager.presentation.common.ManaSymbolRenderer.renderManaSymbols(
+                    root.context,
+                    card.manaCost,
+                    llManaSymbols
+                )
+
+                // Set rarity color strip
+                vRarityStrip.setBackgroundColor(
+                    com.example.mtgcollectionmanager.presentation.common.RarityColorHelper.getRarityColor(
+                        root.context,
+                        card.rarity
+                    )
+                )
+
                 tvSetInfo.text = card.setInfo
                 tvPrice.text = card.priceFormatted
 

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing Scale - 8dp Grid System -->
+    <dimen name="spacing_xxs">2dp</dimen>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">12dp</dimen>
+    <dimen name="spacing_lg">16dp</dimen>
+    <dimen name="spacing_xl">24dp</dimen>
+    <dimen name="spacing_xxl">32dp</dimen>
+    <dimen name="spacing_xxxl">48dp</dimen>
+    <dimen name="spacing_huge">64dp</dimen>
+
+    <!-- Screen Padding -->
+    <dimen name="screen_padding_horizontal">20dp</dimen>
+    <dimen name="screen_padding_vertical">16dp</dimen>
+    <dimen name="screen_padding_top">24dp</dimen>
+    <dimen name="screen_padding_bottom">24dp</dimen>
+
+    <!-- Card Padding -->
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_padding_sm">12dp</dimen>
+    <dimen name="card_padding_lg">20dp</dimen>
+
+    <!-- Item Spacing -->
+    <dimen name="item_spacing">12dp</dimen>
+    <dimen name="item_spacing_sm">8dp</dimen>
+    <dimen name="item_spacing_lg">16dp</dimen>
+
+    <!-- Corner Radius -->
+    <dimen name="corner_radius_xs">4dp</dimen>
+    <dimen name="corner_radius_sm">8dp</dimen>
+    <dimen name="corner_radius_md">12dp</dimen>
+    <dimen name="corner_radius_lg">16dp</dimen>
+    <dimen name="corner_radius_xl">20dp</dimen>
+    <dimen name="corner_radius_xxl">24dp</dimen>
+    <dimen name="corner_radius_full">999dp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="elevation_none">0dp</dimen>
+    <dimen name="elevation_xs">1dp</dimen>
+    <dimen name="elevation_sm">2dp</dimen>
+    <dimen name="elevation_md">4dp</dimen>
+    <dimen name="elevation_lg">8dp</dimen>
+    <dimen name="elevation_xl">12dp</dimen>
+
+    <!-- Button Dimensions -->
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_height_sm">40dp</dimen>
+    <dimen name="button_height_lg">56dp</dimen>
+    <dimen name="button_padding_horizontal">24dp</dimen>
+    <dimen name="button_padding_horizontal_sm">16dp</dimen>
+    <dimen name="button_corner_radius">12dp</dimen>
+
+    <!-- FAB Dimensions -->
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_xs">16dp</dimen>
+    <dimen name="icon_size_sm">20dp</dimen>
+    <dimen name="icon_size_md">24dp</dimen>
+    <dimen name="icon_size_lg">32dp</dimen>
+    <dimen name="icon_size_xl">48dp</dimen>
+    <dimen name="icon_size_xxl">64dp</dimen>
+
+    <!-- Typography Sizes -->
+    <dimen name="text_size_display">32sp</dimen>
+    <dimen name="text_size_headline_large">28sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_body_large">16sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_body_small">12sp</dimen>
+    <dimen name="text_size_label">11sp</dimen>
+
+    <!-- Card Image Sizes -->
+    <dimen name="card_image_width">120dp</dimen>
+    <dimen name="card_image_height">168dp</dimen>
+    <dimen name="card_image_width_sm">80dp</dimen>
+    <dimen name="card_image_height_sm">112dp</dimen>
+    <dimen name="card_image_width_lg">200dp</dimen>
+    <dimen name="card_image_height_lg">280dp</dimen>
+
+    <!-- Collection Item Heights -->
+    <dimen name="collection_item_height">120dp</dimen>
+    <dimen name="collection_card_item_height">140dp</dimen>
+    <dimen name="category_item_height">64dp</dimen>
+
+    <!-- Divider -->
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_margin_horizontal">16dp</dimen>
+
+    <!-- Bottom Sheet -->
+    <dimen name="bottom_sheet_corner_radius">24dp</dimen>
+    <dimen name="bottom_sheet_padding">24dp</dimen>
+
+    <!-- Dialog -->
+    <dimen name="dialog_corner_radius">20dp</dimen>
+    <dimen name="dialog_padding">24dp</dimen>
+    <dimen name="dialog_min_width">280dp</dimen>
+    <dimen name="dialog_max_width">560dp</dimen>
+
+    <!-- Progress Indicator -->
+    <dimen name="progress_size">48dp</dimen>
+    <dimen name="progress_size_sm">32dp</dimen>
+    <dimen name="progress_size_lg">64dp</dimen>
+
+    <!-- Minimum Touch Target -->
+    <dimen name="min_touch_target">48dp</dimen>
+
+    <!-- App Bar -->
+    <dimen name="app_bar_height">56dp</dimen>
+
+    <!-- Status Indicators -->
+    <dimen name="badge_size">8dp</dimen>
+    <dimen name="badge_size_lg">12dp</dimen>
+
+    <!-- MTG-Specific Dimensions -->
+    <dimen name="mana_symbol_size">20dp</dimen>
+    <dimen name="mana_symbol_size_lg">28dp</dimen>
+    <dimen name="mana_symbol_spacing">4dp</dimen>
+
+    <!-- Card Frame Borders -->
+    <dimen name="card_border_width">1dp</dimen>
+    <dimen name="card_border_width_selected">2dp</dimen>
+
+    <!-- Rarity Indicator -->
+    <dimen name="rarity_indicator_size">12dp</dimen>
+    <dimen name="rarity_indicator_size_lg">16dp</dimen>
+
+    <!-- Category Color Strip -->
+    <dimen name="category_color_strip_width">4dp</dimen>
+    <dimen name="category_color_strip_width_thick">6dp</dimen>
+
+    <!-- Additional Text Sizes -->
+    <dimen name="text_size_caption">12sp</dimen>
+    <dimen name="text_size_headline_medium">24sp</dimen>
+
+    <!-- Input Heights -->
+    <dimen name="input_height_md">48dp</dimen>
+</resources>

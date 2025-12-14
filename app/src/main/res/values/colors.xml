@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- =================================================================
+         MTG BRAND COLORS - Official Color Palette
+         ================================================================= -->
+
+    <!-- Primary MTG Colors (Red/Orange) -->
+    <color name="mtg_red_primary">#EA3601</color>
+    <color name="mtg_red_bright">#FF6000</color>
+    <color name="mtg_orange_accent">#EA4B12</color>
+    <color name="mtg_gold">#F59E0B</color>
+    <color name="mtg_gold_light">#FBBF24</color>
+
+    <!-- Dark Backgrounds -->
+    <color name="mtg_black">#000000</color>
+    <color name="mtg_dark_surface">#0C0F11</color>
+    <color name="mtg_dark_gray">#1A1D23</color>
+    <color name="mtg_medium_gray">#252830</color>
+    <color name="mtg_light_gray">#2F3238</color>
+
+    <!-- =================================================================
+         MATERIAL3 DARK THEME MAPPING
+         ================================================================= -->
+
+    <!-- Primary Colors - MTG Red/Orange -->
+    <color name="primary">@color/mtg_red_primary</color>
+    <color name="primary_dark">@color/mtg_red_bright</color>
+    <color name="primary_light">@color/mtg_orange_accent</color>
+    <color name="primary_container">@color/mtg_medium_gray</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">@color/mtg_red_bright</color>
+
+    <!-- Secondary Colors - Gold Accents -->
+    <color name="secondary">@color/mtg_gold</color>
+    <color name="secondary_dark">@color/mtg_gold_light</color>
+    <color name="secondary_light">@color/mtg_gold_light</color>
+    <color name="secondary_container">@color/mtg_light_gray</color>
+    <color name="on_secondary">#000000</color>
+    <color name="on_secondary_container">@color/mtg_gold_light</color>
+
+    <!-- Tertiary Colors - Additional Red -->
+    <color name="tertiary">@color/mtg_orange_accent</color>
+    <color name="tertiary_dark">#D13801</color>
+    <color name="tertiary_light">#FF7A33</color>
+    <color name="tertiary_container">@color/mtg_medium_gray</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="on_tertiary_container">@color/mtg_orange_accent</color>
+
+    <!-- Background & Surface - Pure Dark -->
+    <color name="background">@color/mtg_black</color>
+    <color name="surface">@color/mtg_dark_surface</color>
+    <color name="surface_variant">@color/mtg_dark_gray</color>
+    <color name="surface_container">@color/mtg_medium_gray</color>
+    <color name="surface_container_high">@color/mtg_light_gray</color>
+    <color name="surface_bright">#3A3D45</color>
+    <color name="on_background">#FFFFFF</color>
+    <color name="on_surface">#FFFFFF</color>
+    <color name="on_surface_variant">#B8BCC4</color>
+
+    <!-- Outline & Borders - Subtle -->
+    <color name="outline">#3F4249</color>
+    <color name="outline_variant">#2A2D33</color>
+    <color name="outline_bright">@color/mtg_red_primary</color>
+
+    <!-- =================================================================
+         STATUS COLORS - Dark Theme Adapted
+         ================================================================= -->
+
+    <color name="error">#F44336</color>
+    <color name="error_container">#3A1F1D</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="on_error_container">#FFCDD2</color>
+
+    <color name="success">#4CAF50</color>
+    <color name="success_container">#1E3A1F</color>
+    <color name="on_success">#FFFFFF</color>
+    <color name="on_success_container">#C8E6C9</color>
+
+    <color name="warning">@color/mtg_gold</color>
+    <color name="warning_container">#3A3020</color>
+    <color name="on_warning">#000000</color>
+    <color name="on_warning_container">#FFF9C4</color>
+
+    <!-- =================================================================
+         TEXT COLORS - White Hierarchy
+         ================================================================= -->
+
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B8BCC4</color>
+    <color name="text_tertiary">#858A94</color>
+    <color name="text_disabled">#4F5259</color>
+    <color name="text_hint">#6B6F78</color>
+
+    <!-- =================================================================
+         MTG MANA COLORS - For Card Type Indicators
+         ================================================================= -->
+
+    <color name="mana_white">#F8F6D8</color>
+    <color name="mana_blue">#0E68AB</color>
+    <color name="mana_black">#150B00</color>
+    <color name="mana_red">#D3202A</color>
+    <color name="mana_green">#00733E</color>
+    <color name="mana_colorless">#CAC5C0</color>
+    <color name="mana_gold">#E0C96C</color>
+
+    <!-- Mana Symbol Backgrounds (for circular icons) -->
+    <color name="mana_white_bg">#FFFEF0</color>
+    <color name="mana_blue_bg">#0E68AB</color>
+    <color name="mana_black_bg">#1E1915</color>
+    <color name="mana_red_bg">#D3202A</color>
+    <color name="mana_green_bg">#00733E</color>
+    <color name="mana_colorless_bg">#CAC5C0</color>
+
+    <!-- =================================================================
+         RARITY COLORS - MTG Standard
+         ================================================================= -->
+
+    <color name="rarity_common">#8B8E93</color>
+    <color name="rarity_uncommon">#6B9EBC</color>
+    <color name="rarity_rare">#D4AF37</color>
+    <color name="rarity_mythic">#EB5D34</color>
+    <color name="rarity_special">#BA55D3</color>
+
+    <!-- =================================================================
+         OVERLAY & EFFECTS
+         ================================================================= -->
+
+    <color name="scrim">#CC000000</color>
+    <color name="scrim_light">#80000000</color>
+    <color name="overlay_dark">#33000000</color>
+    <color name="overlay_medium">#1A000000</color>
+    <color name="overlay_light">#0D000000</color>
+
+    <!-- Shimmer/Highlight Effects -->
+    <color name="shimmer">#14FFFFFF</color>
+    <color name="highlight">#1AFF6000</color>
+
+    <!-- Card Shadows & Borders -->
+    <color name="shadow_color">#80000000</color>
+    <color name="shadow_color_strong">#CC000000</color>
+    <color name="card_border">@color/outline</color>
+    <color name="card_border_selected">@color/mtg_red_bright</color>
+
+    <!-- =================================================================
+         ADDITIONAL UI COLORS
+         ================================================================= -->
+
+    <!-- Dividers -->
+    <color name="divider">@color/outline_variant</color>
+    <color name="divider_bright">@color/outline</color>
+
+    <!-- Interactive States -->
+    <color name="ripple_dark">#33FFFFFF</color>
+    <color name="ripple_accent">#33EA3601</color>
+
+    <!-- Transparent -->
+    <color name="transparent">#00000000</color>
+</resources>

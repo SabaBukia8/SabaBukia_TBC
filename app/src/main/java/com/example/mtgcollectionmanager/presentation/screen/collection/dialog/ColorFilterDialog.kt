@@ -11,13 +11,13 @@ import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.DialogColorFilterBinding
 import com.example.mtgcollectionmanager.presentation.screen.collection.CollectionContract
 
-class ColorFilterDialog(
-    private val colorFilters: Map<String, CollectionContract.FilterState>,
-    private val onFiltersApplied: (Map<String, CollectionContract.FilterState>) -> Unit
-) : DialogFragment() {
+class ColorFilterDialog : DialogFragment() {
 
     private var _binding: DialogColorFilterBinding? = null
     private val binding get() = _binding!!
+
+    private var colorFilters: Map<String, CollectionContract.FilterState> = emptyMap()
+    private var onFiltersApplied: ((Map<String, CollectionContract.FilterState>) -> Unit)? = null
 
     private val colors = listOf(
         "W" to "White",
@@ -30,6 +30,14 @@ class ColorFilterDialog(
 
     private val colorItems = mutableListOf<ColorFilterItem>()
     private lateinit var adapter: ColorFilterAdapter
+
+    fun setColorFilters(filters: Map<String, CollectionContract.FilterState>) {
+        this.colorFilters = filters
+    }
+
+    fun setOnFiltersAppliedListener(listener: (Map<String, CollectionContract.FilterState>) -> Unit) {
+        this.onFiltersApplied = listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +91,7 @@ class ColorFilterDialog(
             val filterMap = colorItems
                 .filter { it.state != CollectionContract.FilterState.NEUTRAL }
                 .associate { it.code to it.state }
-            onFiltersApplied(filterMap)
+            onFiltersApplied?.invoke(filterMap)
             dismiss()
         }
 
@@ -100,5 +108,17 @@ class ColorFilterDialog(
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance(
+            colorFilters: Map<String, CollectionContract.FilterState>,
+            onFiltersApplied: (Map<String, CollectionContract.FilterState>) -> Unit
+        ): ColorFilterDialog {
+            return ColorFilterDialog().apply {
+                setColorFilters(colorFilters)
+                setOnFiltersAppliedListener(onFiltersApplied)
+            }
+        }
     }
 }

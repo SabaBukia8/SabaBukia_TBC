@@ -128,15 +128,23 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                         state.card?.let { card ->
                             ivCardImage.loadImage(card.imageUrl)
                             tvCardName.text = card.name
-                            tvManaCost.text = getString(R.string.mana_cost) + ": " + card.manaCost
+                            // Render mana symbols using the helper
+                            com.example.mtgcollectionmanager.presentation.common.ManaSymbolRenderer.renderManaSymbols(
+                                requireContext(),
+                                card.manaCost,
+                                llManaSymbols
+                            )
                             tvType.text = getString(R.string.type) + ": " + card.type
                             tvSetInfo.text = getString(R.string.set) + ": " + card.setInfo
-                            tvPrice.text = getString(R.string.price) + ": " + card.priceFormatted
+                            tvPrice.text = card.priceFormatted
                         }
 
                         if (state.isInCollection) {
                             btnAddToCollection.isEnabled = false
                             btnAddToCollection.text = getString(R.string.already_in_collection)
+                        } else {
+                            btnAddToCollection.isEnabled = true
+                            btnAddToCollection.text = getString(R.string.add_to_collection)
                         }
                     }
                 }

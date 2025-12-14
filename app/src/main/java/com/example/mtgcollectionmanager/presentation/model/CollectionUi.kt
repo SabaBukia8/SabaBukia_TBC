@@ -5,6 +5,8 @@ data class CollectionUi(
     val name: String,
     val description: String,
     val totalCards: Int,
-    val totalValue: String, // Formatted price
-    val createdDate: String // Formatted date
+    val totalValue: String,
+    val createdDate: String,
+    val userId: String,
+    val createdDateMillis: Long
 )

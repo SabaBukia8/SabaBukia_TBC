@@ -16,7 +16,6 @@ class EnsureDefaultCollectionUseCase @Inject constructor(
             val collectionCount = userCollectionsRepository.getCollectionCount()
 
             if (collectionCount == 0) {
-                // Create default collection
                 userCollectionsRepository.createCollection(
                     name = "My Collection",
                     description = "My first card collection"
@@ -28,7 +27,6 @@ class EnsureDefaultCollectionUseCase @Inject constructor(
                     }
                 }
             } else {
-                // Default collection already exists, return success with ID 1
                 emit(Resource.Success(1L))
             }
         } catch (e: Exception) {

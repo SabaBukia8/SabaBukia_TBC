@@ -1,7 +1,7 @@
 package com.example.mtgcollectionmanager.presentation.model
 
 data class CardUiModel(
-    val cardId: String,  // Changed from id to cardId for consistency
+    val cardId: String,
     val name: String,
     val manaCost: String,
     val imageUrl: String,

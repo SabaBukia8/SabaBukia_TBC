@@ -22,7 +22,7 @@ interface ScryfallApiService {
 
     @GET("cards/search")
     suspend fun getCardPrintings(
-        @Query("q") query: String,  // Format: !"exact card name"
+        @Query("q") query: String,
         @Query("unique") unique: String = "prints",
         @Query("order") order: String = "released"
     ): Response<CardSearchResponseDto>

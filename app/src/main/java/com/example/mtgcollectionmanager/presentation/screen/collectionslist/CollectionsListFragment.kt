@@ -25,7 +25,7 @@ class CollectionsListFragment : Fragment() {
     private lateinit var rvCollections: RecyclerView
     private lateinit var fabCreateCollection: FloatingActionButton
     private lateinit var progressBar: View
-    private lateinit var tvEmptyState: View
+    private lateinit var llEmptyState: View
 
     private val adapter by lazy {
         CollectionsListAdapter(
@@ -55,7 +55,7 @@ class CollectionsListFragment : Fragment() {
         rvCollections = view.findViewById(R.id.rvCollections)
         fabCreateCollection = view.findViewById(R.id.fabCreateCollection)
         progressBar = view.findViewById(R.id.progressBar)
-        tvEmptyState = view.findViewById(R.id.tvEmptyState)
+        llEmptyState = view.findViewById(R.id.llEmptyState)
 
         rvCollections.adapter = adapter
 
@@ -67,6 +67,12 @@ class CollectionsListFragment : Fragment() {
         observeSideEffects()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh collections to show updated stats
+        viewModel.onEvent(CollectionsListContract.Event.LoadCollections)
+    }
+
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -75,7 +81,7 @@ class CollectionsListFragment : Fragment() {
 
                     adapter.submitList(state.collections)
 
-                    tvEmptyState.isVisible = state.collections.isEmpty() && !state.isLoading
+                    llEmptyState.isVisible = state.collections.isEmpty() && !state.isLoading
                     rvCollections.isVisible = state.collections.isNotEmpty()
                 }
             }
@@ -97,8 +103,7 @@ class CollectionsListFragment : Fragment() {
                             showCreateCollectionDialog()
                         }
                         is CollectionsListContract.SideEffect.ShowEditCollectionDialog -> {
-                            // TODO: Show edit collection dialog
-                            showMessage("Edit collection dialog (coming soon)")
+                            showEditCollectionDialog(sideEffect.collectionId)
                         }
                         is CollectionsListContract.SideEffect.ShowError -> {
                             showMessage(sideEffect.message)
@@ -121,5 +126,19 @@ class CollectionsListFragment : Fragment() {
             viewModel.onEvent(CollectionsListContract.Event.CreateCollection(name, description))
         }
         dialog.show(parentFragmentManager, "CreateCollectionDialog")
+    }
+
+    private fun showEditCollectionDialog(collectionId: Long) {
+        // Find the collection from state
+        val collection = viewModel.state.value.collections.find { it.id == collectionId } ?: return
+
+        val dialog = EditCollectionDialog(
+            collectionId = collectionId,
+            currentName = collection.name,
+            currentDescription = collection.description
+        ) { id, name, description ->
+            viewModel.onEvent(CollectionsListContract.Event.UpdateCollection(id, name, description))
+        }
+        dialog.show(parentFragmentManager, "EditCollectionDialog")
     }
 }

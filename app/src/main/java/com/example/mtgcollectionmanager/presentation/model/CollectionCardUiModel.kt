@@ -7,6 +7,8 @@ data class CollectionCardUiModel(
     val setInfo: String,
     val setCode: String,
     val colors: List<String>,
+    val manaCost: String? = null,
+    val rarity: String? = null,
     val quantity: Int,
     val quantityDisplay: String,
     val condition: String,

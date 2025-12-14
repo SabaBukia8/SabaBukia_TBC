@@ -3,24 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/surface"
+    android:padding="@dimen/dialog_padding">
 
     <TextView
         android:id="@+id/tvTitle"
+        style="@style/MTG.Text.SectionHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Select Printing"
-        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvCardName"
+        style="@style/MTG.Text.CardNameSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?attr/textAppearanceBody1"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:textColor="@color/text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -29,6 +33,7 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/primary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvPrintings"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,11 +42,13 @@
 
     <TextView
         android:id="@+id/tvError"
+        style="@style/MTG.EmptyState.Subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="32dp"
+        android:padding="@dimen/spacing_xxxl"
         android:text="Failed to load printings"
+        android:textColor="@color/text_secondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvPrintings"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +59,7 @@
         android:id="@+id/rvPrintings"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         app:layout_constraintBottom_toTopOf="@id/btnCancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,10 +67,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MTG.Button.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_xxl"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

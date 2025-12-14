@@ -16,15 +16,13 @@ import com.example.mtgcollectionmanager.databinding.DialogSetFilterBinding
 import com.example.mtgcollectionmanager.presentation.common.hide
 import com.example.mtgcollectionmanager.presentation.common.show
 import com.example.mtgcollectionmanager.presentation.model.SetUiModel
+import com.example.mtgcollectionmanager.presentation.screen.collection.CollectionContract
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SetFilterDialog(
-    private val setFilters: Map<String, com.example.mtgcollectionmanager.presentation.screen.collection.CollectionContract.FilterState>,
-    private val onFiltersApplied: (Map<String, com.example.mtgcollectionmanager.presentation.screen.collection.CollectionContract.FilterState>) -> Unit
-) : DialogFragment() {
+class SetFilterDialog : DialogFragment() {
 
     private var _binding: DialogSetFilterBinding? = null
     private val binding get() = _binding!!
@@ -32,13 +30,25 @@ class SetFilterDialog(
     @Inject
     lateinit var apiService: ScryfallApiService
 
-    private val filterStates = setFilters.toMutableMap()
+    private var setFilters: Map<String, CollectionContract.FilterState> = emptyMap()
+    private var onFiltersApplied: ((Map<String, CollectionContract.FilterState>) -> Unit)? = null
+    private val filterStates = mutableMapOf<String, CollectionContract.FilterState>()
     private var allSets: List<SetUiModel> = emptyList()
     private lateinit var adapter: SetFilterAdapter
+
+    fun setSetFilters(filters: Map<String, CollectionContract.FilterState>) {
+        this.setFilters = filters
+    }
+
+    fun setOnFiltersAppliedListener(listener: (Map<String, CollectionContract.FilterState>) -> Unit) {
+        this.onFiltersApplied = listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.Theme_MTGCollectionManager)
+        filterStates.clear()
+        filterStates.putAll(setFilters)
     }
 
     override fun onCreateView(
@@ -84,8 +94,8 @@ class SetFilterDialog(
 
         binding.btnApply.setOnClickListener {
             val filterMap = filterStates
-                .filter { it.value != com.example.mtgcollectionmanager.presentation.screen.collection.CollectionContract.FilterState.NEUTRAL }
-            onFiltersApplied(filterMap)
+                .filter { it.value != CollectionContract.FilterState.NEUTRAL }
+            onFiltersApplied?.invoke(filterMap)
             dismiss()
         }
 
@@ -156,5 +166,17 @@ class SetFilterDialog(
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance(
+            setFilters: Map<String, CollectionContract.FilterState>,
+            onFiltersApplied: (Map<String, CollectionContract.FilterState>) -> Unit
+        ): SetFilterDialog {
+            return SetFilterDialog().apply {
+                setSetFilters(setFilters)
+                setOnFiltersAppliedListener(onFiltersApplied)
+            }
+        }
     }
 }

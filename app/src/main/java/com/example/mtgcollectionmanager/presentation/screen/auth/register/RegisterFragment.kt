@@ -27,6 +27,10 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
 
     override fun listeners() {
         with(binding) {
+            etNickname.doAfterTextChanged { text ->
+                viewModel.onEvent(RegisterContract.Event.NicknameChanged(text.toString()))
+            }
+
             etEmail.doAfterTextChanged { text ->
                 viewModel.onEvent(RegisterContract.Event.EmailChanged(text.toString()))
             }

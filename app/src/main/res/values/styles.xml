@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- =================================================================
+         BASE PARENT STYLES
+         ================================================================= -->
+
+    <!-- Base MTG Style (Empty Parent) -->
+    <style name="MTG"/>
+
+    <!-- Base Card Style -->
+    <style name="MTG.Card"/>
+
+    <!-- Base Text Style -->
+    <style name="MTG.Text"/>
+
+    <!-- Base Empty State Style -->
+    <style name="MTG.EmptyState"/>
+
+    <!-- =================================================================
+         MTG CARD STYLES
+         ================================================================= -->
+
+    <!-- Card Item - Search Results -->
+    <style name="MTG.Card.SearchResult">
+        <item name="android:background">@drawable/bg_card_item</item>
+        <item name="android:padding">@dimen/card_padding</item>
+        <item name="android:elevation">@dimen/elevation_sm</item>
+    </style>
+
+    <!-- Card Item - Collection -->
+    <style name="MTG.Card.Collection">
+        <item name="android:background">@drawable/bg_card_collection</item>
+        <item name="android:padding">@dimen/card_padding</item>
+        <item name="android:elevation">@dimen/elevation_sm</item>
+    </style>
+
+    <!-- =================================================================
+         TEXT STYLES - Specialized
+         ================================================================= -->
+
+    <!-- Card Name - Large Bold -->
+    <style name="MTG.Text.CardName">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <!-- Card Name Small - Item Lists -->
+    <style name="MTG.Text.CardNameSmall">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_size_body_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Price Text - Gold Color -->
+    <style name="MTG.Text.Price">
+        <item name="android:textColor">@color/mtg_gold_light</item>
+        <item name="android:textSize">@dimen/text_size_body_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Set/Type Info - Secondary -->
+    <style name="MTG.Text.SetInfo">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Metadata - Small Gray -->
+    <style name="MTG.Text.Metadata">
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textSize">@dimen/text_size_body_small</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Section Header -->
+    <style name="MTG.Text.SectionHeader">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">@dimen/text_size_body_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Label - Form Fields -->
+    <style name="MTG.Text.Label">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- =================================================================
+         DIVIDER STYLES
+         ================================================================= -->
+
+    <style name="MTG.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
+        <item name="android:background">@color/divider</item>
+    </style>
+
+    <style name="MTG.Divider.Bright">
+        <item name="android:background">@color/divider_bright</item>
+    </style>
+
+    <!-- =================================================================
+         CATEGORY BADGE STYLES
+         ================================================================= -->
+
+    <style name="MTG.CategoryBadge">
+        <item name="android:background">@drawable/bg_category_badge</item>
+        <item name="android:padding">@dimen/spacing_xs</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_size_body_small</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- =================================================================
+         EMPTY STATE STYLES
+         ================================================================= -->
+
+    <style name="MTG.EmptyState.Title">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_size_headline</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MTG.EmptyState.Subtitle">
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

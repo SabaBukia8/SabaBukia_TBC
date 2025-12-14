@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="@dimen/category_item_height"
+    android:paddingStart="@dimen/spacing_md"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingEnd="@dimen/spacing_md"
+    android:paddingBottom="@dimen/spacing_sm">
+
+    <View
+        android:id="@+id/vColorIndicator"
+        android:layout_width="@dimen/category_color_strip_width_thick"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/spacing_md"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/primary" />
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:contentDescription="@string/collection_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/vColorIndicator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_secondary"
+        tools:src="@drawable/ic_category_outlined" />
+
+    <TextView
+        android:id="@+id/tvCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_sm"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_size_body_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvCardCount"
+        app:layout_constraintStart_toEndOf="@id/ivIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Creatures" />
+
+    <TextView
+        android:id="@+id/tvCardCount"
+        style="@style/MTG.CategoryBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
+        android:background="@drawable/bg_count_badge"
+        android:minWidth="28dp"
+        android:paddingHorizontal="@dimen/spacing_sm"
+        android:paddingVertical="@dimen/spacing_xs"
+        android:textAlignment="center"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="12" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

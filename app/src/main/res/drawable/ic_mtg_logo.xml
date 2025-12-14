@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simplified MTG-style logo placeholder -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- Outer circle -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M100,20C55.82,20 20,55.82 20,100s35.82,80 80,80 80,-35.82 80,-80S144.18,20 100,20z"/>
+    <!-- Inner circle -->
+    <path
+        android:fillColor="@color/mtg_black"
+        android:pathData="M100,30C61.34,30 30,61.34 30,100s31.34,70 70,70 70,-31.34 70,-70S138.66,30 100,30z"/>
+    <!-- Pentagram/star -->
+    <path
+        android:fillColor="@color/mtg_gold"
+        android:pathData="M100,50l12,36h38l-31,23 12,36 -31,-23 -31,23 12,-36 -31,-23h38z"/>
+</vector>

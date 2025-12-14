@@ -103,6 +103,10 @@ dependencies {
 
     // Firebase
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
+    // Navigation UI
+    implementation(libs.androidx.navigation.ui)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

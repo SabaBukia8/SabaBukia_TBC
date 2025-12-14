@@ -3,19 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/surface"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="@dimen/dialog_padding">
 
         <TextView
             android:id="@+id/tvTitle"
+            style="@style/MTG.Text.SectionHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Search Filters"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -23,11 +26,12 @@
         <!-- Colors Section -->
         <TextView
             android:id="@+id/tvColorsLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Colors"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +41,7 @@
             android:id="@+id/rvColors"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvColorsLabel" />
@@ -45,11 +49,12 @@
         <!-- Card Types Section -->
         <TextView
             android:id="@+id/tvCardTypesLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Card Types"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +64,7 @@
             android:id="@+id/cgCardTypes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvCardTypesLabel"
@@ -125,11 +130,12 @@
         <!-- Rarity Section -->
         <TextView
             android:id="@+id/tvRarityLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Rarity"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +145,7 @@
             android:id="@+id/cgRarity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvRarityLabel"
@@ -177,11 +183,12 @@
         <!-- Sets Section -->
         <TextView
             android:id="@+id/tvSetsLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Sets"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/btnSelectSets"
             app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +196,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelectSets"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.MTG.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Sets"
@@ -201,7 +208,7 @@
             android:id="@+id/cgSelectedSets"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSetsLabel" />
@@ -209,11 +216,12 @@
         <!-- Mana Value Range -->
         <TextView
             android:id="@+id/tvManaValueLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Mana Value"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -223,13 +231,14 @@
             android:id="@+id/llManaValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvManaValueLabel">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MTG.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -239,17 +248,21 @@
                     android:id="@+id/etManaValueMin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingHorizontal="8dp"
-                android:text="to" />
+                android:paddingHorizontal="@dimen/spacing_sm"
+                android:text="to"
+                android:textColor="@color/text_secondary" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MTG.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -259,18 +272,21 @@
                     android:id="@+id/etManaValueMax"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Price Range -->
         <TextView
             android:id="@+id/tvPriceLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Price (USD)"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -280,13 +296,14 @@
             android:id="@+id/llPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPriceLabel">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MTG.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -297,17 +314,21 @@
                     android:id="@+id/etPriceMin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingHorizontal="8dp"
-                android:text="to" />
+                android:paddingHorizontal="@dimen/spacing_sm"
+                android:text="to"
+                android:textColor="@color/text_secondary" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MTG.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -318,18 +339,21 @@
                     android:id="@+id/etPriceMax"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Year Range -->
         <TextView
             android:id="@+id/tvYearLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Year Released"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -339,13 +363,14 @@
             android:id="@+id/llYear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvYearLabel">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MTG.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -355,17 +380,21 @@
                     android:id="@+id/etYearMin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingHorizontal="8dp"
-                android:text="to" />
+                android:paddingHorizontal="@dimen/spacing_sm"
+                android:text="to"
+                android:textColor="@color/text_secondary" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MTG.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -375,18 +404,21 @@
                     android:id="@+id/etYearMax"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Artist -->
         <TextView
             android:id="@+id/tvArtistLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Artist"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -394,9 +426,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilArtist"
+            style="@style/Widget.MTG.TextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:hint="Artist name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -406,17 +439,20 @@
                 android:id="@+id/etArtist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Oracle Text -->
         <TextView
             android:id="@+id/tvOracleTextLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Rules Text Contains"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -424,9 +460,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilOracleText"
+            style="@style/Widget.MTG.TextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:hint="e.g., flying, trample"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -436,17 +473,20 @@
                 android:id="@+id/etOracleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Flavor Text -->
         <TextView
             android:id="@+id/tvFlavorTextLabel"
+            style="@style/MTG.Text.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:text="Flavor Text Contains"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/text_secondary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -454,9 +494,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilFlavorText"
+            style="@style/Widget.MTG.TextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:hint="Search flavor text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -466,23 +507,25 @@
                 android:id="@+id/etFlavorText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Buttons -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnClearAll"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.MTG.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/spacing_xxl"
             android:text="Clear All"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilFlavorText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.MTG.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
@@ -492,8 +535,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApply"
+            style="@style/Widget.MTG.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_sm"
             android:text="Apply Filters"
             app:layout_constraintBottom_toBottomOf="@id/btnClearAll"
             app:layout_constraintEnd_toEndOf="parent"

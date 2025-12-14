@@ -10,7 +10,8 @@ import com.example.mtgcollectionmanager.presentation.common.loadImage
 import com.example.mtgcollectionmanager.presentation.model.CollectionCardUiModel
 
 class CollectionCardAdapter(
-    private val onCardClick: (String) -> Unit
+    private val onCardClick: (String) -> Unit,
+    private val onCardLongClick: ((String) -> Unit)? = null
 ) : ListAdapter<CollectionCardUiModel, CollectionCardAdapter.CollectionCardViewHolder>(CollectionCardDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionCardViewHolder {
@@ -34,12 +35,33 @@ class CollectionCardAdapter(
             with(binding) {
                 ivCardImage.loadImage(card.imageUrl, cornerRadius = 8f)
                 tvCardName.text = card.name
-                tvQuantity.text = "Quantity: ${card.quantityDisplay}"
-                tvCondition.text = "Condition: ${card.condition}"
-                tvTotalValue.text = "Total: ${card.totalValueFormatted}"
+                tvQuantityBadge.text = card.quantityDisplay
+
+                // Render mana symbols
+                com.example.mtgcollectionmanager.presentation.common.ManaSymbolRenderer.renderManaSymbols(
+                    root.context,
+                    card.manaCost,
+                    llManaSymbols
+                )
+
+                // Set rarity color strip
+                vRarityStrip.setBackgroundColor(
+                    com.example.mtgcollectionmanager.presentation.common.RarityColorHelper.getRarityColor(
+                        root.context,
+                        card.rarity
+                    )
+                )
+
+                tvCondition.text = card.condition
+                tvTotalValue.text = card.totalValueFormatted
 
                 root.setOnClickListener {
                     onCardClick(card.cardId)
+                }
+
+                root.setOnLongClickListener {
+                    onCardLongClick?.invoke(card.cardId)
+                    true
                 }
             }
         }

@@ -10,5 +10,5 @@ interface CategoryRepository {
     suspend fun createCategory(collectionId: Long, name: String, color: String): Flow<Resource<Long>>
     suspend fun updateCategory(category: Category): Flow<Resource<Unit>>
     suspend fun deleteCategory(categoryId: Long): Flow<Resource<Unit>>
-    suspend fun moveCardToCategory(cardId: Long, categoryId: Long?): Flow<Resource<Unit>>
+    suspend fun moveCardToCategory(collectionId: Long, scryfallCardId: String, categoryId: Long?): Flow<Resource<Unit>>
 }

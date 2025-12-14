@@ -1,5 +1,6 @@
 package com.example.mtgcollectionmanager.presentation.screen.search
 
+import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -8,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.FragmentCardSearchBinding
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
 import com.example.mtgcollectionmanager.presentation.common.hide
@@ -73,23 +75,23 @@ class CardSearchFragment : BaseFragment<FragmentCardSearchBinding>(
                             state.isLoading -> {
                                 progressBar.show()
                                 rvCards.hide()
-                                tvEmptyState.hide()
+                                llEmptyState.hide()
                             }
                             state.cards.isEmpty() && state.hasSearched -> {
                                 progressBar.hide()
                                 rvCards.hide()
-                                tvEmptyState.show()
+                                llEmptyState.show()
                             }
                             state.cards.isNotEmpty() -> {
                                 progressBar.hide()
-                                tvEmptyState.hide()
+                                llEmptyState.hide()
                                 rvCards.show()
                                 adapter.submitList(state.cards)
                             }
                             else -> {
                                 progressBar.hide()
                                 rvCards.hide()
-                                tvEmptyState.show()
+                                llEmptyState.show()
                             }
                         }
                     }
@@ -104,20 +106,48 @@ class CardSearchFragment : BaseFragment<FragmentCardSearchBinding>(
                 viewModel.sideEffect.collect { sideEffect ->
                     when (sideEffect) {
                         is CardSearchContract.SideEffect.NavigateToCardDetails -> {
-                            findNavController().navigate(
-                                CardSearchFragmentDirections.actionCardSearchFragmentToCardDetailsFragment(
-                                    sideEffect.cardId
+                            navigateToCardDetails(sideEffect.cardId)
+                        }
+
+                        is CardSearchContract.SideEffect.ShowError -> {
+                            binding.root.showErrorSnackbar(
+                                sideEffect.message.asString(
+                                    requireContext()
                                 )
                             )
                         }
-                        is CardSearchContract.SideEffect.ShowError -> {
-                            binding.root.showErrorSnackbar(sideEffect.message.asString(requireContext()))
-                        }
+
                         is CardSearchContract.SideEffect.ShowFiltersDialog -> {
                             showFiltersDialog(sideEffect.currentFilters)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun navigateToCardDetails(cardId: String) {
+        val currentDestId = findNavController().currentDestination?.id
+
+        when (currentDestId) {
+            R.id.searchFragment -> {
+                val bundle = Bundle().apply {
+                    putString("cardId", cardId)
+                    putLong("collectionId", viewModel.collectionId)
+                }
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_cardDetailsFragment,
+                    bundle
+                )
+            }
+
+            else -> {
+                findNavController().navigate(
+                    CardSearchFragmentDirections.actionCardSearchFragmentToCardDetailsFragment(
+                        cardId = cardId,
+                        collectionId = viewModel.collectionId
+                    )
+                )
             }
         }
     }

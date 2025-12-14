@@ -21,6 +21,9 @@ class RegisterViewModel @Inject constructor(
 
     override fun onEvent(event: RegisterContract.Event) {
         when (event) {
+            is RegisterContract.Event.NicknameChanged -> {
+                updateState { it.copy(nickname = event.nickname) }
+            }
             is RegisterContract.Event.EmailChanged -> {
                 updateState { it.copy(email = event.email) }
             }
@@ -68,24 +71,21 @@ class RegisterViewModel @Inject constructor(
                     return@launch
                 }
 
-                registerUseCase(email, password).collect { resource ->
+                registerUseCase(email, password, nickname).collect { resource ->
                     when (resource) {
                         is Resource.Loading -> {
                             updateState { it.copy(isLoading = resource.isLoading) }
                         }
                         is Resource.Success -> {
-                            // Create default collection for new user
                             ensureDefaultCollectionUseCase().collect { collectionResource ->
                                 when (collectionResource) {
                                     is Resource.Success -> {
                                         emitSideEffect(RegisterContract.SideEffect.NavigateToCollection)
                                     }
                                     is Resource.Error -> {
-                                        // Still navigate even if default collection fails
                                         emitSideEffect(RegisterContract.SideEffect.NavigateToCollection)
                                     }
                                     is Resource.Loading -> {
-                                        // Keep loading state
                                     }
                                 }
                             }

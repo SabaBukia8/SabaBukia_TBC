@@ -26,8 +26,8 @@ import androidx.room.PrimaryKey
 data class CollectionCardEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val collectionId: Long,
-    val categoryId: Long?, // Nullable - card can be uncategorized
-    val cardId: String, // Scryfall card ID
+    val categoryId: Long?,
+    val cardId: String,
     val name: String,
     val manaCost: String,
     val imageUrl: String,

@@ -5,12 +5,14 @@ import com.example.mtgcollectionmanager.presentation.util.UiText
 object RegisterContract {
     data class State(
         val isLoading: Boolean = false,
+        val nickname: String = "",
         val email: String = "",
         val password: String = "",
         val confirmPassword: String = ""
     )
 
     sealed interface Event {
+        data class NicknameChanged(val nickname: String) : Event
         data class EmailChanged(val email: String) : Event
         data class PasswordChanged(val password: String) : Event
         data class ConfirmPasswordChanged(val confirmPassword: String) : Event

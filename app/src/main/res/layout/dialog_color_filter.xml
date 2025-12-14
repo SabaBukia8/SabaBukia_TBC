@@ -3,14 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:background="@color/surface"
+    android:padding="@dimen/dialog_padding">
 
     <TextView
         android:id="@+id/tvTitle"
+        style="@style/MTG.Text.SectionHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/filter_by_color"
-        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,24 +22,24 @@
         android:id="@+id/rvColors"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearAll"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MTG.Button.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_xxl"
         android:text="@string/clear_all"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rvColors" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MTG.Button.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
@@ -46,8 +49,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"
+        style="@style/Widget.MTG.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
         android:text="@string/apply"
         app:layout_constraintBottom_toBottomOf="@id/btnClearAll"
         app:layout_constraintEnd_toEndOf="parent"

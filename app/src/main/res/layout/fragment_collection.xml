@@ -1,134 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/collection_title"
-        app:titleTextColor="?attr/colorOnPrimary" />
+    <!-- Main content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
-    <TextView
-        android:id="@+id/tvTotalValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:text="Total Value: $125.00" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.MTG.Toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_toolbar_gradient"
+            android:elevation="@dimen/elevation_sm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_menu_outlined"
+            app:title="@string/collection_title"
+            app:titleTextAppearance="@style/TextAppearance.MTG.HeadlineMedium"
+            app:titleTextColor="@color/text_primary" />
 
-    <TextView
-        android:id="@+id/tvTotalCards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvTotalValue"
-        app:layout_constraintBottom_toBottomOf="@id/tvTotalValue"
-        tools:text="Total Cards: 42" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardStats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding_horizontal"
+            android:layout_marginTop="@dimen/spacing_md"
+            app:cardBackgroundColor="@color/surface"
+            app:cardCornerRadius="@dimen/corner_radius_md"
+            app:cardElevation="@dimen/elevation_sm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:strokeColor="@color/outline_variant"
+            app:strokeWidth="1dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnViewAll"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
-        android:text="@string/view_all"
-        app:layout_constraintEnd_toStartOf="@id/btnViewByColor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTotalValue" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_md">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnViewByColor"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:text="@string/view_by_color"
-        app:layout_constraintEnd_toStartOf="@id/btnViewBySet"
-        app:layout_constraintStart_toEndOf="@id/btnViewAll"
-        app:layout_constraintTop_toTopOf="@id/btnViewAll" />
+                <TextView
+                    android:id="@+id/tvTotalValue"
+                    style="@style/MTG.Text.Price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="$125.00" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnViewBySet"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/view_by_set"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnViewByColor"
-        app:layout_constraintTop_toTopOf="@id/btnViewAll" />
+                <TextView
+                    android:id="@+id/labelTotalValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="Total Value"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_size_caption"
+                    app:layout_constraintStart_toStartOf="@id/tvTotalValue"
+                    app:layout_constraintTop_toBottomOf="@id/tvTotalValue" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnViewAll" />
+                <TextView
+                    android:id="@+id/tvTotalCards"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/tvTotalValue"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvTotalValue"
+                    tools:text="42 cards" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:id="@+id/tvEmptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/empty_collection"
-        android:textSize="18sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/tvEmptyStateSubtext"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnViewAll"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleViewMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding_horizontal"
+            android:layout_marginTop="@dimen/spacing_md"
+            app:checkedButton="@id/btnViewAll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardStats"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-    <TextView
-        android:id="@+id/tvEmptyStateSubtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/start_collecting"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEmptyState" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewAll"
+                style="@style/Widget.MTG.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/view_all"
+                app:icon="@drawable/ic_grid_outlined"
+                app:iconGravity="textStart"
+                app:iconSize="18dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCollection"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnViewAll" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewByColor"
+                style="@style/Widget.MTG.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/view_by_color"
+                app:icon="@drawable/ic_palette_outlined"
+                app:iconGravity="textStart"
+                app:iconSize="18dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/menu_search"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewBySet"
+                style="@style/Widget.MTG.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/view_by_set"
+                app:icon="@drawable/ic_category_outlined"
+                app:iconGravity="textStart"
+                app:iconSize="18dp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/primary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toggleViewMode" />
+
+        <LinearLayout
+            android:id="@+id/llEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toggleViewMode">
+
+            <ImageView
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:alpha="0.3"
+                android:contentDescription="@string/empty_collection"
+                android:src="@drawable/ic_empty_collection"
+                app:tint="@color/text_tertiary" />
+
+            <TextView
+                android:id="@+id/tvEmptyStateTitle"
+                style="@style/MTG.EmptyState.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:text="@string/empty_collection" />
+
+            <TextView
+                android:id="@+id/tvEmptyStateSubtitle"
+                style="@style/MTG.EmptyState.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:text="@string/start_collecting" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCollection"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/spacing_sm"
+            android:paddingBottom="@dimen/spacing_xxl"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toggleViewMode" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabSearch"
+            style="@style/Widget.MTG.FloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_lg"
+            android:contentDescription="@string/menu_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_search_outlined" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Navigation drawer -->
+    <include
+        layout="@layout/drawer_navigation"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

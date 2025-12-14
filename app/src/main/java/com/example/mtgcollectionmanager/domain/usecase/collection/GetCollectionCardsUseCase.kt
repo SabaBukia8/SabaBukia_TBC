@@ -9,6 +9,6 @@ import javax.inject.Inject
 class GetCollectionCardsUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<CollectionCard>>> =
-        repository.getCollectionCards()
+    operator fun invoke(collectionId: Long): Flow<Resource<List<CollectionCard>>> =
+        repository.getCollectionCards(collectionId)
 }

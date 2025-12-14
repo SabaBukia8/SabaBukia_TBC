@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@color/background">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/Widget.MTG.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.Material3.Dark"
+        android:background="@drawable/bg_toolbar_gradient"
+        android:elevation="@dimen/elevation_sm"
         app:layout_constraintTop_toTopOf="parent"
         app:title="My Collections"
-        app:titleTextColor="@android:color/white" />
+        app:titleTextAppearance="@style/TextAppearance.MTG.HeadlineMedium"
+        app:titleTextColor="@color/text_primary" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCollections"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:padding="8dp"
+        android:paddingHorizontal="@dimen/spacing_md"
+        android:paddingTop="@dimen/spacing_md"
+        android:paddingBottom="@dimen/spacing_xxl"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -32,6 +35,7 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/primary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,29 +43,53 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/tvEmptyState"
+    <LinearLayout
+        android:id="@+id/llEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No collections yet.\nTap + to create your first collection!"
-        android:textAlignment="center"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="16sp"
+        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:alpha="0.3"
+            android:contentDescription="@string/empty_collection"
+            android:src="@drawable/ic_empty_collection"
+            app:tint="@color/text_tertiary" />
+
+        <TextView
+            android:id="@+id/tvEmptyStateTitle"
+            style="@style/MTG.EmptyState.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:text="No collections yet" />
+
+        <TextView
+            android:id="@+id/tvEmptyStateSubtitle"
+            style="@style/MTG.EmptyState.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:text="Tap + to create your first collection!" />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCreateCollection"
+        style="@style/Widget.MTG.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/spacing_lg"
         android:contentDescription="Create Collection"
-        android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add_outlined" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

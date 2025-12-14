@@ -44,7 +44,6 @@ class CardRepositoryImpl @Inject constructor(
             emit(Resource.Loading(true))
             emit(Resource.Loading(false))
             try {
-                // Scryfall query to get all printings of a specific card
                 val query = "!\"$cardName\""
                 val response = apiService.getCardPrintings(query)
 

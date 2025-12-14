@@ -2,24 +2,30 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MTG.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="8dp">
+    android:layout_marginHorizontal="@dimen/spacing_sm"
+    android:layout_marginVertical="@dimen/spacing_xs"
+    app:cardBackgroundColor="@color/surface_variant"
+    app:cardCornerRadius="@dimen/corner_radius_md"
+    app:cardElevation="@dimen/elevation_sm"
+    app:strokeColor="@color/outline_variant"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="@dimen/spacing_lg">
 
         <TextView
             android:id="@+id/tvCollectionName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toStartOf="@id/btnMenu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,23 +33,24 @@
 
         <ImageButton
             android:id="@+id/btnMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/min_touch_target"
+            android:layout_height="@dimen/min_touch_target"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="More options"
-            android:src="@android:drawable/ic_menu_more"
+            android:src="@drawable/ic_more_vert_outlined"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_secondary" />
 
         <TextView
             android:id="@+id/tvCollectionDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:maxLines="2"
+            android:layout_marginTop="@dimen/spacing_xs"
             android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvCollectionName"
@@ -53,7 +60,7 @@
             android:id="@+id/layoutStats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/spacing_md"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvCollectionDescription">
@@ -62,26 +69,24 @@
                 android:id="@+id/tvCardCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/primary"
                 android:textSize="14sp"
-                android:textColor="?attr/colorPrimary"
                 android:textStyle="bold"
                 tools:text="45 cards" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginHorizontal="@dimen/spacing_md"
                 android:text="•"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/text_tertiary" />
 
             <TextView
                 android:id="@+id/tvTotalValue"
+                style="@style/MTG.Text.Price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:textSize="14sp"
-                android:textColor="?attr/colorSecondary"
-                android:textStyle="bold"
                 tools:text="$234.50" />
 
         </LinearLayout>
@@ -90,9 +95,9 @@
             android:id="@+id/tvCreatedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:textColor="@color/text_tertiary"
             android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutStats"
             tools:text="Created: Jan 15, 2024" />

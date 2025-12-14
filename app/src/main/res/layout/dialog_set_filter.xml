@@ -3,30 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:background="@color/surface"
+    android:padding="@dimen/dialog_padding">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilSearch"
+        style="@style/Widget.MTG.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/search_sets"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@android:drawable/ic_menu_search">
+        app:startIconDrawable="@drawable/ic_search_outlined">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/primary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvSets"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,11 +40,13 @@
 
     <TextView
         android:id="@+id/tvNoResults"
+        style="@style/MTG.EmptyState.Subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="32dp"
+        android:padding="@dimen/spacing_xxxl"
         android:text="@string/no_sets_found"
+        android:textColor="@color/text_secondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvSets"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,24 +57,24 @@
         android:id="@+id/rvSets"
         android:layout_width="0dp"
         android:layout_height="400dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_lg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilSearch" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearAll"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MTG.Button.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_xxl"
         android:text="@string/clear_all"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rvSets" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MTG.Button.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
@@ -77,8 +84,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"
+        style="@style/Widget.MTG.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
         android:text="@string/apply"
         app:layout_constraintBottom_toBottomOf="@id/btnClearAll"
         app:layout_constraintEnd_toEndOf="parent"

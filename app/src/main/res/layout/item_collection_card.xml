@@ -1,69 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MTG.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="?attr/selectableItemBackground"
+    android:layout_marginHorizontal="@dimen/spacing_sm"
+    android:layout_marginVertical="@dimen/spacing_xs"
     android:clickable="true"
     android:focusable="true"
-    android:padding="8dp">
+    app:cardBackgroundColor="@color/surface_variant"
+    app:cardCornerRadius="@dimen/corner_radius_md"
+    app:cardElevation="@dimen/elevation_sm"
+    app:strokeColor="@color/outline_variant"
+    app:strokeWidth="@dimen/card_border_width">
 
-    <ImageView
-        android:id="@+id/ivCardImage"
-        android:layout_width="80dp"
-        android:layout_height="112dp"
-        android:contentDescription="@string/card_details_title"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@android:color/darker_gray" />
-
-    <TextView
-        android:id="@+id/tvCardName"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ivCardImage"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Lightning Bolt" />
+        android:padding="@dimen/spacing_md">
 
-    <TextView
-        android:id="@+id/tvQuantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvCardName"
-        app:layout_constraintTop_toBottomOf="@id/tvCardName"
-        tools:text="Quantity: x3" />
+        <View
+            android:id="@+id/vRarityStrip"
+            android:layout_width="@dimen/category_color_strip_width"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/spacing_md"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/rarity_rare" />
 
-    <TextView
-        android:id="@+id/tvCondition"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvCardName"
-        app:layout_constraintTop_toBottomOf="@id/tvQuantity"
-        tools:text="Condition: Near Mint" />
+        <FrameLayout
+            android:id="@+id/frameCardImage"
+            android:layout_width="@dimen/card_image_width_sm"
+            android:layout_height="@dimen/card_image_height_sm"
+            app:layout_constraintStart_toEndOf="@id/vRarityStrip"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvTotalValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvCardName"
-        app:layout_constraintTop_toBottomOf="@id/tvCondition"
-        tools:text="Total: $7.50" />
+            <ImageView
+                android:id="@+id/ivCardImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_card_image_frame"
+                android:contentDescription="@string/card_details_title"
+                android:scaleType="centerCrop"
+                tools:src="@android:color/darker_gray" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvQuantityBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="@dimen/spacing_xs"
+                android:background="@drawable/bg_quantity_badge"
+                android:minWidth="24dp"
+                android:paddingHorizontal="@dimen/spacing_xs"
+                android:paddingVertical="2dp"
+                android:textAlignment="center"
+                android:textColor="@color/on_primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="x3" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvCardName"
+            style="@style/MTG.Text.CardNameSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_md"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/frameCardImage"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Lightning Bolt" />
+
+        <LinearLayout
+            android:id="@+id/llManaSymbols"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xs"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@id/tvCardName"
+            app:layout_constraintTop_toBottomOf="@id/tvCardName" />
+
+        <TextView
+            android:id="@+id/tvCondition"
+            style="@style/MTG.Text.Metadata"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvCardName"
+            app:layout_constraintTop_toBottomOf="@id/llManaSymbols"
+            tools:text="Near Mint" />
+
+        <TextView
+            android:id="@+id/tvTotalValue"
+            style="@style/MTG.Text.Price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvCardName"
+            app:layout_constraintTop_toBottomOf="@id/tvCondition"
+            tools:text="$7.50" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

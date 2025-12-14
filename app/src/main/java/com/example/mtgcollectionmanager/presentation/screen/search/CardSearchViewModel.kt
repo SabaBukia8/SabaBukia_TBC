@@ -1,5 +1,6 @@
 package com.example.mtgcollectionmanager.presentation.screen.search
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.domain.common.Resource
@@ -13,10 +14,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CardSearchViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val searchCardsUseCase: SearchCardsUseCase
 ) : BaseViewModel<CardSearchContract.State, CardSearchContract.Event, CardSearchContract.SideEffect>(
     CardSearchContract.State()
 ) {
+
+    val collectionId: Long = savedStateHandle.get<Long>("collectionId") ?: 1L
 
     override fun onEvent(event: CardSearchContract.Event) {
         when (event) {

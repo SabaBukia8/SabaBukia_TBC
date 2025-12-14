@@ -36,6 +36,7 @@
     <string name="add_to_collection">Add to Collection</string>
     <string name="already_in_collection">Already in Collection</string>
     <string name="card_added_success">Card added to collection</string>
+    <string name="card_updated_success">Card updated successfully</string>
     <string name="mana_cost">Mana Cost</string>
     <string name="type">Type</string>
     <string name="set">Set</string>
@@ -50,11 +51,47 @@
     <string name="view_all">All Cards</string>
     <string name="view_by_color">By Color</string>
     <string name="view_by_set">By Set</string>
+    <string name="categories_title">Categories</string>
+    <string name="category_all">All Cards</string>
+    <string name="category_uncategorized">Uncategorized</string>
     <string name="empty_collection">Your collection is empty</string>
     <string name="start_collecting">Start searching for cards to add</string>
     <string name="delete_card_title">Delete Card</string>
     <string name="delete_card_message">Are you sure you want to remove \"%s\" from your collection?</string>
     <string name="card_removed_success">Card removed from collection</string>
+    <string name="edit_card_title">Edit Card</string>
+
+    <!-- Collections Management -->
+    <string name="manage_collections">Manage Collections</string>
+    <string name="create_collection">Create Collection</string>
+    <string name="edit_collection">Edit Collection</string>
+    <string name="delete_collection">Delete Collection</string>
+    <string name="delete_collection_confirm">Delete Collection?</string>
+    <string name="delete_collection_message">Are you sure you want to delete \"%s\"? All cards will become uncategorized.</string>
+    <string name="collection_name">Collection Name</string>
+    <string name="collection_description">Description (optional)</string>
+    <string name="collection_created_success">Collection created successfully</string>
+    <string name="collection_updated_success">Collection updated successfully</string>
+    <string name="collection_deleted_success">Collection deleted successfully</string>
+    <string name="card_count_format">%d cards</string>
+    <string name="created_date_format">Created: %s</string>
+    <string name="close">Close</string>
+
+    <!-- Category Management -->
+    <string name="manage_categories">Manage Categories</string>
+    <string name="create_category">Create Category</string>
+    <string name="edit_category">Edit Category</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="delete_category_confirm">Delete Category?</string>
+    <string name="delete_category_message">Are you sure you want to delete \"%s\"?</string>
+    <string name="delete_category_with_cards_message">Are you sure you want to delete \"%1$s\"? It contains %2$d cards that will become uncategorized.</string>
+    <string name="category_name">Category Name</string>
+    <string name="category_color">Category Color</string>
+    <string name="category_created_success">Category created successfully</string>
+    <string name="category_updated_success">Category updated successfully</string>
+    <string name="category_deleted_success">Category deleted successfully</string>
+    <string name="move_to_category">Category</string>
+    <string name="no_category">No Category</string>
 
     <!-- Statistics -->
     <string name="statistics_title">Collection Statistics</string>
@@ -86,6 +123,30 @@
     <string name="no_sets_found">No sets found</string>
     <string name="loading_sets">Loading sets…</string>
 
+    <!-- Bottom Navigation -->
+    <string name="nav_collections">Collections</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="nickname">Nickname</string>
+    <string name="nickname_hint">Enter your nickname</string>
+    <string name="member_since">Member since</string>
+    <string name="change_password">Change Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_confirm">Delete Account?</string>
+    <string name="delete_account_message">This action cannot be undone. All your collections and data will be permanently deleted.</string>
+    <string name="enter_password_to_confirm">Enter your password to confirm</string>
+    <string name="password_changed_success">Password changed successfully</string>
+    <string name="account_deleted_success">Account deleted successfully</string>
+    <string name="nickname_updated_success">Nickname updated successfully</string>
+    <string name="logout_confirm">Logout?</string>
+    <string name="logout_message">Are you sure you want to logout?</string>
+
     <!-- Common -->
     <string name="error_generic">An error occurred</string>
     <string name="error_network">Network error. Check your connection.</string>
@@ -95,4 +156,5 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+    <string name="create">Create</string>
 </resources>

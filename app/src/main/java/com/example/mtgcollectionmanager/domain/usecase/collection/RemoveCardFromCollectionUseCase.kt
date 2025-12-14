@@ -8,6 +8,6 @@ import javax.inject.Inject
 class RemoveCardFromCollectionUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    suspend operator fun invoke(cardId: String): Flow<Resource<Unit>> =
-        repository.removeCard(cardId)
+    suspend operator fun invoke(collectionId: Long, cardId: String): Flow<Resource<Unit>> =
+        repository.removeCard(collectionId, cardId)
 }

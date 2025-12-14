@@ -11,10 +11,11 @@ class AddCardToCollectionUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
     suspend operator fun invoke(
+        collectionId: Long,
         card: Card,
         quantity: Int,
         condition: CardCondition,
         notes: String
     ): Flow<Resource<Unit>> =
-        repository.addCard(card, quantity, condition, notes)
+        repository.addCard(collectionId, card, quantity, condition, notes)
 }
