@@ -7,6 +7,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.sababukia_tbc.databinding.ActivityMainBinding
 import com.example.sababukia_tbc.presentation.common.showNetworkConnectedSnackbar
 import com.example.sababukia_tbc.presentation.common.showNetworkDisconnectedSnackbar
@@ -57,24 +60,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() = with(binding) {
-        bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_heart -> {
-                    true
+        // Safely obtain NavController from NavHostFragment. If fragment isn't ready yet,
+        // post to the view's message queue to try again shortly.
+        val navHost =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val navController = navHost?.navController
+        if (navController != null) {
+            bottomNavigation.setupWithNavController(navController)
+        } else {
+            bottomNavigation.post {
+                try {
+                    val nc = findNavController(R.id.nav_host_fragment)
+                    bottomNavigation.setupWithNavController(nc)
+                } catch (ignored: IllegalStateException) {
+                    // If still not available, ignore to avoid crashing; nav will work when fragment attaches
                 }
-                R.id.nav_home -> {
-                    true
-                }
-                R.id.nav_message -> {
-                    true
-                }
-                R.id.nav_notifications -> {
-                    true
-                }
-                else -> false
             }
         }
-        bottomNavigation.selectedItemId = R.id.nav_home
     }
 
     override fun onDestroy() {

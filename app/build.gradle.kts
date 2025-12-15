@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment)
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.process)
@@ -93,6 +94,12 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // Play Services - Location (required for FusedLocationProviderClient)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    // Play Services - Maps and utilities (for Google Maps and clustering)
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.maps.android:android-maps-utils:2.3.0")
 
     // Coil for image loading
     implementation(libs.coil)

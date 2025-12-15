@@ -2,6 +2,7 @@ package com.example.sababukia_tbc.di
 
 import android.util.Log
 import com.example.sababukia_tbc.BuildConfig
+import com.example.sababukia_tbc.data.remote.api.LocationApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -79,5 +80,11 @@ object NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationApiService(@AppRetrofit retrofit: Retrofit): LocationApiService {
+        return retrofit.create(LocationApiService::class.java)
     }
 }

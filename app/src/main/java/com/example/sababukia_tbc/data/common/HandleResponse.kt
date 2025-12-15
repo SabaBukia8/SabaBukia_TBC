@@ -1,6 +1,7 @@
 package com.example.sababukia_tbc.data.common
 
 import com.example.sababukia_tbc.domain.common.Resource
+import com.example.sababukia_tbc.domain.common.DomainError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 class HandleResponse @Inject constructor() {
 
     fun <T> safeApiCall(call: suspend () -> Response<T>): Flow<Resource<T>> = flow {
-        emit(Resource.Loading(isLoading = true))
+        emit(Resource.Loading)
 
         try {
             val response = call()
@@ -21,20 +22,20 @@ class HandleResponse @Inject constructor() {
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     emit(Resource.Success(body))
-                } ?: emit(Resource.Error(errorMessage = "Response body is null"))
+                } ?: emit(Resource.Error(DomainError.UnknownError))
             } else {
                 val errorBody = response.errorBody()?.string() ?: "Unknown error"
-                emit(Resource.Error(errorMessage = errorBody))
+                emit(Resource.Error(DomainError.GeneralError(Throwable(errorBody))))
             }
         } catch (e: Exception) {
-            val errorMessage = when (e) {
-                is HttpException -> e.message ?: "HTTP error occurred"
-                is IOException -> "Network error. Please check your connection."
-                else -> e.message ?: "Unknown error occurred"
+            val domainError = when (e) {
+                is HttpException -> DomainError.GeneralError(e)
+                is IOException -> DomainError.NetworkError
+                else -> DomainError.GeneralError(e)
             }
-            emit(Resource.Error(errorMessage = errorMessage))
+            emit(Resource.Error(domainError))
         } finally {
-            emit(Resource.Loading(isLoading = false))
+            emit(Resource.Loading)
         }
     }
 }
