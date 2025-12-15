@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<VB : ViewBinding>(private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB) :
-    Fragment() {
+abstract class BaseFragment<VB : ViewBinding>(
+    private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB
+) : Fragment() {
+
     private var _binding: VB? = null
     protected val binding get() = _binding!!
 
@@ -23,16 +25,15 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: (LayoutInflat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listeners()
         bind()
+        listeners()
     }
-
-    open fun listeners() {}
-
-    open fun bind() {}
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
+
+    open fun bind() {}
+    open fun listeners() {}
 }

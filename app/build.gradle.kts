@@ -20,22 +20,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val mapsApiKey = providers.gradleProperty("MAPS_API_KEY").orNull ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
         debug {
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://mocki.io/\""
-            )
+            // No specific configuration for debug needed for Maps
         }
         release {
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://mocki.io/\""
-            )
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -71,11 +65,12 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.process)
 
-    // Room
+    // Room for persistent storage
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
@@ -83,9 +78,9 @@ dependencies {
     // Networking
     implementation(libs.retrofit)
     implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -94,12 +89,15 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // Coil for image loading
-    implementation(libs.coil)
-    implementation(libs.coil.network.okhttp)
+    // We don't need Coil for Maps functionality
 
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
+
+    // Google Maps and Location
+    implementation(libs.google.maps)
+    implementation(libs.google.location)
+    implementation(libs.google.maps.utils)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

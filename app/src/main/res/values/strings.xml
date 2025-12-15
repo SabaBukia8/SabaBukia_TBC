@@ -17,7 +17,47 @@
     <string name="nav_search">Search</string>
     <string name="nav_add">Add</string>
     <string name="nav_notifications">Notifications</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_home">Home</string>
+    <string name="title_map">Map</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- Map Screen -->
+    <string name="add_location">Add Location</string>
+    <string name="my_location">My Location</string>
+    <string name="show_all_locations">Show All Locations</string>
+    <string name="location_name">Location Name</string>
+    <string name="location_description">Description</string>
+    <string name="location_details">Location Details</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
 
     <!-- Error Messages -->
     <string name="error_unknown">Unknown error occurred</string>
+    <string name="error_location_permission">Location permission is required to use this feature</string>
+    <string name="location_permission_denied">Location permission denied</string>
+    <string name="location_not_available">Your current location is not available</string>
+    <string name="location_permission_title">Location Permission</string>
+    <string name="location_permission_rationale">This app needs location permission to show your position on the map</string>
+    <string name="ok">OK</string>
+    <string name="name_required">Please enter a name for this location</string>
+    <string name="error_location_unavailable">Location services are unavailable</string>
+    <string name="error_database">Database error occurred</string>
+    <string name="error_item_not_found">Item not found</string>
+    <string name="error_network">Network error occurred</string>
+    <string name="error_general">An error occurred</string>
+    <string name="location_saved_success">Location saved successfully</string>
+    <string name="getting_location">Getting your location…</string>
+    <string name="location_required_enable">Please enable location services to use the map</string>
+    <string name="settings">Settings</string>
+
+    <!-- Screen Titles -->
+    <string name="home_screen">Home Screen</string>
+    <string name="favorites_screen">Favorites Screen</string>
+    <string name="messages_screen">Messages Screen</string>
+    <string name="notifications_screen">Notifications Screen</string>
 </resources>
