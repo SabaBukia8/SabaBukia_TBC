@@ -35,4 +35,10 @@
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
 
+    <fragment
+        android:id="@+id/broadcastFragment"
+        android:name="com.example.sababukia_tbc.presentation.screen.broadcast.BroadcastFragment"
+        android:label="Broadcast"
+        tools:layout="@layout/fragment_broadcast" />
+
 </navigation>
