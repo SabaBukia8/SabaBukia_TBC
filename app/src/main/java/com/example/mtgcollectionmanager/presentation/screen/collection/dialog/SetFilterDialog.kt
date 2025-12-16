@@ -106,11 +106,11 @@ class SetFilterDialog : DialogFragment() {
         binding.btnClearAll.setOnClickListener {
             // Clear the filter states
             filterStates.clear()
-            
+
             // Create a new list to trigger ListAdapter's diffing
             val updatedList = allSets.toList()
             adapter.submitList(updatedList)
-            
+
             // No need for notifyDataSetChanged as DiffUtil will handle changes
             // Since we're using a ListAdapter, submitList with a new list reference
             // will trigger DiffUtil to calculate changes and update only what's needed

@@ -141,7 +141,7 @@ class SetSelectionDialog(
                         it.code.contains(query, ignoreCase = true)
             }
         }
-        
+
         adapter.submitList(filteredList)
 
         if (filteredList.isEmpty()) {
@@ -190,9 +190,9 @@ class SetSelectionDialog(
             fun bind(set: SetUiModel) = with(binding) {
                 val isSelected = selectedSets.contains(set.code)
                 cbSet.text = itemView.context.getString(
-                    R.string.cards, 
-                    set.name, 
-                    set.code, 
+                    R.string.cards,
+                    set.name,
+                    set.code,
                     set.cardCount
                 )
                 cbSet.isChecked = isSelected

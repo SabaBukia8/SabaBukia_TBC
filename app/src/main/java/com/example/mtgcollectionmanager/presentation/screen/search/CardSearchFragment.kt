@@ -79,24 +79,27 @@ class CardSearchFragment : BaseFragment<FragmentCardSearchBinding>(
                             else
                                 NetworkConnectivityManager.NetworkState.Unavailable
                         )
-                        
+
                         when {
                             state.isLoading -> {
                                 progressBar.show()
                                 rvCards.hide()
                                 llEmptyState.hide()
                             }
+
                             state.cards.isEmpty() && state.hasSearched -> {
                                 progressBar.hide()
                                 rvCards.hide()
                                 llEmptyState.show()
                             }
+
                             state.cards.isNotEmpty() -> {
                                 progressBar.hide()
                                 llEmptyState.hide()
                                 rvCards.show()
                                 adapter.submitList(state.cards)
                             }
+
                             else -> {
                                 progressBar.hide()
                                 rvCards.hide()
@@ -162,12 +165,13 @@ class CardSearchFragment : BaseFragment<FragmentCardSearchBinding>(
     }
 
     private fun showFiltersDialog(currentFilters: com.example.mtgcollectionmanager.presentation.screen.search.model.SearchFilters) {
-        val dialog = com.example.mtgcollectionmanager.presentation.screen.search.dialog.SearchFiltersDialog(
-            currentFilters = currentFilters,
-            onFiltersApplied = { filters ->
-                viewModel.onEvent(CardSearchContract.Event.FiltersApplied(filters))
-            }
-        )
+        val dialog =
+            com.example.mtgcollectionmanager.presentation.screen.search.dialog.SearchFiltersDialog(
+                currentFilters = currentFilters,
+                onFiltersApplied = { filters ->
+                    viewModel.onEvent(CardSearchContract.Event.FiltersApplied(filters))
+                }
+            )
         dialog.show(parentFragmentManager, "SearchFiltersDialog")
     }
 }

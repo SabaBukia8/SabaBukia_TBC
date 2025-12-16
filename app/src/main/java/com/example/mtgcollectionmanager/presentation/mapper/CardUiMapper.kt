@@ -12,17 +12,17 @@ import java.util.Locale
 fun Card.toUi(): CardUiModel {
 
     val defaultPrice = pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice ?: 0.0
-    
+
 
     val marketPricesUi = pricing.markets.map { market ->
         MarketPriceUiModel(
             marketName = market.marketName,
-            normalPrice = market.normalPrice?.let { String.format("\$%.2f", it) } ?: "N/A",
-            foilPrice = market.foilPrice?.let { String.format("\$%.2f", it) } ?: "N/A",
+            normalPrice = market.normalPrice?.let { String.format(Locale.US, "\$%.2f", it) } ?: "N/A",
+            foilPrice = market.foilPrice?.let { String.format(Locale.US, "\$%.2f", it) } ?: "N/A",
             purchaseUrl = market.purchaseUrl
         )
     }
-    
+
     return CardUiModel(
         cardId = id,
         name = name,
@@ -36,14 +36,14 @@ fun Card.toUi(): CardUiModel {
         releasedAt = releasedAt,
         setInfo = "$setCode - $setName",
         colorsDisplay = if (colors.isEmpty()) "Colorless" else colors.joinToString(", "),
-        priceFormatted = if (defaultPrice > 0) String.format("\$%.2f", defaultPrice) else "N/A",
+        priceFormatted = if (defaultPrice > 0) String.format(Locale.US, "\$%.2f", defaultPrice) else "N/A",
         marketPrices = marketPricesUi
     )
 }
 
 fun CollectionCard.toUi(): CollectionCardUiModel = with(card) {
     val defaultPrice = pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice ?: 0.0
-    
+
     CollectionCardUiModel(
         cardId = cardId,
         name = name,
@@ -55,8 +55,8 @@ fun CollectionCard.toUi(): CollectionCardUiModel = with(card) {
         quantityDisplay = "x${this@toUi.quantity}",
         condition = this@toUi.condition.name.lowercase().split("_")
             .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } },
-        priceFormatted = String.format("\$%.2f", defaultPrice),
-        totalValueFormatted = String.format("\$%.2f", defaultPrice * this@toUi.quantity),
+        priceFormatted = String.format(Locale.US, "\$%.2f", defaultPrice),
+        totalValueFormatted = String.format(Locale.US, "\$%.2f", defaultPrice * this@toUi.quantity),
         addedDateFormatted = formatDate(this@toUi.addedDate),
         notes = this@toUi.notes
     )

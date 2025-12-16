@@ -9,6 +9,9 @@ import javax.inject.Inject
 class GetCollectionByColorUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    suspend operator fun invoke(collectionId: Long, color: String): Flow<Resource<List<CollectionCard>>> =
+    suspend operator fun invoke(
+        collectionId: Long,
+        color: String
+    ): Flow<Resource<List<CollectionCard>>> =
         repository.getCardsByColor(collectionId, color)
 }

@@ -14,10 +14,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.databinding.FragmentCardDetailsBinding
 import com.example.mtgcollectionmanager.databinding.ItemMarketPriceBinding
 import com.example.mtgcollectionmanager.domain.model.CardCondition
-import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
 import com.example.mtgcollectionmanager.presentation.common.hide
 import com.example.mtgcollectionmanager.presentation.common.loadImage
@@ -190,12 +190,12 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                     with(binding) {
 
                         networkStatusView.updateNetworkStatus(
-                            if (state.isNetworkAvailable) 
-                                NetworkConnectivityManager.NetworkState.Available 
-                            else 
+                            if (state.isNetworkAvailable)
+                                NetworkConnectivityManager.NetworkState.Available
+                            else
                                 NetworkConnectivityManager.NetworkState.Unavailable
                         )
-                        
+
                         if (state.isLoading) {
                             progressBar.show()
                         } else {

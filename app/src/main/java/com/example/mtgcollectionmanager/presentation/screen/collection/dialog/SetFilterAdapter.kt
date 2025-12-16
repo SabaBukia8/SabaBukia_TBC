@@ -39,7 +39,8 @@ class SetFilterAdapter(
                 updateStateIcon(currentState)
 
                 root.setOnClickListener {
-                    val currentStateNow = filterStates[set.code] ?: CollectionContract.FilterState.NEUTRAL
+                    val currentStateNow =
+                        filterStates[set.code] ?: CollectionContract.FilterState.NEUTRAL
 
                     val newState = when (currentStateNow) {
                         CollectionContract.FilterState.NEUTRAL -> CollectionContract.FilterState.INCLUDE
@@ -59,10 +60,12 @@ class SetFilterAdapter(
                     CollectionContract.FilterState.NEUTRAL -> {
                         setImageDrawable(null)
                     }
+
                     CollectionContract.FilterState.INCLUDE -> {
                         setImageResource(com.example.mtgcollectionmanager.R.drawable.ic_check_mark)
                         clearColorFilter()
                     }
+
                     CollectionContract.FilterState.EXCLUDE -> {
                         setImageResource(com.example.mtgcollectionmanager.R.drawable.ic_redx)
                         clearColorFilter()

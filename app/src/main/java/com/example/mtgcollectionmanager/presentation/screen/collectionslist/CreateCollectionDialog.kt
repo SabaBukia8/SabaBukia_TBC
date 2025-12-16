@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.DialogCreateCollectionBinding
 import com.example.mtgcollectionmanager.presentation.common.ValidationHelper
 
@@ -35,7 +34,8 @@ class CreateCollectionDialog(
                 val description = etCollectionDescription.text?.toString()?.trim() ?: ""
 
                 if (name.isEmpty()) {
-                    etCollectionName.error = ValidationHelper.getCollectionNameRequiredError(requireContext())
+                    etCollectionName.error =
+                        ValidationHelper.getCollectionNameRequiredError(requireContext())
                     return@setOnClickListener
                 }
 
@@ -46,7 +46,7 @@ class CreateCollectionDialog(
             btnCancel.setOnClickListener {
                 dismiss()
             }
-            
+
             etCollectionName.requestFocus()
         }
 
@@ -60,7 +60,7 @@ class CreateCollectionDialog(
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

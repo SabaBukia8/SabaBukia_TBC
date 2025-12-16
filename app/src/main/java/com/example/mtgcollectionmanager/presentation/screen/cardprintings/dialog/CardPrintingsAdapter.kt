@@ -2,7 +2,6 @@ package com.example.mtgcollectionmanager.presentation.screen.cardprintings.dialo
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +44,10 @@ class CardPrintingsAdapter(
 
                 if (card.cardId == currentCardId) {
                     root.strokeWidth = 4
-                    root.strokeColor = androidx.core.content.ContextCompat.getColor(root.context, android.R.color.holo_blue_dark)
+                    root.strokeColor = androidx.core.content.ContextCompat.getColor(
+                        root.context,
+                        android.R.color.holo_blue_dark
+                    )
                 } else {
                     root.strokeWidth = 0
                 }

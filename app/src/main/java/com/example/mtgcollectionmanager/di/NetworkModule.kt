@@ -53,7 +53,7 @@ object NetworkModule {
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
-    
+
 
     @Provides
     @Singleton

@@ -34,10 +34,8 @@ class ProfileViewModel @Inject constructor(
 
     init {
         observeNetworkStatus()
-        // Load profile immediately
         loadProfile()
-        
-        // Then force a sync after a short delay to ensure data is loaded
+
         viewModelScope.launch {
             kotlinx.coroutines.delay(1000)
             syncCollections()
@@ -46,11 +44,10 @@ class ProfileViewModel @Inject constructor(
 
     private fun observeNetworkStatus() {
         networkConnectivityManager.observeNetworkState()
-            .onEach { networkState -> 
+            .onEach { networkState ->
                 val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
                 updateState { it.copy(isNetworkAvailable = isAvailable) }
-                
-                // If network becomes available, refresh profile
+
                 if (isAvailable) {
                     loadProfile()
                 }
@@ -119,7 +116,6 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        // Only show error messages if we're online
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 ProfileContract.SideEffect.ShowError(
@@ -166,7 +162,6 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        // Only show error messages if we're online
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 ProfileContract.SideEffect.ShowError(
@@ -239,7 +234,6 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        // Only show error messages if we're online
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 ProfileContract.SideEffect.ShowError(
@@ -280,7 +274,6 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        // Only show error messages if we're online
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 ProfileContract.SideEffect.ShowError(
@@ -298,25 +291,23 @@ class ProfileViewModel @Inject constructor(
         logoutUseCase()
         emitSideEffect(ProfileContract.SideEffect.NavigateToLogin)
     }
-    
-    // Debug function to manually sync collections and cards
+
     fun syncCollections() {
         viewModelScope.launch {
             updateState { it.copy(isLoading = true) }
-            
+
             try {
-                // Force a reload of the profile which will trigger the card sync
                 getUserProfileUseCase().collect { resource ->
                     when (resource) {
                         is Resource.Loading -> {
                             updateState { it.copy(isLoading = resource.isLoading) }
                         }
-                        
+
                         is Resource.Success -> {
                             val profile = resource.data
                             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                             val memberSince = dateFormat.format(Date(profile.createdAt))
-                            
+
                             updateState {
                                 it.copy(
                                     nickname = profile.nickname,
@@ -328,7 +319,7 @@ class ProfileViewModel @Inject constructor(
                                 )
                             }
                         }
-                        
+
                         is Resource.Error -> {
                             if (state.value.isNetworkAvailable) {
                                 emitSideEffect(

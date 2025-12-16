@@ -3,13 +3,13 @@ package com.example.mtgcollectionmanager.presentation.screen.collection.bottomsh
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.ItemCategoryBinding
 import com.example.mtgcollectionmanager.domain.model.Category
-import androidx.core.graphics.toColorInt
 
 class CategoryManagementAdapter(
     private val onEditClick: (Category) -> Unit,
@@ -36,7 +36,8 @@ class CategoryManagementAdapter(
         fun bind(category: Category) {
             with(binding) {
                 tvCategoryName.text = category.name
-                tvCardCount.text = root.context.getString(R.string.card_count_format, category.cardCount)
+                tvCardCount.text =
+                    root.context.getString(R.string.card_count_format, category.cardCount)
 
                 try {
                     vColorIndicator.setBackgroundColor(category.color.toColorInt())

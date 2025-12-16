@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.domain.common.Resource
-import com.example.mtgcollectionmanager.domain.model.CardCondition
 import com.example.mtgcollectionmanager.domain.model.Card
+import com.example.mtgcollectionmanager.domain.model.CardCondition
 import com.example.mtgcollectionmanager.domain.usecase.auth.LogoutUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.CreateCategoryUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.CreateCollectionUseCase
@@ -23,6 +23,7 @@ import com.example.mtgcollectionmanager.domain.usecase.collection.UpdateCollecti
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
 import com.example.mtgcollectionmanager.presentation.screen.collection.drawer.CategoryDrawerItem
+import java.util.Locale
 import com.example.mtgcollectionmanager.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -59,13 +60,13 @@ class CollectionViewModel @Inject constructor(
         onEvent(CollectionContract.Event.LoadCollection)
         onEvent(CollectionContract.Event.LoadCategories)
     }
-    
+
     private fun observeNetworkStatus() {
         networkConnectivityManager.observeNetworkState()
-            .onEach { networkState -> 
+            .onEach { networkState ->
                 val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
                 updateState { it.copy(isNetworkAvailable = isAvailable) }
-                
+
 
                 if (isAvailable) {
                     onEvent(CollectionContract.Event.RefreshCollection)
@@ -83,37 +84,60 @@ class CollectionViewModel @Inject constructor(
             is CollectionContract.Event.ViewModeChanged -> {
                 updateState { it.copy(viewMode = event.mode) }
             }
+
             is CollectionContract.Event.CardClicked -> {
                 emitSideEffect(CollectionContract.SideEffect.NavigateToCardDetails(event.cardId))
             }
+
             is CollectionContract.Event.DeleteCardClicked -> {
                 val card = state.value.allCards.find { it.cardId == event.cardId }
                 if (card != null) {
-                    emitSideEffect(CollectionContract.SideEffect.ShowDeleteConfirmation(card.cardId, card.name))
+                    emitSideEffect(
+                        CollectionContract.SideEffect.ShowDeleteConfirmation(
+                            card.cardId,
+                            card.name
+                        )
+                    )
                 }
             }
+
             is CollectionContract.Event.SearchClicked -> {
                 emitSideEffect(CollectionContract.SideEffect.NavigateToSearch)
             }
+
             is CollectionContract.Event.LogoutClicked -> logout()
             is CollectionContract.Event.ColorFilterClicked -> {
                 emitSideEffect(CollectionContract.SideEffect.ShowColorFilterDialog(state.value.colorFilters))
             }
+
             is CollectionContract.Event.ColorFilterApplied -> {
-                updateState { it.copy(colorFilters = event.colorFilters, viewMode = CollectionContract.ViewMode.BY_COLOR) }
+                updateState {
+                    it.copy(
+                        colorFilters = event.colorFilters,
+                        viewMode = CollectionContract.ViewMode.BY_COLOR
+                    )
+                }
                 applyFilters()
             }
+
             is CollectionContract.Event.SetFilterClicked -> {
                 emitSideEffect(CollectionContract.SideEffect.ShowSetFilterDialog(state.value.setFilters))
             }
+
             is CollectionContract.Event.SetFilterApplied -> {
-                updateState { it.copy(setFilters = event.setFilters, viewMode = CollectionContract.ViewMode.BY_SET) }
+                updateState {
+                    it.copy(
+                        setFilters = event.setFilters,
+                        viewMode = CollectionContract.ViewMode.BY_SET
+                    )
+                }
                 applyFilters()
             }
+
             is CollectionContract.Event.CategoryFilterClicked -> {
                 when {
                     event.categoryId == null -> {
-    
+
                         updateState {
                             it.copy(
                                 selectedCategoryId = null,
@@ -122,6 +146,7 @@ class CollectionViewModel @Inject constructor(
                         }
                         loadCollection()
                     }
+
                     event.categoryId == -1L -> {
 
                         updateState {
@@ -132,6 +157,7 @@ class CollectionViewModel @Inject constructor(
                         }
                         loadUncategorizedCards()
                     }
+
                     else -> {
 
                         updateState {
@@ -144,39 +170,56 @@ class CollectionViewModel @Inject constructor(
                     }
                 }
             }
+
             is CollectionContract.Event.EditCardClicked -> {
                 val card = state.value.allCards.find { it.cardId == event.cardId }
                 if (card != null) {
                     emitSideEffect(CollectionContract.SideEffect.ShowEditCardDialog(card))
                 }
             }
+
             is CollectionContract.Event.SaveCardDetails -> {
-                saveCardDetails(event.cardId, event.quantity, event.condition, event.notes, event.categoryId)
+                saveCardDetails(
+                    event.cardId,
+                    event.quantity,
+                    event.condition,
+                    event.notes,
+                    event.categoryId
+                )
             }
+
             is CollectionContract.Event.ManageCollectionsClicked -> {
                 loadCollections()
             }
+
             is CollectionContract.Event.LoadCollections -> {
                 loadCollections()
             }
+
             is CollectionContract.Event.CreateCollection -> {
                 createCollection(event.name, event.description)
             }
+
             is CollectionContract.Event.UpdateCollection -> {
                 updateCollection(event.id, event.name, event.description)
             }
+
             is CollectionContract.Event.DeleteCollection -> {
                 deleteCollection(event.id)
             }
+
             is CollectionContract.Event.ManageCategoriesClicked -> {
                 loadCategoriesForManagement()
             }
+
             is CollectionContract.Event.CreateCategory -> {
                 createCategory(event.name, event.color)
             }
+
             is CollectionContract.Event.UpdateCategory -> {
                 updateCategory(event.id, event.name, event.color)
             }
+
             is CollectionContract.Event.DeleteCategory -> {
                 deleteCategory(event.id)
             }
@@ -190,29 +233,34 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
                         resource.data.let { collectionCards ->
                             val uiCards = collectionCards.map { it.toUi() }
-                            val totalValue = collectionCards.sumOf { calculateCardPrice(it.card) * it.quantity.toDouble() }
+                            val totalValue =
+                                collectionCards.sumOf { calculateCardPrice(it.card) * it.quantity.toDouble() }
                             val totalCards = collectionCards.sumOf { it.quantity }
 
                             updateState {
                                 it.copy(
                                     allCards = uiCards,
                                     cards = uiCards,
-                                    totalValue = String.format("$%.2f", totalValue),
+                                    totalValue = String.format(Locale.US, "$%.2f", totalValue),
                                     totalCards = totalCards
                                 )
                             }
                             applyFilters()
                         }
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -235,7 +283,8 @@ class CollectionViewModel @Inject constructor(
 
                 currentState.allCards.filter { card ->
 
-                    val hasExcludedColor = excludeColors.any { color -> card.colors.contains(color) }
+                    val hasExcludedColor =
+                        excludeColors.any { color -> card.colors.contains(color) }
                     if (hasExcludedColor) return@filter false
 
 
@@ -246,6 +295,7 @@ class CollectionViewModel @Inject constructor(
                     }
                 }
             }
+
             CollectionContract.ViewMode.BY_SET -> {
                 val includeSets = currentState.setFilters
                     .filter { it.value == CollectionContract.FilterState.INCLUDE }
@@ -278,17 +328,23 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.card_removed_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.card_removed_success)
+                            )
+                        )
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -319,11 +375,13 @@ class CollectionViewModel @Inject constructor(
                             updateState { it.copy(categories = drawerItems) }
                         }
                     }
+
                     is Resource.Error -> {
-    
+
                     }
+
                     is Resource.Loading -> {
-    
+
                     }
                 }
             }
@@ -337,6 +395,7 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
                         resource.data.let { collectionCards ->
                             val uiCards = collectionCards.map { it.toUi() }
@@ -348,12 +407,15 @@ class CollectionViewModel @Inject constructor(
                             }
                         }
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -368,6 +430,7 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
                         resource.data.let { collectionCards ->
                             val uiCards = collectionCards.map { it.toUi() }
@@ -379,12 +442,15 @@ class CollectionViewModel @Inject constructor(
                             }
                         }
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -392,7 +458,13 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
-    private fun saveCardDetails(cardId: String, quantity: Int, conditionStr: String, notes: String, categoryId: Long?) {
+    private fun saveCardDetails(
+        cardId: String,
+        quantity: Int,
+        conditionStr: String,
+        notes: String,
+        categoryId: Long?
+    ) {
         viewModelScope.launch {
             val condition = try {
                 CardCondition.valueOf(conditionStr)
@@ -401,27 +473,39 @@ class CollectionViewModel @Inject constructor(
             }
 
 
-            updateCardDetailsUseCase(collectionId, cardId, quantity, condition, notes).collect { resource ->
+            updateCardDetailsUseCase(
+                collectionId,
+                cardId,
+                quantity,
+                condition,
+                notes
+            ).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
 
                         if (categoryId != null) {
                             moveCardToCategory(cardId, categoryId)
                         } else {
-                            emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.card_updated_success)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowSuccess(
+                                    UiText.StringResource(com.example.mtgcollectionmanager.R.string.card_updated_success)
+                                )
+                            )
                         }
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -434,21 +518,27 @@ class CollectionViewModel @Inject constructor(
             moveCardToCategoryUseCase(collectionId, cardId, categoryId).collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.card_updated_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.card_updated_success)
+                            )
+                        )
                         loadCategories()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
+
                     is Resource.Loading -> {
-    
+
                     }
                 }
             }
@@ -463,19 +553,27 @@ class CollectionViewModel @Inject constructor(
                         resource.data.let { collections ->
                             val collectionsUi = collections.map { it.toUi() }
                             updateState { it.copy(collections = collectionsUi) }
-                            emitSideEffect(CollectionContract.SideEffect.ShowManageCollectionsDialog(collectionsUi))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowManageCollectionsDialog(
+                                    collectionsUi
+                                )
+                            )
                         }
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
+
                     is Resource.Loading -> {
-    
+
                     }
                 }
             }
@@ -489,18 +587,24 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.collection_created_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.collection_created_success)
+                            )
+                        )
                         loadCollections()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -513,9 +617,11 @@ class CollectionViewModel @Inject constructor(
 
             val existingCollection = state.value.collections.find { it.id == id }
             if (existingCollection == null) {
-                emitSideEffect(CollectionContract.SideEffect.ShowError(
-                    UiText.DynamicString("Collection not found")
-                ))
+                emitSideEffect(
+                    CollectionContract.SideEffect.ShowError(
+                        UiText.DynamicString("Collection not found")
+                    )
+                )
                 return@launch
             }
 
@@ -535,18 +641,24 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.collection_updated_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.collection_updated_success)
+                            )
+                        )
                         loadCollections()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -561,18 +673,24 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.collection_deleted_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.collection_deleted_success)
+                            )
+                        )
                         loadCollections()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -585,20 +703,26 @@ class CollectionViewModel @Inject constructor(
             getCategoriesUseCase(collectionId).collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        resource.data.let { categories ->
-                            emitSideEffect(CollectionContract.SideEffect.ShowManageCategoriesDialog(categories))
-                        }
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowManageCategoriesDialog(
+                                resource.data
+                            )
+                        )
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
+
                     is Resource.Loading -> {
-    
+
                     }
                 }
             }
@@ -612,18 +736,24 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.category_created_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.category_created_success)
+                            )
+                        )
                         loadCategories()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -648,18 +778,24 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.category_updated_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.category_updated_success)
+                            )
+                        )
                         loadCategories()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -674,18 +810,24 @@ class CollectionViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(com.example.mtgcollectionmanager.R.string.category_deleted_success)
-                        ))
+                        emitSideEffect(
+                            CollectionContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(com.example.mtgcollectionmanager.R.string.category_deleted_success)
+                            )
+                        )
                         loadCategories()
                     }
+
                     is Resource.Error -> {
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -699,19 +841,19 @@ class CollectionViewModel @Inject constructor(
             emitSideEffect(CollectionContract.SideEffect.NavigateToLogin)
         }
     }
-    
+
     private fun calculateCardPrice(card: Card): Double {
-    
+
         card.pricing.markets.find { it.marketId == com.example.mtgcollectionmanager.domain.model.MarketPrice.MARKET_TCGPLAYER }?.normalPrice?.let {
             return it
         }
-        
-    
+
+
         card.pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice?.let {
             return it
         }
-        
-    
+
+
         return 0.0
     }
 }

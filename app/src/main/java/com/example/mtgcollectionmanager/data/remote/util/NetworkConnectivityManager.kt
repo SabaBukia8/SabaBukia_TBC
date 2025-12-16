@@ -20,33 +20,33 @@ import javax.inject.Singleton
 class NetworkConnectivityManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val connectivityManager = 
+    private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    
+
 
     sealed class NetworkState {
 
         object Available : NetworkState()
-        
+
 
         object Unavailable : NetworkState()
     }
-    
+
 
     fun observeNetworkState(): Flow<NetworkState> = callbackFlow {
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 launch { send(NetworkState.Available) }
             }
-            
+
             override fun onLost(network: Network) {
                 launch { send(NetworkState.Unavailable) }
             }
-            
+
             override fun onUnavailable() {
                 launch { send(NetworkState.Unavailable) }
             }
-            
+
             override fun onCapabilitiesChanged(
                 network: Network,
                 networkCapabilities: NetworkCapabilities
@@ -56,7 +56,7 @@ class NetworkConnectivityManager @Inject constructor(
                 ) && networkCapabilities.hasCapability(
                     NetworkCapabilities.NET_CAPABILITY_VALIDATED
                 )
-                
+
                 if (isInternetCapable) {
                     launch { send(NetworkState.Available) }
                 } else {
@@ -64,21 +64,21 @@ class NetworkConnectivityManager @Inject constructor(
                 }
             }
         }
-        
+
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
-        
+
         connectivityManager.registerNetworkCallback(networkRequest, callback)
-        
+
 
         send(getCurrentNetworkState())
-        
+
         awaitClose {
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }.distinctUntilChanged()
-    
+
 
     fun getCurrentNetworkState(): NetworkState {
         return if (isNetworkAvailable()) {
@@ -87,12 +87,13 @@ class NetworkConnectivityManager @Inject constructor(
             NetworkState.Unavailable
         }
     }
-    
+
 
     fun isNetworkAvailable(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val networkCapabilities = connectivityManager.activeNetwork ?: return false
-            val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
             when {
                 actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true

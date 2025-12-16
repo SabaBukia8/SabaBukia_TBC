@@ -73,13 +73,19 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                                 LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
                             )
                         }
+
                         is LoginContract.SideEffect.NavigateToCollection -> {
                             findNavController().navigate(
                                 LoginFragmentDirections.actionLoginFragmentToCollectionsListFragment()
                             )
                         }
+
                         is LoginContract.SideEffect.ShowError -> {
-                            binding.root.showErrorSnackbar(sideEffect.message.asString(requireContext()))
+                            binding.root.showErrorSnackbar(
+                                sideEffect.message.asString(
+                                    requireContext()
+                                )
+                            )
                         }
                     }
                 }

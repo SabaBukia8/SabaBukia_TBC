@@ -95,19 +95,21 @@ class CardPrintingsDialog(
                             else
                                 NetworkConnectivityManager.NetworkState.Unavailable
                         )
-                        
+
                         when {
                             state.isLoading -> {
                                 progressBar.show()
                                 rvPrintings.hide()
                                 tvError.hide()
                             }
+
                             state.error != null -> {
                                 progressBar.hide()
                                 rvPrintings.hide()
                                 tvError.text = state.error
                                 tvError.show()
                             }
+
                             state.printings.isNotEmpty() -> {
                                 progressBar.hide()
                                 tvError.hide()

@@ -31,7 +31,7 @@ class SearchColorFilterAdapter(
     override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
-    
+
     fun updateItemState(position: Int, newState: ColorFilterState) {
         val currentList = currentList.toMutableList()
         if (position >= 0 && position < currentList.size) {
@@ -40,7 +40,7 @@ class SearchColorFilterAdapter(
             submitList(currentList)
         }
     }
-    
+
     fun resetAllStates() {
         val resetList = currentList.map { it.copy(state = ColorFilterState.NEUTRAL) }
         submitList(resetList)
@@ -81,10 +81,12 @@ class SearchColorFilterAdapter(
                     ColorFilterState.NEUTRAL -> {
                         setImageDrawable(null)
                     }
+
                     ColorFilterState.INCLUDE -> {
                         setImageResource(R.drawable.ic_check_mark)
                         clearColorFilter()
                     }
+
                     ColorFilterState.EXCLUDE -> {
                         setImageResource(R.drawable.ic_redx)
                         clearColorFilter()
@@ -99,7 +101,10 @@ class SearchColorFilterAdapter(
             return oldItem.code == newItem.code
         }
 
-        override fun areContentsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
+        override fun areContentsTheSame(
+            oldItem: ColorFilterItem,
+            newItem: ColorFilterItem
+        ): Boolean {
             return oldItem == newItem
         }
     }

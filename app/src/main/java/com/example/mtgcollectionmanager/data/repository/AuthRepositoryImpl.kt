@@ -88,7 +88,7 @@ class AuthRepositoryImpl @Inject constructor(
                 val collectionCount = collectionDao.getCollectionCount(user.uid)
                 val cardRecordCount = collectionCardDao.getCardRecordCountForUser(user.uid)
                 var totalCardsCount = collectionCardDao.getTotalCardCountForUser(user.uid)
-                
+
                 // If we have card records but totalCards is 0, something's wrong with quantity values
                 if (cardRecordCount > 0 && totalCardsCount == 0) {
                     // Force all card quantities to be at least 1
@@ -104,37 +104,40 @@ class AuthRepositoryImpl @Inject constructor(
                         totalCardsCount = updatedTotal
                     }
                 }
-                
+
                 // Debug: Let's force a refresh of card data from Firestore
                 try {
                     // Get all collections
                     val collections = firestoreDataSource.getCollectionsOnce(user.uid)
-                    
+
                     // For each collection, get all cards and save them locally
                     var cardCount = 0
                     collections.forEach { collection ->
                         val cards = firestoreDataSource.getCardsOnce(user.uid, collection.id)
                         cards.forEach { card ->
                             // Convert Firestore ID to local ID
-                            val localId = collection.id.hashCode().toLong().let { if (it < 0) -it else it }
+                            val localId =
+                                collection.id.hashCode().toLong().let { if (it < 0) -it else it }
                             val entity = card.toEntity(localId, user.uid)
                             collectionCardDao.insertCard(entity)
                             cardCount += card.quantity
                         }
                     }
-                    
+
                     // Use the card count we just calculated
                     if (cardCount > 0) {
-                        emit(Resource.Success(
-                            UserProfile(
-                                uid = user.uid,
-                                email = profile.email,
-                                nickname = profile.nickname,
-                                createdAt = profile.createdAt,
-                                collectionCount = collectionCount,
-                                totalCards = cardCount
+                        emit(
+                            Resource.Success(
+                                UserProfile(
+                                    uid = user.uid,
+                                    email = profile.email,
+                                    nickname = profile.nickname,
+                                    createdAt = profile.createdAt,
+                                    collectionCount = collectionCount,
+                                    totalCards = cardCount
+                                )
                             )
-                        ))
+                        )
                         emit(Resource.Loading(false))
                         return@flow
                     }

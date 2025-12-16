@@ -8,7 +8,11 @@ import javax.inject.Inject
 class MoveCardToCategoryUseCase @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) {
-    suspend operator fun invoke(collectionId: Long, scryfallCardId: String, categoryId: Long?): Flow<Resource<Unit>> {
+    suspend operator fun invoke(
+        collectionId: Long,
+        scryfallCardId: String,
+        categoryId: Long?
+    ): Flow<Resource<Unit>> {
         return categoryRepository.moveCardToCategory(collectionId, scryfallCardId, categoryId)
     }
 }

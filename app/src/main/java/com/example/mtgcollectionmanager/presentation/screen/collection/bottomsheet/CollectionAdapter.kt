@@ -36,9 +36,11 @@ class CollectionAdapter(
             with(binding) {
                 tvCollectionName.text = collection.name
                 tvCollectionDescription.text = collection.description
-                tvCardCount.text = root.context.getString(R.string.card_count_format, collection.totalCards)
+                tvCardCount.text =
+                    root.context.getString(R.string.card_count_format, collection.totalCards)
                 tvTotalValue.text = collection.totalValue
-                tvCreatedDate.text = root.context.getString(R.string.created_date_format, collection.createdDate)
+                tvCreatedDate.text =
+                    root.context.getString(R.string.created_date_format, collection.createdDate)
 
                 btnMenu.setOnClickListener {
                     showPopupMenu(collection)
@@ -55,10 +57,12 @@ class CollectionAdapter(
                         onEditClick(collection)
                         true
                     }
+
                     R.id.action_delete -> {
                         onDeleteClick(collection)
                         true
                     }
+
                     else -> false
                 }
             }

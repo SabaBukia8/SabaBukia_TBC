@@ -8,6 +8,7 @@ import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.usecase.card.SearchCardsUseCase
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
+import com.example.mtgcollectionmanager.presentation.screen.search.model.SearchFilters
 import com.example.mtgcollectionmanager.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -29,14 +30,13 @@ class CardSearchViewModel @Inject constructor(
     init {
         observeNetworkStatus()
     }
-    
+
     private fun observeNetworkStatus() {
         networkConnectivityManager.observeNetworkState()
-            .onEach { networkState -> 
+            .onEach { networkState ->
                 val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
                 updateState { it.copy(isNetworkAvailable = isAvailable) }
-                
-                // If network becomes available and we have an active search query, refresh results
+
                 if (isAvailable && state.value.searchQuery.isNotEmpty() && state.value.hasSearched) {
                     searchCards()
                 }
@@ -49,13 +49,16 @@ class CardSearchViewModel @Inject constructor(
             is CardSearchContract.Event.SearchQueryChanged -> {
                 updateState { it.copy(searchQuery = event.query) }
             }
+
             is CardSearchContract.Event.SearchClicked -> searchCards()
             is CardSearchContract.Event.CardClicked -> {
                 emitSideEffect(CardSearchContract.SideEffect.NavigateToCardDetails(event.cardId))
             }
+
             is CardSearchContract.Event.FiltersClicked -> {
                 emitSideEffect(CardSearchContract.SideEffect.ShowFiltersDialog(state.value.filters))
             }
+
             is CardSearchContract.Event.FiltersApplied -> {
                 updateState { it.copy(filters = event.filters) }
             }
@@ -66,13 +69,14 @@ class CardSearchViewModel @Inject constructor(
         viewModelScope.launch {
             with(state.value) {
                 if (searchQuery.isBlank() && filters.isEmpty()) {
-                    emitSideEffect(CardSearchContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.search_empty_state)
-                    ))
+                    emitSideEffect(
+                        CardSearchContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.search_empty_state)
+                        )
+                    )
                     return@launch
                 }
 
-                // Build the complete query
                 val fullQuery = buildSearchQuery(searchQuery, filters)
 
                 searchCardsUseCase(fullQuery).collect { resource ->
@@ -80,6 +84,7 @@ class CardSearchViewModel @Inject constructor(
                         is Resource.Loading -> {
                             updateState { it.copy(isLoading = resource.isLoading) }
                         }
+
                         is Resource.Success -> {
                             resource.data?.let { cards ->
                                 updateState {
@@ -90,13 +95,15 @@ class CardSearchViewModel @Inject constructor(
                                 }
                             }
                         }
+
                         is Resource.Error -> {
                             updateState { it.copy(hasSearched = true) }
-                            // Only show error messages if we're online - avoid showing network errors when offline
                             if (state.value.isNetworkAvailable) {
-                                emitSideEffect(CardSearchContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
-                                ))
+                                emitSideEffect(
+                                    CardSearchContract.SideEffect.ShowError(
+                                        UiText.DynamicString(resource.errorMessage)
+                                    )
+                                )
                             }
                         }
                     }
@@ -105,15 +112,13 @@ class CardSearchViewModel @Inject constructor(
         }
     }
 
-    private fun buildSearchQuery(nameQuery: String, filters: com.example.mtgcollectionmanager.presentation.screen.search.model.SearchFilters): String {
+    private fun buildSearchQuery(nameQuery: String, filters: SearchFilters): String {
         val queryParts = mutableListOf<String>()
 
-        // Add name query if present
         if (nameQuery.isNotBlank()) {
             queryParts.add("name:\"$nameQuery\"")
         }
 
-        // Add filter query
         val filterQuery = filters.toScryfallQuery()
         if (filterQuery.isNotBlank()) {
             queryParts.add(filterQuery)

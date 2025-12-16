@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,6 @@ import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.BottomSheetManageCategoriesBinding
 import com.example.mtgcollectionmanager.domain.model.Category
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import androidx.core.graphics.toColorInt
 
 class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
 
@@ -109,8 +109,10 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
 
         val etName = dialogView.findViewById<EditText>(R.id.etCategoryName)
         val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
-        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
-        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+        val btnCreate =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
         var selectedColor = predefinedColors[0]
 
@@ -149,8 +151,10 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
         val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
         val etName = dialogView.findViewById<EditText>(R.id.etCategoryName)
         val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
-        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
-        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+        val btnCreate =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
         tvTitle.setText(R.string.edit_category)
         btnCreate.setText(R.string.save)
@@ -279,11 +283,17 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
         }
 
         private class ColorDiffCallback : DiffUtil.ItemCallback<ColorPickerItem>() {
-            override fun areItemsTheSame(oldItem: ColorPickerItem, newItem: ColorPickerItem): Boolean {
+            override fun areItemsTheSame(
+                oldItem: ColorPickerItem,
+                newItem: ColorPickerItem
+            ): Boolean {
                 return oldItem.color == newItem.color
             }
 
-            override fun areContentsTheSame(oldItem: ColorPickerItem, newItem: ColorPickerItem): Boolean {
+            override fun areContentsTheSame(
+                oldItem: ColorPickerItem,
+                newItem: ColorPickerItem
+            ): Boolean {
                 return oldItem == newItem
             }
         }

@@ -13,7 +13,7 @@ fun Collection.toUi(): CollectionUi {
         name = name,
         description = description,
         totalCards = totalCards,
-        totalValue = if (totalValue > 0) "$${String.format("%.2f", totalValue)}" else "$0.00",
+        totalValue = if (totalValue > 0) String.format(Locale.US, "%.2f", totalValue) else "$0.00",
         createdDate = dateFormat.format(Date(createdDate)),
         userId = userId,
         createdDateMillis = createdDate,

@@ -2,9 +2,9 @@ package com.example.mtgcollectionmanager.presentation.screen.details
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.domain.model.Card
 import com.example.mtgcollectionmanager.domain.usecase.card.GetCardDetailsUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.AddCardToCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.IsCardInCollectionUseCase
@@ -29,18 +29,17 @@ class CardDetailsViewModel @Inject constructor(
 ) {
 
     private val collectionId: Long = savedStateHandle.get<Long>("collectionId") ?: 1L
-    private var domainCard: com.example.mtgcollectionmanager.domain.model.Card? = null
-    
+    private var domainCard: Card? = null
+
     init {
         observeNetworkStatus()
     }
-    
+
     private fun observeNetworkStatus() {
         networkConnectivityManager.observeNetworkState()
-            .onEach { networkState -> 
+            .onEach { networkState ->
                 val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
                 updateState { it.copy(isNetworkAvailable = isAvailable) }
-                
 
                 if (isAvailable && domainCard != null) {
                     loadCard(domainCard!!.id)
@@ -55,12 +54,15 @@ class CardDetailsViewModel @Inject constructor(
             is CardDetailsContract.Event.QuantityChanged -> {
                 updateState { it.copy(quantity = event.quantity) }
             }
+
             is CardDetailsContract.Event.ConditionSelected -> {
                 updateState { it.copy(selectedCondition = event.condition) }
             }
+
             is CardDetailsContract.Event.NotesChanged -> {
                 updateState { it.copy(notes = event.notes) }
             }
+
             is CardDetailsContract.Event.AddToCollectionClicked -> addToCollection()
             is CardDetailsContract.Event.OpenMarketUrl -> {
                 emitSideEffect(CardDetailsContract.SideEffect.OpenBrowser(event.url))
@@ -75,6 +77,7 @@ class CardDetailsViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
                         resource.data?.let { card ->
                             domainCard = card
@@ -87,12 +90,14 @@ class CardDetailsViewModel @Inject constructor(
                             }
                         }
                     }
-                    is Resource.Error -> {
 
+                    is Resource.Error -> {
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CardDetailsContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CardDetailsContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -115,18 +120,21 @@ class CardDetailsViewModel @Inject constructor(
                             is Resource.Loading -> {
                                 updateState { it.copy(isLoading = resource.isLoading) }
                             }
+
                             is Resource.Success -> {
                                 emitSideEffect(CardDetailsContract.SideEffect.ShowAddedToCollection)
                                 emitSideEffect(CardDetailsContract.SideEffect.NavigateBack)
                             }
-                            is Resource.Error -> {
 
-                        if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CardDetailsContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
-                        }
-                    }
+                            is Resource.Error -> {
+                                if (state.value.isNetworkAvailable) {
+                                    emitSideEffect(
+                                        CardDetailsContract.SideEffect.ShowError(
+                                            UiText.DynamicString(resource.errorMessage)
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
                 }

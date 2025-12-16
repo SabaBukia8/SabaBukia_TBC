@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.R
-import com.example.mtgcollectionmanager.databinding.DrawerNavigationBinding
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.databinding.FragmentCollectionBinding
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
-import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.presentation.common.hide
 import com.example.mtgcollectionmanager.presentation.common.show
 import com.example.mtgcollectionmanager.presentation.common.showErrorSnackbar
@@ -122,7 +121,8 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
             adapter = drawerAdapter
         }
 
-        val btnManageCategories = binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnManageCategories)
+        val btnManageCategories =
+            binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnManageCategories)
         btnManageCategories?.setOnClickListener {
             viewModel.onEvent(CollectionContract.Event.ManageCategoriesClicked)
             binding.drawerLayout.closeDrawers()
@@ -141,10 +141,12 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
                         viewModel.onEvent(CollectionContract.Event.ManageCollectionsClicked)
                         true
                     }
+
                     R.id.action_logout -> {
                         viewModel.onEvent(CollectionContract.Event.LogoutClicked)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -158,31 +160,33 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
                 viewModel.state.collect { state ->
                     with(binding) {
 
-                            networkStatusView.updateNetworkStatus(
-                                if (state.isNetworkAvailable) 
-                                    NetworkConnectivityManager.NetworkState.Available 
-                                else 
-                                    NetworkConnectivityManager.NetworkState.Unavailable
-                            )
-                            
-                            when {
-                                state.isLoading -> {
-                                    progressBar.show()
-                                    rvCollection.hide()
-                                    llEmptyState.hide()
-                                }
-                                state.cards.isEmpty() -> {
-                                    progressBar.hide()
-                                    rvCollection.hide()
-                                    llEmptyState.show()
-                                }
-                                else -> {
-                                    progressBar.hide()
-                                    llEmptyState.hide()
-                                    rvCollection.show()
-                                    adapter.submitList(state.cards)
-                                }
+                        networkStatusView.updateNetworkStatus(
+                            if (state.isNetworkAvailable)
+                                NetworkConnectivityManager.NetworkState.Available
+                            else
+                                NetworkConnectivityManager.NetworkState.Unavailable
+                        )
+
+                        when {
+                            state.isLoading -> {
+                                progressBar.show()
+                                rvCollection.hide()
+                                llEmptyState.hide()
                             }
+
+                            state.cards.isEmpty() -> {
+                                progressBar.hide()
+                                rvCollection.hide()
+                                llEmptyState.show()
+                            }
+
+                            else -> {
+                                progressBar.hide()
+                                llEmptyState.hide()
+                                rvCollection.show()
+                                adapter.submitList(state.cards)
+                            }
+                        }
 
                         tvTotalValue.text = getString(R.string.total_value, state.totalValue)
                         tvTotalCards.text = getString(R.string.total_cards, state.totalCards)
@@ -209,6 +213,7 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
                                 )
                             )
                         }
+
                         is CollectionContract.SideEffect.NavigateToSearch -> {
                             findNavController().navigate(
                                 CollectionFragmentDirections.actionCollectionFragmentToCardSearchFragment(
@@ -216,14 +221,21 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
                                 )
                             )
                         }
+
                         is CollectionContract.SideEffect.NavigateToLogin -> {
                             findNavController().navigate(
                                 CollectionFragmentDirections.actionCollectionFragmentToLoginFragment()
                             )
                         }
+
                         is CollectionContract.SideEffect.ShowError -> {
-                            binding.root.showErrorSnackbar(sideEffect.message.asString(requireContext()))
+                            binding.root.showErrorSnackbar(
+                                sideEffect.message.asString(
+                                    requireContext()
+                                )
+                            )
                         }
+
                         is CollectionContract.SideEffect.ShowSuccess -> {
                             Snackbar.make(
                                 binding.root,
@@ -231,21 +243,27 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
                                 Snackbar.LENGTH_SHORT
                             ).show()
                         }
+
                         is CollectionContract.SideEffect.ShowColorFilterDialog -> {
                             showColorFilterDialog(sideEffect.colorFilters)
                         }
+
                         is CollectionContract.SideEffect.ShowSetFilterDialog -> {
                             showSetFilterDialog(sideEffect.setFilters)
                         }
+
                         is CollectionContract.SideEffect.ShowDeleteConfirmation -> {
                             showDeleteConfirmationDialog(sideEffect.cardId, sideEffect.cardName)
                         }
+
                         is CollectionContract.SideEffect.ShowEditCardDialog -> {
                             showEditCardDialog(sideEffect.card)
                         }
+
                         is CollectionContract.SideEffect.ShowManageCollectionsDialog -> {
                             showManageCollectionsDialog(sideEffect.collections)
                         }
+
                         is CollectionContract.SideEffect.ShowManageCategoriesDialog -> {
                             showManageCategoriesDialog(sideEffect.categories)
                         }
@@ -292,11 +310,15 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
                         cardCount = item.cardCount
                     )
                 }
+
                 else -> null
             }
         }
 
-        EditCardBottomSheet.newInstance(card, categories) { quantity, condition, notes, categoryId ->
+        EditCardBottomSheet.newInstance(
+            card,
+            categories
+        ) { quantity, condition, notes, categoryId ->
             viewModel.onEvent(
                 CollectionContract.Event.SaveCardDetails(
                     cardId = card.cardId,

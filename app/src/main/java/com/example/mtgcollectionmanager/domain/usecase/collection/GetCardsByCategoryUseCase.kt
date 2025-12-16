@@ -9,6 +9,9 @@ import javax.inject.Inject
 class GetCardsByCategoryUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    suspend operator fun invoke(collectionId: Long, categoryId: Long?): Flow<Resource<List<CollectionCard>>> =
+    suspend operator fun invoke(
+        collectionId: Long,
+        categoryId: Long?
+    ): Flow<Resource<List<CollectionCard>>> =
         repository.getCardsByCategory(collectionId, categoryId)
 }

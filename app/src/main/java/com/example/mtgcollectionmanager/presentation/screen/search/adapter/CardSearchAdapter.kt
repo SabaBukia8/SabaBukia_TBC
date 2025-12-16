@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.databinding.ItemCardBinding
+import com.example.mtgcollectionmanager.presentation.common.ManaSymbolRenderer
+import com.example.mtgcollectionmanager.presentation.common.RarityColorHelper
 import com.example.mtgcollectionmanager.presentation.common.loadImage
 import com.example.mtgcollectionmanager.presentation.model.CardUiModel
 
@@ -35,16 +37,14 @@ class CardSearchAdapter(
                 ivCardImage.loadImage(card.imageUrl, cornerRadius = 8f)
                 tvCardName.text = card.name
 
-                // Render mana symbols
-                com.example.mtgcollectionmanager.presentation.common.ManaSymbolRenderer.renderManaSymbols(
+                ManaSymbolRenderer.renderManaSymbols(
                     root.context,
                     card.manaCost,
                     llManaSymbols
                 )
 
-                // Set rarity color strip
                 vRarityStrip.setBackgroundColor(
-                    com.example.mtgcollectionmanager.presentation.common.RarityColorHelper.getRarityColor(
+                    RarityColorHelper.getRarityColor(
                         root.context,
                         card.rarity
                     )

@@ -2,15 +2,11 @@ package com.example.mtgcollectionmanager.presentation.screen.collectionslist
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.ItemColorPickerBinding
-import com.google.android.material.card.MaterialCardView
 
 data class ColorItem(
     val color: String,
@@ -42,7 +38,7 @@ class ColorPickerAdapter(
         "#795548", // Brown
         "#9E9E9E"  // Grey
     )
-    
+
     // Initialize with the first color selected
     init {
         val initialList = availableColors.mapIndexed { index, color ->
@@ -54,7 +50,7 @@ class ColorPickerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
         val binding = ItemColorPickerBinding.inflate(
             LayoutInflater.from(parent.context),
-            parent, 
+            parent,
             false
         )
         return ColorViewHolder(binding)
@@ -77,7 +73,8 @@ class ColorPickerAdapter(
         submitList(newList)
     }
 
-    inner class ColorViewHolder(private val binding: ItemColorPickerBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ColorViewHolder(private val binding: ItemColorPickerBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(colorItem: ColorItem) {
             with(binding) {
                 colorView.setBackgroundColor(Color.parseColor(colorItem.color))
@@ -103,7 +100,7 @@ class ColorPickerAdapter(
             }
         }
     }
-    
+
     private class ColorDiffCallback : DiffUtil.ItemCallback<ColorItem>() {
         override fun areItemsTheSame(oldItem: ColorItem, newItem: ColorItem): Boolean {
             return oldItem.color == newItem.color

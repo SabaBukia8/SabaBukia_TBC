@@ -7,19 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtgcollectionmanager.R
-import com.example.mtgcollectionmanager.data.model.remote.SetDto
 import com.example.mtgcollectionmanager.data.remote.api.ScryfallApiService
 import com.example.mtgcollectionmanager.databinding.DialogSearchFiltersBinding
-import com.example.mtgcollectionmanager.presentation.common.hide
-import com.example.mtgcollectionmanager.presentation.common.show
 import com.example.mtgcollectionmanager.presentation.screen.search.model.ColorFilterState
 import com.example.mtgcollectionmanager.presentation.screen.search.model.SearchFilters
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -107,7 +102,7 @@ class SearchFiltersDialog(
                 adapter = colorAdapter
             }
         }
-        
+
         // Submit the initial list
         colorAdapter.submitList(colorItems)
     }
@@ -180,7 +175,7 @@ class SearchFiltersDialog(
             }
         }
     }
-    
+
     private fun addNoSetsSelectedChip() {
         val chip = Chip(requireContext()).apply {
             text = "No sets selected"
@@ -188,7 +183,7 @@ class SearchFiltersDialog(
         }
         binding.cgSelectedSets.addView(chip)
     }
-    
+
     private fun addSetChip(setCode: String) {
         val chip = Chip(requireContext()).apply {
             text = setCode.uppercase()
@@ -234,7 +229,7 @@ class SearchFiltersDialog(
         btnApply.setOnClickListener {
             // Get the most current state from the adapter
             val updatedColorFilters = colorAdapter.getColorStates()
-            
+
             val filters = SearchFilters(
                 colors = updatedColorFilters,
                 sets = selectedSets.toSet(),

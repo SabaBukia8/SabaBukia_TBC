@@ -12,7 +12,9 @@ import com.example.mtgcollectionmanager.presentation.model.CollectionCardUiModel
 class CollectionCardAdapter(
     private val onCardClick: (String) -> Unit,
     private val onCardLongClick: ((String) -> Unit)? = null
-) : ListAdapter<CollectionCardUiModel, CollectionCardAdapter.CollectionCardViewHolder>(CollectionCardDiffCallback()) {
+) : ListAdapter<CollectionCardUiModel, CollectionCardAdapter.CollectionCardViewHolder>(
+    CollectionCardDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionCardViewHolder {
         val binding = ItemCollectionCardBinding.inflate(
@@ -68,11 +70,17 @@ class CollectionCardAdapter(
     }
 
     private class CollectionCardDiffCallback : DiffUtil.ItemCallback<CollectionCardUiModel>() {
-        override fun areItemsTheSame(oldItem: CollectionCardUiModel, newItem: CollectionCardUiModel): Boolean {
+        override fun areItemsTheSame(
+            oldItem: CollectionCardUiModel,
+            newItem: CollectionCardUiModel
+        ): Boolean {
             return oldItem.cardId == newItem.cardId
         }
 
-        override fun areContentsTheSame(oldItem: CollectionCardUiModel, newItem: CollectionCardUiModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: CollectionCardUiModel,
+            newItem: CollectionCardUiModel
+        ): Boolean {
             return oldItem == newItem
         }
     }

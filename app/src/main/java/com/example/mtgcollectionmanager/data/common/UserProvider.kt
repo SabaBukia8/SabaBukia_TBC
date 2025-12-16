@@ -10,6 +10,6 @@ class UserProvider @Inject constructor(
     private val authRepository: AuthRepository
 ) {
 
-    fun getCurrentUserId(): String = 
+    fun getCurrentUserId(): String =
         authRepository.getCurrentUser()?.uid ?: ""
 }

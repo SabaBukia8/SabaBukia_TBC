@@ -51,7 +51,7 @@ class CreateCategoryDialog(
 
             etCategoryName.requestFocus()
         }
-        
+
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
 
@@ -67,7 +67,7 @@ class CreateCategoryDialog(
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -38,14 +38,14 @@ class CardPrintingsViewModel @Inject constructor(
 ) : BaseViewModel<CardPrintingsContract.State, CardPrintingsContract.Event, CardPrintingsContract.SideEffect>(
     CardPrintingsContract.State(isNetworkAvailable = networkConnectivityManager.isNetworkAvailable())
 ) {
-    
+
     init {
         observeNetworkStatus()
     }
-    
+
     private fun observeNetworkStatus() {
         networkConnectivityManager.observeNetworkState()
-            .onEach { networkState -> 
+            .onEach { networkState ->
                 val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
                 updateState { it.copy(isNetworkAvailable = isAvailable) }
             }
@@ -65,6 +65,7 @@ class CardPrintingsViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading, error = null) }
                     }
+
                     is Resource.Success -> {
                         resource.data?.let { cards ->
                             updateState {
@@ -76,6 +77,7 @@ class CardPrintingsViewModel @Inject constructor(
                             }
                         }
                     }
+
                     is Resource.Error -> {
                         updateState {
                             it.copy(
@@ -83,12 +85,14 @@ class CardPrintingsViewModel @Inject constructor(
                                 error = resource.errorMessage
                             )
                         }
-                        
+
 
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CardPrintingsContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CardPrintingsContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }

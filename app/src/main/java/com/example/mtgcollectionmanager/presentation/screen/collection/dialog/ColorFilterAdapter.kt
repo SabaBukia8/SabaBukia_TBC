@@ -23,7 +23,7 @@ class ColorFilterAdapter(
 
         submitList(colors)
     }
-    
+
 
     fun updateColorState(code: String, newState: CollectionContract.FilterState) {
         val newList = currentList.map { item ->
@@ -35,7 +35,7 @@ class ColorFilterAdapter(
         }
         submitList(newList)
     }
-    
+
 
     fun clearAllFilters() {
         val clearedList = currentList.map { item ->
@@ -73,10 +73,10 @@ class ColorFilterAdapter(
                         CollectionContract.FilterState.INCLUDE -> CollectionContract.FilterState.EXCLUDE
                         CollectionContract.FilterState.EXCLUDE -> CollectionContract.FilterState.NEUTRAL
                     }
-                    
+
 
                     updateColorState(colorItem.code, newState)
-                    
+
 
                     onColorStateChanged(colorItem.code, newState)
                 }
@@ -89,10 +89,12 @@ class ColorFilterAdapter(
                     CollectionContract.FilterState.NEUTRAL -> {
                         setImageDrawable(null)
                     }
+
                     CollectionContract.FilterState.INCLUDE -> {
                         setImageResource(com.example.mtgcollectionmanager.R.drawable.ic_check_mark)
                         clearColorFilter()
                     }
+
                     CollectionContract.FilterState.EXCLUDE -> {
                         setImageResource(com.example.mtgcollectionmanager.R.drawable.ic_redx)
                         clearColorFilter()
@@ -101,13 +103,16 @@ class ColorFilterAdapter(
             }
         }
     }
-    
+
     class ColorFilterDiffCallback : DiffUtil.ItemCallback<ColorFilterItem>() {
         override fun areItemsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
             return oldItem.code == newItem.code
         }
 
-        override fun areContentsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
+        override fun areContentsTheSame(
+            oldItem: ColorFilterItem,
+            newItem: ColorFilterItem
+        ): Boolean {
             return oldItem == newItem
         }
     }

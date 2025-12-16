@@ -1,7 +1,5 @@
 package com.example.mtgcollectionmanager.presentation.screen.profile
 
-import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -13,7 +11,6 @@ import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.databinding.FragmentProfileBinding
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
-import com.example.mtgcollectionmanager.presentation.util.asString
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -57,13 +54,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(
         btnDeleteAccount.setOnClickListener {
             viewModel.onEvent(ProfileContract.Event.DeleteAccountClicked)
         }
-        
+
         // Debug: Add a manual refresh for profile
         tvTotalCards.setOnClickListener {
             viewModel.onEvent(ProfileContract.Event.LoadProfile)
             showSnackbar("Refreshing profile data...")
         }
-        
+
         // Debug: Add a manual sync for collections
         tvCollectionCount.setOnClickListener {
             viewModel.syncCollections()
@@ -83,7 +80,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(
                             else
                                 NetworkConnectivityManager.NetworkState.Unavailable
                         )
-                        
+
                         progressBar.isVisible = state.isLoading
                         scrollView.isVisible = !state.isLoading
 
@@ -147,11 +144,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(
 
     private fun showChangePasswordDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_change_password, null)
-        val tilCurrentPassword = dialogView.findViewById<TextInputLayout>(R.id.tilCurrentPassword)
+        dialogView.findViewById<TextInputLayout>(R.id.tilCurrentPassword)
         val etCurrentPassword = dialogView.findViewById<TextInputEditText>(R.id.etCurrentPassword)
-        val tilNewPassword = dialogView.findViewById<TextInputLayout>(R.id.tilNewPassword)
+        dialogView.findViewById<TextInputLayout>(R.id.tilNewPassword)
         val etNewPassword = dialogView.findViewById<TextInputEditText>(R.id.etNewPassword)
-        val tilConfirmPassword = dialogView.findViewById<TextInputLayout>(R.id.tilConfirmPassword)
+        dialogView.findViewById<TextInputLayout>(R.id.tilConfirmPassword)
         val etConfirmPassword = dialogView.findViewById<TextInputEditText>(R.id.etConfirmPassword)
 
         MaterialAlertDialogBuilder(requireContext())

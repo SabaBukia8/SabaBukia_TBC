@@ -7,7 +7,6 @@ import com.example.mtgcollectionmanager.domain.model.CardCondition
 import com.example.mtgcollectionmanager.domain.model.CardPricing
 import com.example.mtgcollectionmanager.domain.model.CollectionCard
 import com.example.mtgcollectionmanager.domain.model.MarketPrice
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 fun CardDto.toDomain(): Card = Card(
@@ -33,7 +32,7 @@ private fun mapPricing(
     purchaseUris: Map<String, String>?
 ): CardPricing {
     val markets = mutableListOf<MarketPrice>()
-    
+
 
     markets.add(
         MarketPrice(
@@ -44,7 +43,7 @@ private fun mapPricing(
             purchaseUrl = purchaseUris?.get("tcgplayer")
         )
     )
-    
+
 
     markets.add(
         MarketPrice(
@@ -55,7 +54,7 @@ private fun mapPricing(
             purchaseUrl = purchaseUris?.get("cardkingdom")
         )
     )
-    
+
 
     markets.add(
         MarketPrice(
@@ -66,7 +65,7 @@ private fun mapPricing(
             purchaseUrl = purchaseUris?.get("cardmarket")
         )
     )
-    
+
 
     markets.add(
         MarketPrice(
@@ -77,7 +76,7 @@ private fun mapPricing(
             purchaseUrl = null
         )
     )
-    
+
     return CardPricing(markets)
 }
 

@@ -88,8 +88,10 @@ class ManageCollectionsBottomSheet : BottomSheetDialogFragment() {
 
         val etName = dialogView.findViewById<EditText>(R.id.etCollectionName)
         val etDescription = dialogView.findViewById<EditText>(R.id.etCollectionDescription)
-        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
-        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+        val btnCreate =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
@@ -119,8 +121,10 @@ class ManageCollectionsBottomSheet : BottomSheetDialogFragment() {
         val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
         val etName = dialogView.findViewById<EditText>(R.id.etCollectionName)
         val etDescription = dialogView.findViewById<EditText>(R.id.etCollectionDescription)
-        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
-        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+        val btnCreate =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel =
+            dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
         tvTitle.setText(R.string.edit_collection)
         btnCreate.setText(R.string.save)

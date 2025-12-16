@@ -19,7 +19,7 @@ class CategoryDrawerAdapter(
     fun setSelectedCategory(categoryId: Long?) {
         val oldCategoryId = selectedCategoryId
         selectedCategoryId = categoryId
-        
+
         // Optimize updates by only redrawing affected items
         if (oldCategoryId != categoryId) {
             // Find and update the previously selected category
@@ -32,7 +32,7 @@ class CategoryDrawerAdapter(
                 // The "All Cards" item was previously selected (position 0)
                 notifyItemChanged(0)
             }
-            
+
             // Find and update the newly selected category
             if (categoryId != null) {
                 val newPosition = findPositionById(categoryId)
@@ -45,7 +45,7 @@ class CategoryDrawerAdapter(
             }
         }
     }
-    
+
     private fun findPositionById(categoryId: Long): Int {
         for (position in 0 until itemCount) {
             val item = getItem(position)
@@ -97,8 +97,10 @@ class CategoryDrawerAdapter(
                             onItemClick(null)
                         }
                     }
+
                     is CategoryDrawerItem.Uncategorized -> {
-                        tvCategoryName.text = root.context.getString(R.string.category_uncategorized)
+                        tvCategoryName.text =
+                            root.context.getString(R.string.category_uncategorized)
                         tvCardCount.isVisible = false
                         vColorIndicator.isVisible = false
                         ivIcon.isVisible = true
@@ -116,6 +118,7 @@ class CategoryDrawerAdapter(
                             onItemClick(-1L) // Use -1 to represent uncategorized
                         }
                     }
+
                     is CategoryDrawerItem.Category -> {
                         tvCategoryName.text = item.name
                         tvCardCount.isVisible = true
@@ -147,17 +150,24 @@ class CategoryDrawerAdapter(
     }
 
     private class CategoryDiffCallback : DiffUtil.ItemCallback<CategoryDrawerItem>() {
-        override fun areItemsTheSame(oldItem: CategoryDrawerItem, newItem: CategoryDrawerItem): Boolean {
+        override fun areItemsTheSame(
+            oldItem: CategoryDrawerItem,
+            newItem: CategoryDrawerItem
+        ): Boolean {
             return when {
                 oldItem is CategoryDrawerItem.AllCards && newItem is CategoryDrawerItem.AllCards -> true
                 oldItem is CategoryDrawerItem.Uncategorized && newItem is CategoryDrawerItem.Uncategorized -> true
                 oldItem is CategoryDrawerItem.Category && newItem is CategoryDrawerItem.Category ->
                     oldItem.id == newItem.id
+
                 else -> false
             }
         }
 
-        override fun areContentsTheSame(oldItem: CategoryDrawerItem, newItem: CategoryDrawerItem): Boolean {
+        override fun areContentsTheSame(
+            oldItem: CategoryDrawerItem,
+            newItem: CategoryDrawerItem
+        ): Boolean {
             return oldItem == newItem
         }
     }

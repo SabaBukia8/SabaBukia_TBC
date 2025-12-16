@@ -46,12 +46,12 @@ object ManaSymbolRenderer {
 
     private fun getManaIcon(symbol: String): Int {
         val upperSymbol = symbol.uppercase()
-        
+
 
         if (upperSymbol.contains("/")) {
             return getHybridManaIcon(upperSymbol)
         }
-        
+
         return when (upperSymbol) {
 
             "W" -> R.drawable.ic_mana_white
@@ -59,12 +59,12 @@ object ManaSymbolRenderer {
             "B" -> R.drawable.ic_mana_black
             "R" -> R.drawable.ic_mana_red
             "G" -> R.drawable.ic_mana_green
-            
+
 
             "X" -> R.drawable.ic_mana_x
             "C" -> R.drawable.ic_mana_c
             "S" -> R.drawable.ic_mana_snow
-            
+
 
             "0" -> R.drawable.ic_mana_colorless  // 0 uses colorless
             "1" -> R.drawable.ic_mana_1
@@ -87,12 +87,12 @@ object ManaSymbolRenderer {
             "18" -> R.drawable.ic_mana_18
             "19" -> R.drawable.ic_mana_19
             "20" -> R.drawable.ic_mana_20
-            
+
 
             else -> R.drawable.ic_mana_colorless
         }
     }
-    
+
     private fun getHybridManaIcon(symbol: String): Int {
 
         if (symbol.endsWith("/P")) {
@@ -106,13 +106,13 @@ object ManaSymbolRenderer {
                 else -> R.drawable.ic_mana_colorless
             }
         }
-        
+
         val parts = symbol.split("/")
         if (parts.size != 2) return R.drawable.ic_mana_colorless
-        
+
         val first = parts[0]
         val second = parts[1]
-        
+
 
         if (first == "2") {
             return when (second) {
@@ -124,10 +124,10 @@ object ManaSymbolRenderer {
                 else -> R.drawable.ic_mana_colorless
             }
         }
-        
+
 
         val hybridKey = "${first}${second}".lowercase()
-        
+
         return when (hybridKey) {
             "wu" -> R.drawable.ic_mana_wu
             "wb" -> R.drawable.ic_mana_wb

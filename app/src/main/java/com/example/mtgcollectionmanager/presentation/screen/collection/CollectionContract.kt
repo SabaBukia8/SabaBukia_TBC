@@ -38,7 +38,14 @@ object CollectionContract {
         data class CardClicked(val cardId: String) : Event
         data class DeleteCardClicked(val cardId: String) : Event
         data class EditCardClicked(val cardId: String) : Event
-        data class SaveCardDetails(val cardId: String, val quantity: Int, val condition: String, val notes: String, val categoryId: Long?) : Event
+        data class SaveCardDetails(
+            val cardId: String,
+            val quantity: Int,
+            val condition: String,
+            val notes: String,
+            val categoryId: Long?
+        ) : Event
+
         data object SearchClicked : Event
         data object LogoutClicked : Event
         data object ColorFilterClicked : Event
@@ -67,7 +74,10 @@ object CollectionContract {
         data class ShowDeleteConfirmation(val cardId: String, val cardName: String) : SideEffect
         data class ShowSuccess(val message: UiText) : SideEffect
         data class ShowEditCardDialog(val card: CollectionCardUiModel) : SideEffect
-        data class ShowManageCollectionsDialog(val collections: List<com.example.mtgcollectionmanager.presentation.model.CollectionUi>) : SideEffect
-        data class ShowManageCategoriesDialog(val categories: List<com.example.mtgcollectionmanager.domain.model.Category>) : SideEffect
+        data class ShowManageCollectionsDialog(val collections: List<com.example.mtgcollectionmanager.presentation.model.CollectionUi>) :
+            SideEffect
+
+        data class ShowManageCategoriesDialog(val categories: List<com.example.mtgcollectionmanager.domain.model.Category>) :
+            SideEffect
     }
 }

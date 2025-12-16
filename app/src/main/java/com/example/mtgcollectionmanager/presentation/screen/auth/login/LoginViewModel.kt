@@ -22,9 +22,11 @@ class LoginViewModel @Inject constructor(
             is LoginContract.Event.EmailChanged -> {
                 updateState { it.copy(email = event.email) }
             }
+
             is LoginContract.Event.PasswordChanged -> {
                 updateState { it.copy(password = event.password) }
             }
+
             is LoginContract.Event.LoginClicked -> login()
             is LoginContract.Event.RegisterClicked -> {
                 emitSideEffect(LoginContract.SideEffect.NavigateToRegister)
@@ -36,16 +38,20 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             with(state.value) {
                 if (email.isBlank()) {
-                    emitSideEffect(LoginContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.error_empty_email)
-                    ))
+                    emitSideEffect(
+                        LoginContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.error_empty_email)
+                        )
+                    )
                     return@launch
                 }
 
                 if (password.isBlank()) {
-                    emitSideEffect(LoginContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.error_empty_password)
-                    ))
+                    emitSideEffect(
+                        LoginContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.error_empty_password)
+                        )
+                    )
                     return@launch
                 }
 
@@ -54,13 +60,17 @@ class LoginViewModel @Inject constructor(
                         is Resource.Loading -> {
                             updateState { it.copy(isLoading = resource.isLoading) }
                         }
+
                         is Resource.Success -> {
                             emitSideEffect(LoginContract.SideEffect.NavigateToCollection)
                         }
+
                         is Resource.Error -> {
-                            emitSideEffect(LoginContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                LoginContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }

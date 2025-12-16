@@ -79,13 +79,19 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
                         is RegisterContract.SideEffect.NavigateToLogin -> {
                             findNavController().popBackStack()
                         }
+
                         is RegisterContract.SideEffect.NavigateToCollection -> {
                             findNavController().navigate(
                                 RegisterFragmentDirections.actionRegisterFragmentToCollectionsListFragment()
                             )
                         }
+
                         is RegisterContract.SideEffect.ShowError -> {
-                            binding.root.showErrorSnackbar(sideEffect.message.asString(requireContext()))
+                            binding.root.showErrorSnackbar(
+                                sideEffect.message.asString(
+                                    requireContext()
+                                )
+                            )
                         }
                     }
                 }

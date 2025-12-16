@@ -17,7 +17,11 @@ interface CollectionCardDao {
 
     // Get cards in a specific category
     @Query("SELECT * FROM collection_cards WHERE collectionId = :collectionId AND categoryId = :categoryId AND userId = :userId ORDER BY addedDate DESC")
-    fun getCardsByCategory(collectionId: Long, categoryId: Long, userId: String): Flow<List<CollectionCardEntity>>
+    fun getCardsByCategory(
+        collectionId: Long,
+        categoryId: Long,
+        userId: String
+    ): Flow<List<CollectionCardEntity>>
 
     // Get uncategorized cards in a collection
     @Query("SELECT * FROM collection_cards WHERE collectionId = :collectionId AND categoryId IS NULL AND userId = :userId ORDER BY addedDate DESC")
@@ -25,11 +29,19 @@ interface CollectionCardDao {
 
     // Get cards by color in a collection
     @Query("SELECT * FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId AND colorsJson LIKE :color ORDER BY addedDate DESC")
-    fun getCardsByColor(collectionId: Long, userId: String, color: String): Flow<List<CollectionCardEntity>>
+    fun getCardsByColor(
+        collectionId: Long,
+        userId: String,
+        color: String
+    ): Flow<List<CollectionCardEntity>>
 
     // Get cards by set in a collection
     @Query("SELECT * FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId AND setCode = :setCode ORDER BY addedDate DESC")
-    fun getCardsBySet(collectionId: Long, userId: String, setCode: String): Flow<List<CollectionCardEntity>>
+    fun getCardsBySet(
+        collectionId: Long,
+        userId: String,
+        setCode: String
+    ): Flow<List<CollectionCardEntity>>
 
     // Get a specific card by its internal ID
     @Query("SELECT * FROM collection_cards WHERE id = :id AND userId = :userId")
@@ -37,7 +49,11 @@ interface CollectionCardDao {
 
     // Check if a card exists in a collection
     @Query("SELECT * FROM collection_cards WHERE cardId = :cardId AND collectionId = :collectionId AND userId = :userId LIMIT 1")
-    suspend fun getCardInCollection(cardId: String, collectionId: Long, userId: String): CollectionCardEntity?
+    suspend fun getCardInCollection(
+        cardId: String,
+        collectionId: Long,
+        userId: String
+    ): CollectionCardEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCard(card: CollectionCardEntity): Long
@@ -68,10 +84,10 @@ interface CollectionCardDao {
 
     @Query("SELECT COALESCE(SUM(quantity), 0) FROM collection_cards WHERE userId = :userId")
     suspend fun getTotalCardCountForUser(userId: String): Int
-    
+
     @Query("SELECT COUNT(*) FROM collection_cards WHERE userId = :userId")
     suspend fun getCardRecordCountForUser(userId: String): Int
-    
+
     @Query("SELECT * FROM collection_cards WHERE userId = :userId")
     suspend fun getAllCardsForUser(userId: String): List<CollectionCardEntity>
 

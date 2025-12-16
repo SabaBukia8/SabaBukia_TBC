@@ -18,7 +18,11 @@ object CollectionsListContract {
         data class CreateCollection(val name: String, val description: String) : Event
         data class OnDeleteCollectionClick(val collectionId: Long) : Event
         data class OnEditCollectionClick(val collectionId: Long) : Event
-        data class UpdateCollection(val collectionId: Long, val name: String, val description: String) : Event
+        data class UpdateCollection(
+            val collectionId: Long,
+            val name: String,
+            val description: String
+        ) : Event
     }
 
     sealed interface SideEffect {

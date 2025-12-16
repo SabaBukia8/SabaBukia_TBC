@@ -8,6 +8,10 @@ import javax.inject.Inject
 class UpdateCardQuantityUseCase @Inject constructor(
     private val repository: CollectionRepository
 ) {
-    suspend operator fun invoke(collectionId: Long, cardId: String, quantity: Int): Flow<Resource<Unit>> =
+    suspend operator fun invoke(
+        collectionId: Long,
+        cardId: String,
+        quantity: Int
+    ): Flow<Resource<Unit>> =
         repository.updateCardQuantity(collectionId, cardId, quantity)
 }

@@ -61,8 +61,7 @@ class CollectionsListFragment : BaseFragment<FragmentCollectionsListBinding>(
                         adapter.submitList(state.collections)
                         llEmptyState.isVisible = state.collections.isEmpty() && !state.isLoading
                         rvCollections.isVisible = state.collections.isNotEmpty()
-                        
-                        // Update network status view
+
                         if (state.isNetworkAvailable) {
                             networkStatusView.visibility = View.GONE
                         } else {
@@ -87,15 +86,19 @@ class CollectionsListFragment : BaseFragment<FragmentCollectionsListBinding>(
                                     .actionCollectionsListFragmentToCollectionFragment(sideEffect.collectionId)
                             )
                         }
+
                         is CollectionsListContract.SideEffect.ShowCreateCollectionDialog -> {
                             showCreateCollectionDialog()
                         }
+
                         is CollectionsListContract.SideEffect.ShowEditCollectionDialog -> {
                             showEditCollectionDialog(sideEffect.collectionId)
                         }
+
                         is CollectionsListContract.SideEffect.ShowError -> {
                             showMessage(sideEffect.message.asString(requireContext()))
                         }
+
                         is CollectionsListContract.SideEffect.ShowSuccess -> {
                             showMessage(sideEffect.message.asString(requireContext()))
                         }

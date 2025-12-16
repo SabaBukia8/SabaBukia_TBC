@@ -30,7 +30,8 @@ class CollectionsListAdapter(
         holder.bind(getItem(position))
     }
 
-    inner class CollectionViewHolder(private val binding: ItemCollectionBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CollectionViewHolder(private val binding: ItemCollectionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(collection: CollectionUi) {
             with(binding) {
@@ -40,12 +41,8 @@ class CollectionsListAdapter(
                 tvTotalValue.text = collection.totalValue
                 tvCreatedDate.text = "Created: ${collection.createdDate}"
 
-                // Show/hide description based on whether it's empty
-                tvCollectionDescription.visibility = if (collection.description.isEmpty()) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
+                tvCollectionDescription.visibility =
+                    if (collection.description.isEmpty()) View.GONE else View.VISIBLE
 
                 root.setOnClickListener {
                     onCollectionClick(collection.id)
@@ -66,10 +63,12 @@ class CollectionsListAdapter(
                         onEditClick(collection.id)
                         true
                     }
+
                     R.id.action_delete -> {
                         onDeleteClick(collection.id)
                         true
                     }
+
                     else -> false
                 }
             }

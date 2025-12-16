@@ -104,7 +104,7 @@ class ColorFilterDialog : DialogFragment() {
 
         binding.btnClearAll.setOnClickListener {
             adapter.clearAllFilters()
-            
+
             for (i in colorItems.indices) {
                 val item = colorItems[i]
                 colorItems[i] = item.copy(state = CollectionContract.FilterState.NEUTRAL)

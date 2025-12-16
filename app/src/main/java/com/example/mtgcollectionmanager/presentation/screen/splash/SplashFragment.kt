@@ -30,6 +30,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(
                                 SplashFragmentDirections.actionSplashFragmentToLoginFragment()
                             )
                         }
+
                         is SplashContract.SideEffect.NavigateToCollectionsList -> {
                             findNavController().navigate(
                                 SplashFragmentDirections.actionSplashFragmentToCollectionsListFragment()

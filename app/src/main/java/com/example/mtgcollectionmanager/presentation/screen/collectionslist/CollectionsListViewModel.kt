@@ -37,14 +37,13 @@ class CollectionsListViewModel @Inject constructor(
         observeNetworkStatus()
         ensureDefaultCollectionAndLoad()
     }
-    
+
     private fun observeNetworkStatus() {
         networkConnectivityManager.observeNetworkState()
-            .onEach { networkState -> 
+            .onEach { networkState ->
                 val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
                 updateState { it.copy(isNetworkAvailable = isAvailable) }
-                
-                // If network becomes available, refresh the collections
+
                 if (isAvailable) {
                     loadCollections()
                 }
@@ -56,16 +55,8 @@ class CollectionsListViewModel @Inject constructor(
         viewModelScope.launch {
             ensureDefaultCollectionUseCase().collect { resource ->
                 when (resource) {
-                    is Resource.Success -> {
-                        loadCollections()
-                    }
-                    is Resource.Error -> {
-                        // Still try to load collections even if default creation fails
-                        loadCollections()
-                    }
-                    is Resource.Loading -> {
-                        updateState { it.copy(isLoading = resource.isLoading) }
-                    }
+                    is Resource.Success, is Resource.Error -> loadCollections()
+                    is Resource.Loading -> updateState { it.copy(isLoading = resource.isLoading) }
                 }
             }
         }
@@ -77,18 +68,23 @@ class CollectionsListViewModel @Inject constructor(
             is CollectionsListContract.Event.OnCollectionClick -> {
                 emitSideEffect(CollectionsListContract.SideEffect.NavigateToCollection(event.collectionId))
             }
+
             is CollectionsListContract.Event.OnCreateCollectionClick -> {
                 emitSideEffect(CollectionsListContract.SideEffect.ShowCreateCollectionDialog)
             }
+
             is CollectionsListContract.Event.CreateCollection -> {
                 createCollection(event.name, event.description)
             }
+
             is CollectionsListContract.Event.OnDeleteCollectionClick -> {
                 deleteCollection(event.collectionId)
             }
+
             is CollectionsListContract.Event.OnEditCollectionClick -> {
                 emitSideEffect(CollectionsListContract.SideEffect.ShowEditCollectionDialog(event.collectionId))
             }
+
             is CollectionsListContract.Event.UpdateCollection -> {
                 updateCollection(event.collectionId, event.name, event.description)
             }
@@ -97,12 +93,10 @@ class CollectionsListViewModel @Inject constructor(
 
     private fun loadCollections() {
         viewModelScope.launch {
-            // Use executeWithFallback to handle network state gracefully
             executeWithFallback(
                 networkManager = networkConnectivityManager,
                 networkOperation = { getUserCollectionsUseCase() },
-                fallbackOperation = { 
-                    // Return whatever collections we have in cache when offline
+                fallbackOperation = {
                     flow {
                         emit(Resource.Loading(true))
                         emit(Resource.Success(state.value.collections.map { it.toDomain() }))
@@ -114,6 +108,7 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
                         updateState {
                             it.copy(
@@ -122,13 +117,15 @@ class CollectionsListViewModel @Inject constructor(
                             )
                         }
                     }
+
                     is Resource.Error -> {
                         updateState { it.copy(error = resource.errorMessage) }
-                        // Only show error if we're online - avoid showing network errors when offline
                         if (state.value.isNetworkAvailable) {
-                            emitSideEffect(CollectionsListContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                CollectionsListContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }
@@ -143,16 +140,22 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionsListContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(R.string.collection_created_success)
-                        ))
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(R.string.collection_created_success)
+                            )
+                        )
                         loadCollections()
                     }
+
                     is Resource.Error -> {
-                        emitSideEffect(CollectionsListContract.SideEffect.ShowError(
-                            UiText.DynamicString(resource.errorMessage)
-                        ))
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowError(
+                                UiText.DynamicString(resource.errorMessage)
+                            )
+                        )
                     }
                 }
             }
@@ -173,16 +176,22 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionsListContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(R.string.collection_updated_success)
-                        ))
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(R.string.collection_updated_success)
+                            )
+                        )
                         loadCollections()
                     }
+
                     is Resource.Error -> {
-                        emitSideEffect(CollectionsListContract.SideEffect.ShowError(
-                            UiText.DynamicString(resource.errorMessage)
-                        ))
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowError(
+                                UiText.DynamicString(resource.errorMessage)
+                            )
+                        )
                     }
                 }
             }
@@ -196,16 +205,22 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
                     }
+
                     is Resource.Success -> {
-                        emitSideEffect(CollectionsListContract.SideEffect.ShowSuccess(
-                            UiText.StringResource(R.string.collection_deleted_success)
-                        ))
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowSuccess(
+                                UiText.StringResource(R.string.collection_deleted_success)
+                            )
+                        )
                         loadCollections()
                     }
+
                     is Resource.Error -> {
-                        emitSideEffect(CollectionsListContract.SideEffect.ShowError(
-                            UiText.DynamicString(resource.errorMessage)
-                        ))
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowError(
+                                UiText.DynamicString(resource.errorMessage)
+                            )
+                        )
                     }
                 }
             }

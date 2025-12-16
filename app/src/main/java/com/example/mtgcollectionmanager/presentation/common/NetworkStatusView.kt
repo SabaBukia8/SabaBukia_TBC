@@ -21,18 +21,19 @@ class NetworkStatusView @JvmOverloads constructor(
     init {
         val view = LayoutInflater.from(context).inflate(R.layout.view_network_status, this, true)
         messageTextView = view.findViewById(R.id.tvNetworkStatus)
-        visibility = View.GONE // Initially hidden
+        visibility = GONE // Initially hidden
     }
 
 
     fun updateNetworkStatus(state: NetworkConnectivityManager.NetworkState) {
         when (state) {
             is NetworkConnectivityManager.NetworkState.Available -> {
-                visibility = View.GONE
+                visibility = GONE
             }
+
             is NetworkConnectivityManager.NetworkState.Unavailable -> {
                 messageTextView.text = context.getString(R.string.error_network)
-                visibility = View.VISIBLE
+                visibility = VISIBLE
             }
         }
     }

@@ -24,15 +24,19 @@ class RegisterViewModel @Inject constructor(
             is RegisterContract.Event.NicknameChanged -> {
                 updateState { it.copy(nickname = event.nickname) }
             }
+
             is RegisterContract.Event.EmailChanged -> {
                 updateState { it.copy(email = event.email) }
             }
+
             is RegisterContract.Event.PasswordChanged -> {
                 updateState { it.copy(password = event.password) }
             }
+
             is RegisterContract.Event.ConfirmPasswordChanged -> {
                 updateState { it.copy(confirmPassword = event.confirmPassword) }
             }
+
             is RegisterContract.Event.RegisterClicked -> register()
             is RegisterContract.Event.LoginClicked -> {
                 emitSideEffect(RegisterContract.SideEffect.NavigateToLogin)
@@ -44,30 +48,38 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             with(state.value) {
                 if (email.isBlank()) {
-                    emitSideEffect(RegisterContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.error_empty_email)
-                    ))
+                    emitSideEffect(
+                        RegisterContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.error_empty_email)
+                        )
+                    )
                     return@launch
                 }
 
                 if (password.isBlank()) {
-                    emitSideEffect(RegisterContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.error_empty_password)
-                    ))
+                    emitSideEffect(
+                        RegisterContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.error_empty_password)
+                        )
+                    )
                     return@launch
                 }
 
                 if (password.length < 6) {
-                    emitSideEffect(RegisterContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.error_password_too_short)
-                    ))
+                    emitSideEffect(
+                        RegisterContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.error_password_too_short)
+                        )
+                    )
                     return@launch
                 }
 
                 if (password != confirmPassword) {
-                    emitSideEffect(RegisterContract.SideEffect.ShowError(
-                        UiText.StringResource(R.string.error_password_mismatch)
-                    ))
+                    emitSideEffect(
+                        RegisterContract.SideEffect.ShowError(
+                            UiText.StringResource(R.string.error_password_mismatch)
+                        )
+                    )
                     return@launch
                 }
 
@@ -76,24 +88,30 @@ class RegisterViewModel @Inject constructor(
                         is Resource.Loading -> {
                             updateState { it.copy(isLoading = resource.isLoading) }
                         }
+
                         is Resource.Success -> {
                             ensureDefaultCollectionUseCase().collect { collectionResource ->
                                 when (collectionResource) {
                                     is Resource.Success -> {
                                         emitSideEffect(RegisterContract.SideEffect.NavigateToCollection)
                                     }
+
                                     is Resource.Error -> {
                                         emitSideEffect(RegisterContract.SideEffect.NavigateToCollection)
                                     }
+
                                     is Resource.Loading -> {
                                     }
                                 }
                             }
                         }
+
                         is Resource.Error -> {
-                            emitSideEffect(RegisterContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            emitSideEffect(
+                                RegisterContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
+                            )
                         }
                     }
                 }

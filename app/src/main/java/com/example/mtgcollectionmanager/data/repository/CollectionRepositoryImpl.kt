@@ -1,18 +1,18 @@
 package com.example.mtgcollectionmanager.data.repository
 
+import com.example.mtgcollectionmanager.data.common.UserProvider
 import com.example.mtgcollectionmanager.data.local.dao.CollectionCardDao
 import com.example.mtgcollectionmanager.data.local.dao.CollectionDao
 import com.example.mtgcollectionmanager.data.mapper.toDomain
 import com.example.mtgcollectionmanager.data.mapper.toEntity
 import com.example.mtgcollectionmanager.data.remote.firebase.FirestoreDataSource
 import com.example.mtgcollectionmanager.data.remote.firebase.dto.FirestoreCardDto
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.model.Card
 import com.example.mtgcollectionmanager.domain.model.CardCondition
 import com.example.mtgcollectionmanager.domain.model.CardPricing
 import com.example.mtgcollectionmanager.domain.model.CollectionCard
-import com.example.mtgcollectionmanager.data.common.UserProvider
-import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.domain.repository.CollectionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -40,8 +40,9 @@ class CollectionRepositoryImpl @Inject constructor(
                     try {
 
                         val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                        val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-                        
+                        val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
+                            ?: collectionId.toString()
+
                         val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
 
 
@@ -72,7 +73,11 @@ class CollectionRepositoryImpl @Inject constructor(
                         }
                         emit(Resource.Loading(false))
                     } catch (cacheError: Exception) {
-                        emit(Resource.Error(cacheError.message ?: "Failed to load collection from cache"))
+                        emit(
+                            Resource.Error(
+                                cacheError.message ?: "Failed to load collection from cache"
+                            )
+                        )
                         emit(Resource.Loading(false))
                     }
                 }
@@ -89,17 +94,19 @@ class CollectionRepositoryImpl @Inject constructor(
                 try {
 
                     val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-                    
+                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
+                        ?: collectionId.toString()
+
                     val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
-                    val filteredCards = firestoreCards.filter { it.colorsJson.contains(color, ignoreCase = true) }
+                    val filteredCards =
+                        firestoreCards.filter { it.colorsJson.contains(color, ignoreCase = true) }
 
 
                     firestoreCards.forEach { dto ->
                         val entity = dto.toEntity(collectionId, userId)
 // Make sure we're setting the correct userId
-val cardWithUserId = entity.copy(userId = userId)
-dao.insertCard(cardWithUserId)
+                        val cardWithUserId = entity.copy(userId = userId)
+                        dao.insertCard(cardWithUserId)
                     }
 
                     emit(Resource.Success(filteredCards.map {
@@ -121,7 +128,11 @@ dao.insertCard(cardWithUserId)
                     }
                     emit(Resource.Loading(false))
                 } catch (cacheError: Exception) {
-                    emit(Resource.Error(cacheError.message ?: "Failed to load cards by color from cache"))
+                    emit(
+                        Resource.Error(
+                            cacheError.message ?: "Failed to load cards by color from cache"
+                        )
+                    )
                     emit(Resource.Loading(false))
                 }
             }
@@ -138,17 +149,19 @@ dao.insertCard(cardWithUserId)
                 try {
 
                     val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-                    
+                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
+                        ?: collectionId.toString()
+
                     val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
-                    val filteredCards = firestoreCards.filter { it.setCode.equals(setCode, ignoreCase = true) }
+                    val filteredCards =
+                        firestoreCards.filter { it.setCode.equals(setCode, ignoreCase = true) }
 
 
                     firestoreCards.forEach { dto ->
                         val entity = dto.toEntity(collectionId, userId)
 // Make sure we're setting the correct userId
-val cardWithUserId = entity.copy(userId = userId)
-dao.insertCard(cardWithUserId)
+                        val cardWithUserId = entity.copy(userId = userId)
+                        dao.insertCard(cardWithUserId)
                     }
 
                     emit(Resource.Success(filteredCards.map {
@@ -170,7 +183,11 @@ dao.insertCard(cardWithUserId)
                     }
                     emit(Resource.Loading(false))
                 } catch (cacheError: Exception) {
-                    emit(Resource.Error(cacheError.message ?: "Failed to load cards by set from cache"))
+                    emit(
+                        Resource.Error(
+                            cacheError.message ?: "Failed to load cards by set from cache"
+                        )
+                    )
                     emit(Resource.Loading(false))
                 }
             }
@@ -205,8 +222,9 @@ dao.insertCard(cardWithUserId)
 
 
             val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-            
+            val firestoreId =
+                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
+
             firestoreDataSource.addCard(userId, firestoreId, dto)
 
             val entity = card.toEntity(
@@ -236,8 +254,9 @@ dao.insertCard(cardWithUserId)
             try {
 
                 val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-                
+                val firestoreId =
+                    localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
+
                 val firestoreCard =
                     firestoreDataSource.getCardByCardId(userId, firestoreId, cardId)
 
@@ -271,8 +290,9 @@ dao.insertCard(cardWithUserId)
         try {
 
             val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-            
+            val firestoreId =
+                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
+
             val firestoreCard =
                 firestoreDataSource.getCardByCardId(userId, firestoreId, cardId)
 
@@ -309,8 +329,9 @@ dao.insertCard(cardWithUserId)
                 try {
 
                     val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-                    
+                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
+                        ?: collectionId.toString()
+
                     val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
                     val filteredCards = if (categoryId == null) {
                         firestoreCards.filter { it.categoryId == null }
@@ -322,8 +343,8 @@ dao.insertCard(cardWithUserId)
                     firestoreCards.forEach { dto ->
                         val entity = dto.toEntity(collectionId, userId)
 // Make sure we're setting the correct userId
-val cardWithUserId = entity.copy(userId = userId)
-dao.insertCard(cardWithUserId)
+                        val cardWithUserId = entity.copy(userId = userId)
+                        dao.insertCard(cardWithUserId)
                     }
 
                     emit(Resource.Success(filteredCards.map {
@@ -331,7 +352,11 @@ dao.insertCard(cardWithUserId)
                     }))
                     emit(Resource.Loading(false))
                 } catch (e: Exception) {
-                    emit(Resource.Error(e.message ?: "Failed to load cards by category from network"))
+                    emit(
+                        Resource.Error(
+                            e.message ?: "Failed to load cards by category from network"
+                        )
+                    )
                     emit(Resource.Loading(false))
                 }
             }
@@ -350,7 +375,11 @@ dao.insertCard(cardWithUserId)
                     }
                     emit(Resource.Loading(false))
                 } catch (cacheError: Exception) {
-                    emit(Resource.Error(cacheError.message ?: "Failed to load cards by category from cache"))
+                    emit(
+                        Resource.Error(
+                            cacheError.message ?: "Failed to load cards by category from cache"
+                        )
+                    )
                     emit(Resource.Loading(false))
                 }
             }
@@ -368,8 +397,9 @@ dao.insertCard(cardWithUserId)
         try {
 
             val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-            
+            val firestoreId =
+                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
+
             val firestoreCard =
                 firestoreDataSource.getCardByCardId(userId, firestoreId, cardId)
 
@@ -413,25 +443,26 @@ dao.insertCard(cardWithUserId)
         return try {
 
             val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-            
+            val firestoreId =
+                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
+
             firestoreDataSource.getCardByCardId(userId, firestoreId, cardId) != null
         } catch (e: Exception) {
             false
         }
     }
-    
+
     private fun calculateDefaultPrice(pricing: CardPricing): Double {
 
         pricing.markets.find { it.marketId == com.example.mtgcollectionmanager.domain.model.MarketPrice.MARKET_TCGPLAYER }?.normalPrice?.let {
             return it
         }
-        
+
 
         pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice?.let {
             return it
         }
-        
+
 
         return 0.0
     }
