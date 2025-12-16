@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_lg">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCollectionName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,18 +31,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Commander Deck" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnMenu"
             android:layout_width="@dimen/min_touch_target"
             android:layout_height="@dimen/min_touch_target"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="More options"
+            android:contentDescription="@string/more_options"
             android:src="@drawable/ic_more_vert_outlined"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/text_secondary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCollectionDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -56,42 +56,41 @@
             app:layout_constraintTop_toBottomOf="@id/tvCollectionName"
             tools:text="My collection of powerful commander cards" />
 
-        <LinearLayout
-            android:id="@+id/layoutStats"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvCardCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
-            android:orientation="horizontal"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCollectionDescription">
+            app:layout_constraintTop_toBottomOf="@id/tvCollectionDescription"
+            tools:text="45 cards" />
 
-            <TextView
-                android:id="@+id/tvCardCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:text="45 cards" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvStatsDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_md"
+            android:text="@string/bullet_point"
+            android:textColor="@color/text_tertiary"
+            app:layout_constraintBottom_toBottomOf="@id/tvCardCount"
+            app:layout_constraintStart_toEndOf="@id/tvCardCount"
+            app:layout_constraintTop_toTopOf="@id/tvCardCount" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_md"
-                android:text="•"
-                android:textColor="@color/text_tertiary" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTotalValue"
+            style="@style/MTG.Text.Price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvCardCount"
+            app:layout_constraintStart_toEndOf="@id/tvStatsDivider"
+            app:layout_constraintTop_toTopOf="@id/tvCardCount"
+            tools:text="$234.50" />
 
-            <TextView
-                android:id="@+id/tvTotalValue"
-                style="@style/MTG.Text.Price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                tools:text="$234.50" />
-
-        </LinearLayout>
-
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCreatedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,7 +98,7 @@
             android:textColor="@color/text_tertiary"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutStats"
+            app:layout_constraintTop_toBottomOf="@id/tvCardCount"
             tools:text="Created: Jan 15, 2024" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

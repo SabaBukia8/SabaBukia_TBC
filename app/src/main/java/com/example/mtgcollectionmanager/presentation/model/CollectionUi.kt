@@ -8,5 +8,6 @@ data class CollectionUi(
     val totalValue: String,
     val createdDate: String,
     val userId: String,
-    val createdDateMillis: Long
+    val createdDateMillis: Long,
+    val firestoreId: String = ""
 )

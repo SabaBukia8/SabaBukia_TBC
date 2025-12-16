@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SetSelectionDialog(
-    private val selectedSets: Set<String>,
+    selectedSets: Set<String>,
     private val onSetsSelected: (Set<String>) -> Unit
 ) : DialogFragment() {
 
@@ -85,30 +85,30 @@ class SetSelectionDialog(
         }
     }
 
-    private fun setupListeners() {
-        binding.etSearch.addTextChangedListener { text ->
+    private fun setupListeners() = with(binding) {
+        etSearch.addTextChangedListener { text ->
             filterSets(text.toString())
         }
 
-        binding.btnApply.setOnClickListener {
+        btnApply.setOnClickListener {
             onSetsSelected(selectedSetCodes)
             dismiss()
         }
 
-        binding.btnCancel.setOnClickListener {
+        btnCancel.setOnClickListener {
             dismiss()
         }
 
-        binding.btnClearAll.setOnClickListener {
+        btnClearAll.setOnClickListener {
+            // Simply clear the selected sets and refresh the list
             selectedSetCodes.clear()
             adapter.submitList(allSets.toList())
-            adapter.notifyDataSetChanged()
         }
     }
 
-    private fun loadSets() {
-        binding.progressBar.show()
-        binding.rvSets.hide()
+    private fun loadSets() = with(binding) {
+        progressBar.show()
+        rvSets.hide()
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -117,38 +117,39 @@ class SetSelectionDialog(
                     allSets = response.body()!!.data.map { it.toUiModel() }
                         .sortedByDescending { it.releasedAt }
                     adapter.submitList(allSets)
-                    binding.progressBar.hide()
-                    binding.rvSets.show()
+                    progressBar.hide()
+                    rvSets.show()
                 } else {
-                    binding.progressBar.hide()
-                    binding.tvNoResults.text = response.message() ?: "Failed to load sets"
-                    binding.tvNoResults.show()
+                    progressBar.hide()
+                    tvNoResults.text = response.message() ?: "Failed to load sets"
+                    tvNoResults.show()
                 }
             } catch (e: Exception) {
-                binding.progressBar.hide()
-                binding.tvNoResults.text = e.message ?: "Failed to load sets"
-                binding.tvNoResults.show()
+                progressBar.hide()
+                tvNoResults.text = e.message ?: "Failed to load sets"
+                tvNoResults.show()
             }
         }
     }
 
-    private fun filterSets(query: String) {
-        if (query.isBlank()) {
-            adapter.submitList(allSets)
+    private fun filterSets(query: String) = with(binding) {
+        val filteredList = if (query.isBlank()) {
+            allSets
         } else {
-            val filtered = allSets.filter {
+            allSets.filter {
                 it.name.contains(query, ignoreCase = true) ||
                         it.code.contains(query, ignoreCase = true)
             }
-            adapter.submitList(filtered)
         }
+        
+        adapter.submitList(filteredList)
 
-        if (adapter.currentList.isEmpty()) {
-            binding.tvNoResults.show()
-            binding.rvSets.hide()
+        if (filteredList.isEmpty()) {
+            tvNoResults.show()
+            rvSets.hide()
         } else {
-            binding.tvNoResults.hide()
-            binding.rvSets.show()
+            tvNoResults.hide()
+            rvSets.show()
         }
     }
 
@@ -164,7 +165,6 @@ class SetSelectionDialog(
         _binding = null
     }
 
-    // Simple adapter with checkboxes
     class SetSelectionAdapter(
         private val selectedSets: MutableSet<String>,
         private val onSetToggled: (String, Boolean) -> Unit
@@ -187,15 +187,18 @@ class SetSelectionDialog(
             private val binding: ItemSetSelectionBinding
         ) : RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(set: SetUiModel) {
-                with(binding) {
-                    val isSelected = selectedSets.contains(set.code)
-                    cbSet.text = "${set.name} (${set.code}) - ${set.cardCount} cards"
-                    cbSet.isChecked = isSelected
+            fun bind(set: SetUiModel) = with(binding) {
+                val isSelected = selectedSets.contains(set.code)
+                cbSet.text = itemView.context.getString(
+                    R.string.cards, 
+                    set.name, 
+                    set.code, 
+                    set.cardCount
+                )
+                cbSet.isChecked = isSelected
 
-                    cbSet.setOnCheckedChangeListener { _, isChecked ->
-                        onSetToggled(set.code, isChecked)
-                    }
+                cbSet.setOnCheckedChangeListener { _, isChecked ->
+                    onSetToggled(set.code, isChecked)
                 }
             }
         }

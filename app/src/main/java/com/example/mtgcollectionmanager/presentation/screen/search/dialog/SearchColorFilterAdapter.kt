@@ -2,6 +2,8 @@ package com.example.mtgcollectionmanager.presentation.screen.search.dialog
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.ItemColorFilterBinding
@@ -10,13 +12,12 @@ import com.example.mtgcollectionmanager.presentation.screen.search.model.ColorFi
 data class ColorFilterItem(
     val code: String,
     val name: String,
-    var state: ColorFilterState
+    val state: ColorFilterState
 )
 
 class SearchColorFilterAdapter(
-    val colorItems: MutableList<ColorFilterItem>,
     private val onColorStateChanged: (String, ColorFilterState) -> Unit
-) : RecyclerView.Adapter<SearchColorFilterAdapter.ColorViewHolder>() {
+) : ListAdapter<ColorFilterItem, SearchColorFilterAdapter.ColorViewHolder>(ColorFilterDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
         val binding = ItemColorFilterBinding.inflate(
@@ -28,10 +29,27 @@ class SearchColorFilterAdapter(
     }
 
     override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
-        holder.bind(colorItems[position])
+        holder.bind(getItem(position))
+    }
+    
+    fun updateItemState(position: Int, newState: ColorFilterState) {
+        val currentList = currentList.toMutableList()
+        if (position >= 0 && position < currentList.size) {
+            val oldItem = currentList[position]
+            currentList[position] = oldItem.copy(state = newState)
+            submitList(currentList)
+        }
+    }
+    
+    fun resetAllStates() {
+        val resetList = currentList.map { it.copy(state = ColorFilterState.NEUTRAL) }
+        submitList(resetList)
     }
 
-    override fun getItemCount(): Int = colorItems.size
+    fun getColorStates(): Map<String, ColorFilterState> {
+        return currentList.associate { it.code to it.state }
+            .filter { it.value != ColorFilterState.NEUTRAL }
+    }
 
     inner class ColorViewHolder(
         private val binding: ItemColorFilterBinding
@@ -43,15 +61,16 @@ class SearchColorFilterAdapter(
                 updateStateIcon(colorItem.state)
 
                 root.setOnClickListener {
-                    // Cycle through states: NEUTRAL -> INCLUDE -> EXCLUDE -> NEUTRAL
-                    val newState = when (colorItem.state) {
-                        ColorFilterState.NEUTRAL -> ColorFilterState.INCLUDE
-                        ColorFilterState.INCLUDE -> ColorFilterState.EXCLUDE
-                        ColorFilterState.EXCLUDE -> ColorFilterState.NEUTRAL
+                    val position = bindingAdapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val newState = when (colorItem.state) {
+                            ColorFilterState.NEUTRAL -> ColorFilterState.INCLUDE
+                            ColorFilterState.INCLUDE -> ColorFilterState.EXCLUDE
+                            ColorFilterState.EXCLUDE -> ColorFilterState.NEUTRAL
+                        }
+                        updateItemState(position, newState)
+                        onColorStateChanged(colorItem.code, newState)
                     }
-                    colorItem.state = newState
-                    updateStateIcon(newState)
-                    onColorStateChanged(colorItem.code, newState)
                 }
             }
         }
@@ -72,6 +91,16 @@ class SearchColorFilterAdapter(
                     }
                 }
             }
+        }
+    }
+
+    private class ColorFilterDiffCallback : DiffUtil.ItemCallback<ColorFilterItem>() {
+        override fun areItemsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
+            return oldItem.code == newItem.code
+        }
+
+        override fun areContentsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
+            return oldItem == newItem
         }
     }
 }

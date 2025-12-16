@@ -7,6 +7,7 @@ import com.example.mtgcollectionmanager.presentation.util.UiText
 object CollectionContract {
     data class State(
         val isLoading: Boolean = true,
+        val isNetworkAvailable: Boolean = true,
         val cards: List<CollectionCardUiModel> = emptyList(),
         val allCards: List<CollectionCardUiModel> = emptyList(),
         val viewMode: ViewMode = ViewMode.ALL,

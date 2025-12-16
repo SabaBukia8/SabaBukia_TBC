@@ -13,7 +13,8 @@ fun CollectionEntity.toDomain(
     createdDate = createdDate,
     userId = userId,
     totalCards = totalCards,
-    totalValue = totalValue
+    totalValue = totalValue,
+    firestoreId = firestoreId
 )
 
 fun Collection.toEntity(): CollectionEntity = CollectionEntity(
@@ -21,5 +22,6 @@ fun Collection.toEntity(): CollectionEntity = CollectionEntity(
     name = name,
     description = description,
     createdDate = createdDate,
-    userId = userId
+    userId = userId,
+    firestoreId = firestoreId
 )

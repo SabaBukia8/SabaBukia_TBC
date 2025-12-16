@@ -7,10 +7,10 @@
     android:padding="@dimen/screen_padding_horizontal">
 
     <!-- MTG Icon -->
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
         android:layout_marginTop="@dimen/spacing_huge"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_mtg_logo"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
         app:layout_constraintStart_toStartOf="@id/btnLogin"
         app:layout_constraintTop_toTopOf="@id/btnLogin" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvRegisterLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

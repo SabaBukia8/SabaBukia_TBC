@@ -17,8 +17,45 @@ class CategoryDrawerAdapter(
     private var selectedCategoryId: Long? = null
 
     fun setSelectedCategory(categoryId: Long?) {
+        val oldCategoryId = selectedCategoryId
         selectedCategoryId = categoryId
-        notifyDataSetChanged()
+        
+        // Optimize updates by only redrawing affected items
+        if (oldCategoryId != categoryId) {
+            // Find and update the previously selected category
+            if (oldCategoryId != null) {
+                val oldPosition = findPositionById(oldCategoryId)
+                if (oldPosition != -1) {
+                    notifyItemChanged(oldPosition)
+                }
+            } else {
+                // The "All Cards" item was previously selected (position 0)
+                notifyItemChanged(0)
+            }
+            
+            // Find and update the newly selected category
+            if (categoryId != null) {
+                val newPosition = findPositionById(categoryId)
+                if (newPosition != -1) {
+                    notifyItemChanged(newPosition)
+                }
+            } else {
+                // The "All Cards" item is now selected (position 0)
+                notifyItemChanged(0)
+            }
+        }
+    }
+    
+    private fun findPositionById(categoryId: Long): Int {
+        for (position in 0 until itemCount) {
+            val item = getItem(position)
+            if (item is CategoryDrawerItem.Category && item.id == categoryId) {
+                return position
+            } else if (item is CategoryDrawerItem.Uncategorized && categoryId == -1L) {
+                return position
+            }
+        }
+        return -1
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {

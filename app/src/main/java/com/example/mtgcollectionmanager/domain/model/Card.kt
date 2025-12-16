@@ -12,5 +12,5 @@ data class Card(
     val collectorNumber: String,
     val releasedAt: String,
     val colors: List<String>,
-    val price: Double
+    val pricing: CardPricing
 )

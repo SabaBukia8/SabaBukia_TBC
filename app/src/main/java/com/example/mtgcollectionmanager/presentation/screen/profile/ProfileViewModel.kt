@@ -2,6 +2,7 @@ package com.example.mtgcollectionmanager.presentation.screen.profile
 
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.usecase.auth.ChangePasswordUseCase
 import com.example.mtgcollectionmanager.domain.usecase.auth.DeleteAccountUseCase
@@ -11,6 +12,8 @@ import com.example.mtgcollectionmanager.domain.usecase.auth.UpdateNicknameUseCas
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,13 +26,36 @@ class ProfileViewModel @Inject constructor(
     private val updateNicknameUseCase: UpdateNicknameUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val networkConnectivityManager: NetworkConnectivityManager
 ) : BaseViewModel<ProfileContract.State, ProfileContract.Event, ProfileContract.SideEffect>(
-    ProfileContract.State()
+    ProfileContract.State(isNetworkAvailable = networkConnectivityManager.isNetworkAvailable())
 ) {
 
     init {
+        observeNetworkStatus()
+        // Load profile immediately
         loadProfile()
+        
+        // Then force a sync after a short delay to ensure data is loaded
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(1000)
+            syncCollections()
+        }
+    }
+
+    private fun observeNetworkStatus() {
+        networkConnectivityManager.observeNetworkState()
+            .onEach { networkState -> 
+                val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
+                updateState { it.copy(isNetworkAvailable = isAvailable) }
+                
+                // If network becomes available, refresh profile
+                if (isAvailable) {
+                    loadProfile()
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     override fun onEvent(event: ProfileContract.Event) {
@@ -93,11 +119,14 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        emitSideEffect(
-                            ProfileContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                        // Only show error messages if we're online
+                        if (state.value.isNetworkAvailable) {
+                            emitSideEffect(
+                                ProfileContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -137,11 +166,14 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        emitSideEffect(
-                            ProfileContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                        // Only show error messages if we're online
+                        if (state.value.isNetworkAvailable) {
+                            emitSideEffect(
+                                ProfileContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -207,11 +239,14 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        emitSideEffect(
-                            ProfileContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                        // Only show error messages if we're online
+                        if (state.value.isNetworkAvailable) {
+                            emitSideEffect(
+                                ProfileContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -245,11 +280,14 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        emitSideEffect(
-                            ProfileContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                        // Only show error messages if we're online
+                        if (state.value.isNetworkAvailable) {
+                            emitSideEffect(
+                                ProfileContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -259,5 +297,58 @@ class ProfileViewModel @Inject constructor(
     private fun logout() {
         logoutUseCase()
         emitSideEffect(ProfileContract.SideEffect.NavigateToLogin)
+    }
+    
+    // Debug function to manually sync collections and cards
+    fun syncCollections() {
+        viewModelScope.launch {
+            updateState { it.copy(isLoading = true) }
+            
+            try {
+                // Force a reload of the profile which will trigger the card sync
+                getUserProfileUseCase().collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            updateState { it.copy(isLoading = resource.isLoading) }
+                        }
+                        
+                        is Resource.Success -> {
+                            val profile = resource.data
+                            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                            val memberSince = dateFormat.format(Date(profile.createdAt))
+                            
+                            updateState {
+                                it.copy(
+                                    nickname = profile.nickname,
+                                    email = profile.email,
+                                    memberSince = memberSince,
+                                    collectionCount = profile.collectionCount,
+                                    totalCards = profile.totalCards,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                        
+                        is Resource.Error -> {
+                            if (state.value.isNetworkAvailable) {
+                                emitSideEffect(
+                                    ProfileContract.SideEffect.ShowError(
+                                        UiText.DynamicString("Failed to sync: ${resource.errorMessage}")
+                                    )
+                                )
+                            }
+                            updateState { it.copy(isLoading = false) }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                updateState { it.copy(isLoading = false) }
+                emitSideEffect(
+                    ProfileContract.SideEffect.ShowError(
+                        UiText.DynamicString("Sync error: ${e.message ?: "Unknown error"}")
+                    )
+                )
+            }
+        }
     }
 }

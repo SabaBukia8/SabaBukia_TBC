@@ -1,15 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <!-- Circle background -->
-    <path
-        android:fillColor="@color/mana_blue_bg"
-        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2z"/>
-    <!-- Water drop symbol -->
-    <path
-        android:fillColor="@color/mana_white_bg"
-        android:pathData="M12,6c-2,4 -4,6 -4,8.5C8,16.43 9.79,18 12,18s4,-1.57 4,-3.5C16,12 14,10 12,6z"/>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:viewportHeight="600" android:viewportWidth="600" android:width="24dp">
+      
+    <path android:fillColor="#aae0fa" android:pathData="M300,300m-300,0a300,300 0,1 1,600 0a300,300 0,1 1,-600 0"/>
+      
+    <path android:fillColor="#061922" android:pathData="m404.92,502.32c-28.72,29.23 -64.1,43.84 -106.13,43.84 -47.17,0 -84.59,-16.14 -112.27,-48.44 -26.15,-30.76 -39.22,-69.97 -39.22,-117.64 0,-51.26 22.3,-109.72 66.9,-175.34 36.38,-53.81 79.19,-100.98 128.41,-141.48 -7.18,32.81 -10.76,56.13 -10.76,69.97 0,31.79 9.98,62.8 29.98,93.05 24.61,35.88 43.31,62.56 56.14,79.97 19.99,30.26 29.99,59.73 29.99,88.42 0,42.56 -14.35,78.44 -43.04,107.65m-0.77,-164.17c-7.69,-17.17 -16.66,-28.57 -26.92,-34.22 1.54,3.08 2.31,7.44 2.31,13.08 0,10.77 -3.07,26.14 -9.23,46.13l-9.98,30.76c0,17.94 8.95,26.92 26.9,26.92 18.96,0 28.45,-12.57 28.45,-37.69 0,-12.8 -3.84,-27.79 -11.53,-44.99"/>
+    
 </vector>

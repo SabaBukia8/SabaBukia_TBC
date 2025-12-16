@@ -1,12 +1,14 @@
 package com.example.mtgcollectionmanager.presentation.screen.collectionslist
 
 import com.example.mtgcollectionmanager.presentation.model.CollectionUi
+import com.example.mtgcollectionmanager.presentation.util.UiText
 
 object CollectionsListContract {
     data class State(
         val collections: List<CollectionUi> = emptyList(),
         val isLoading: Boolean = false,
-        val error: String? = null
+        val error: String? = null,
+        val isNetworkAvailable: Boolean = true
     )
 
     sealed interface Event {
@@ -23,7 +25,7 @@ object CollectionsListContract {
         data class NavigateToCollection(val collectionId: Long) : SideEffect
         object ShowCreateCollectionDialog : SideEffect
         data class ShowEditCollectionDialog(val collectionId: Long) : SideEffect
-        data class ShowError(val message: String) : SideEffect
-        data class ShowSuccess(val message: String) : SideEffect
+        data class ShowError(val message: UiText) : SideEffect
+        data class ShowSuccess(val message: UiText) : SideEffect
     }
 }

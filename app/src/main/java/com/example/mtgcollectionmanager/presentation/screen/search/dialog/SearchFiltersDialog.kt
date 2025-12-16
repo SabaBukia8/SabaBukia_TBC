@@ -91,9 +91,9 @@ class SearchFiltersDialog(
                 name = name,
                 state = colorFilters[code] ?: ColorFilterState.NEUTRAL
             )
-        }.toMutableList()
+        }
 
-        colorAdapter = SearchColorFilterAdapter(colorItems) { code, state ->
+        colorAdapter = SearchColorFilterAdapter { code, state ->
             if (state == ColorFilterState.NEUTRAL) {
                 colorFilters.remove(code)
             } else {
@@ -101,22 +101,27 @@ class SearchFiltersDialog(
             }
         }
 
-        binding.rvColors.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = colorAdapter
+        with(binding) {
+            rvColors.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = colorAdapter
+            }
         }
+        
+        // Submit the initial list
+        colorAdapter.submitList(colorItems)
     }
 
-    private fun setupCardTypeFilters() {
+    private fun setupCardTypeFilters() = with(binding) {
         val typeChips = mapOf(
-            binding.chipCreature to "creature",
-            binding.chipInstant to "instant",
-            binding.chipSorcery to "sorcery",
-            binding.chipEnchantment to "enchantment",
-            binding.chipArtifact to "artifact",
-            binding.chipLand to "land",
-            binding.chipPlaneswalker to "planeswalker",
-            binding.chipBattle to "battle"
+            chipCreature to "creature",
+            chipInstant to "instant",
+            chipSorcery to "sorcery",
+            chipEnchantment to "enchantment",
+            chipArtifact to "artifact",
+            chipLand to "land",
+            chipPlaneswalker to "planeswalker",
+            chipBattle to "battle"
         )
 
         typeChips.forEach { (chip, type) ->
@@ -131,12 +136,12 @@ class SearchFiltersDialog(
         }
     }
 
-    private fun setupRarityFilters() {
+    private fun setupRarityFilters() = with(binding) {
         val rarityChips = mapOf(
-            binding.chipCommon to "common",
-            binding.chipUncommon to "uncommon",
-            binding.chipRare to "rare",
-            binding.chipMythic to "mythic"
+            chipCommon to "common",
+            chipUncommon to "uncommon",
+            chipRare to "rare",
+            chipMythic to "mythic"
         )
 
         rarityChips.forEach { (chip, rarity) ->
@@ -151,11 +156,10 @@ class SearchFiltersDialog(
         }
     }
 
-    private fun setupSetsFilter() {
+    private fun setupSetsFilter() = with(binding) {
         updateSelectedSetsChips()
 
-        binding.btnSelectSets.setOnClickListener {
-            // Show set selection dialog
+        btnSelectSets.setOnClickListener {
             val setDialog = SetSelectionDialog(selectedSets) { sets ->
                 selectedSets.clear()
                 selectedSets.addAll(sets)
@@ -165,107 +169,114 @@ class SearchFiltersDialog(
         }
     }
 
-    private fun updateSelectedSetsChips() {
-        binding.cgSelectedSets.removeAllViews()
+    private fun updateSelectedSetsChips() = with(binding) {
+        cgSelectedSets.removeAllViews()
 
         if (selectedSets.isEmpty()) {
-            val chip = Chip(requireContext()).apply {
-                text = "No sets selected"
-                isEnabled = false
-            }
-            binding.cgSelectedSets.addView(chip)
+            addNoSetsSelectedChip()
         } else {
             selectedSets.forEach { setCode ->
-                val chip = Chip(requireContext()).apply {
-                    text = setCode.uppercase()
-                    isCloseIconVisible = true
-                    setOnCloseIconClickListener {
-                        selectedSets.remove(setCode)
-                        updateSelectedSetsChips()
-                    }
-                }
-                binding.cgSelectedSets.addView(chip)
+                addSetChip(setCode)
             }
         }
     }
+    
+    private fun addNoSetsSelectedChip() {
+        val chip = Chip(requireContext()).apply {
+            text = "No sets selected"
+            isEnabled = false
+        }
+        binding.cgSelectedSets.addView(chip)
+    }
+    
+    private fun addSetChip(setCode: String) {
+        val chip = Chip(requireContext()).apply {
+            text = setCode.uppercase()
+            isCloseIconVisible = true
+            setOnCloseIconClickListener {
+                selectedSets.remove(setCode)
+                updateSelectedSetsChips()
+            }
+        }
+        binding.cgSelectedSets.addView(chip)
+    }
 
-    private fun setupRangeFilters() {
-        // Mana Value
+    private fun setupRangeFilters() = with(binding) {
         currentFilters.manaValueMin?.let {
-            binding.etManaValueMin.setText(it.toString())
+            etManaValueMin.setText(it.toString())
         }
         currentFilters.manaValueMax?.let {
-            binding.etManaValueMax.setText(it.toString())
+            etManaValueMax.setText(it.toString())
         }
 
-        // Price
         currentFilters.priceMin?.let {
-            binding.etPriceMin.setText(it.toString())
+            etPriceMin.setText(it.toString())
         }
         currentFilters.priceMax?.let {
-            binding.etPriceMax.setText(it.toString())
+            etPriceMax.setText(it.toString())
         }
 
-        // Year
         currentFilters.yearMin?.let {
-            binding.etYearMin.setText(it.toString())
+            etYearMin.setText(it.toString())
         }
         currentFilters.yearMax?.let {
-            binding.etYearMax.setText(it.toString())
+            etYearMax.setText(it.toString())
         }
     }
 
-    private fun setupTextFilters() {
-        binding.etArtist.setText(currentFilters.artist)
-        binding.etOracleText.setText(currentFilters.oracleText)
-        binding.etFlavorText.setText(currentFilters.flavorText)
+    private fun setupTextFilters() = with(binding) {
+        etArtist.setText(currentFilters.artist)
+        etOracleText.setText(currentFilters.oracleText)
+        etFlavorText.setText(currentFilters.flavorText)
     }
 
-    private fun setupListeners() {
-        binding.btnApply.setOnClickListener {
+    private fun setupListeners() = with(binding) {
+        btnApply.setOnClickListener {
+            // Get the most current state from the adapter
+            val updatedColorFilters = colorAdapter.getColorStates()
+            
             val filters = SearchFilters(
-                colors = colorFilters.toMap(),
+                colors = updatedColorFilters,
                 sets = selectedSets.toSet(),
                 cardTypes = selectedCardTypes.toSet(),
                 rarities = selectedRarities.toSet(),
-                manaValueMin = binding.etManaValueMin.text.toString().toIntOrNull(),
-                manaValueMax = binding.etManaValueMax.text.toString().toIntOrNull(),
-                priceMin = binding.etPriceMin.text.toString().toFloatOrNull(),
-                priceMax = binding.etPriceMax.text.toString().toFloatOrNull(),
-                artist = binding.etArtist.text.toString().trim(),
-                yearMin = binding.etYearMin.text.toString().toIntOrNull(),
-                yearMax = binding.etYearMax.text.toString().toIntOrNull(),
-                oracleText = binding.etOracleText.text.toString().trim(),
-                flavorText = binding.etFlavorText.text.toString().trim()
+                manaValueMin = etManaValueMin.text.toString().toIntOrNull(),
+                manaValueMax = etManaValueMax.text.toString().toIntOrNull(),
+                priceMin = etPriceMin.text.toString().toFloatOrNull(),
+                priceMax = etPriceMax.text.toString().toFloatOrNull(),
+                artist = etArtist.text.toString().trim(),
+                yearMin = etYearMin.text.toString().toIntOrNull(),
+                yearMax = etYearMax.text.toString().toIntOrNull(),
+                oracleText = etOracleText.text.toString().trim(),
+                flavorText = etFlavorText.text.toString().trim()
             )
             onFiltersApplied(filters)
             dismiss()
         }
 
-        binding.btnCancel.setOnClickListener {
+        btnCancel.setOnClickListener {
             dismiss()
         }
 
-        binding.btnClearAll.setOnClickListener {
+        btnClearAll.setOnClickListener {
             clearAllFilters()
         }
     }
 
-    private fun clearAllFilters() {
-        // Clear colors
+    private fun clearAllFilters() = with(binding) {
+        // Clear colors using the adapter's method
         colorFilters.clear()
-        colorAdapter.colorItems.forEach { it.state = ColorFilterState.NEUTRAL }
-        colorAdapter.notifyDataSetChanged()
+        colorAdapter.resetAllStates()
 
         // Clear card types
         selectedCardTypes.clear()
-        binding.cgCardTypes.children.filterIsInstance<Chip>().forEach {
+        cgCardTypes.children.filterIsInstance<Chip>().forEach {
             it.isChecked = false
         }
 
         // Clear rarities
         selectedRarities.clear()
-        binding.cgRarity.children.filterIsInstance<Chip>().forEach {
+        cgRarity.children.filterIsInstance<Chip>().forEach {
             it.isChecked = false
         }
 
@@ -274,17 +285,17 @@ class SearchFiltersDialog(
         updateSelectedSetsChips()
 
         // Clear ranges
-        binding.etManaValueMin.text?.clear()
-        binding.etManaValueMax.text?.clear()
-        binding.etPriceMin.text?.clear()
-        binding.etPriceMax.text?.clear()
-        binding.etYearMin.text?.clear()
-        binding.etYearMax.text?.clear()
+        etManaValueMin.text?.clear()
+        etManaValueMax.text?.clear()
+        etPriceMin.text?.clear()
+        etPriceMax.text?.clear()
+        etYearMin.text?.clear()
+        etYearMax.text?.clear()
 
         // Clear text fields
-        binding.etArtist.text?.clear()
-        binding.etOracleText.text?.clear()
-        binding.etFlavorText.text?.clear()
+        etArtist.text?.clear()
+        etOracleText.text?.clear()
+        etFlavorText.text?.clear()
     }
 
     override fun onDestroyView() {

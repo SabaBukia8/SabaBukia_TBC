@@ -14,9 +14,15 @@
         android:background="@drawable/bg_toolbar_gradient"
         android:elevation="@dimen/elevation_sm"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="My Collections"
+        app:title="@string/my_collections"
         app:titleTextAppearance="@style/TextAppearance.MTG.HeadlineMedium"
         app:titleTextColor="@color/text_primary" />
+        
+    <com.example.mtgcollectionmanager.presentation.common.NetworkStatusView
+        android:id="@+id/networkStatusView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCollections"
@@ -28,7 +34,7 @@
         android:paddingBottom="@dimen/spacing_xxl"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/networkStatusView"
         tools:listitem="@layout/item_collection" />
 
     <ProgressBar
@@ -43,43 +49,56 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/llEmptyState"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivEmptyStateIcon"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:alpha="0.3"
+        android:contentDescription="@string/empty_collection"
+        android:src="@drawable/ic_empty_collection"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tvEmptyStateTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/networkStatusView"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/text_tertiary"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvEmptyStateTitle"
+        style="@style/MTG.EmptyState.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:text="@string/no_collections_yet"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tvEmptyStateSubtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivEmptyStateIcon"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvEmptyStateSubtitle"
+        style="@style/MTG.EmptyState.Subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:text="@string/create_first_collection"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@id/tvEmptyStateTitle"
+        tools:visibility="visible" />
 
-        <ImageView
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:alpha="0.3"
-            android:contentDescription="@string/empty_collection"
-            android:src="@drawable/ic_empty_collection"
-            app:tint="@color/text_tertiary" />
-
-        <TextView
-            android:id="@+id/tvEmptyStateTitle"
-            style="@style/MTG.EmptyState.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:text="No collections yet" />
-
-        <TextView
-            android:id="@+id/tvEmptyStateSubtitle"
-            style="@style/MTG.EmptyState.Subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_sm"
-            android:text="Tap + to create your first collection!" />
-    </LinearLayout>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/llEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="ivEmptyStateIcon,tvEmptyStateTitle,tvEmptyStateSubtitle" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCreateCollection"
@@ -87,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_lg"
-        android:contentDescription="Create Collection"
+        android:contentDescription="@string/create_collection"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_outlined" />

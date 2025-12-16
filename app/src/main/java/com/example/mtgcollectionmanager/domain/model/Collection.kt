@@ -7,5 +7,6 @@ data class Collection(
     val createdDate: Long,
     val userId: String,
     val totalCards: Int = 0,
-    val totalValue: Double = 0.0
+    val totalValue: Double = 0.0,
+    val firestoreId: String = ""
 )

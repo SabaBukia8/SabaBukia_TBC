@@ -56,18 +56,24 @@ interface CollectionCardDao {
     suspend fun moveCardToCategory(cardId: Long, categoryId: Long?, userId: String)
 
     // Get total value of a collection
-    @Query("SELECT SUM(price * quantity) FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId")
-    suspend fun getTotalValue(collectionId: Long, userId: String): Double?
+    @Query("SELECT COALESCE(SUM(price * quantity), 0.0) FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId")
+    suspend fun getTotalValue(collectionId: Long, userId: String): Double
 
     // Get total card count in a collection
-    @Query("SELECT SUM(quantity) FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId")
-    suspend fun getTotalCardCount(collectionId: Long, userId: String): Int?
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId")
+    suspend fun getTotalCardCount(collectionId: Long, userId: String): Int
 
     @Query("DELETE FROM collection_cards WHERE userId = :userId")
     suspend fun deleteAllCards(userId: String)
 
-    @Query("SELECT SUM(quantity) FROM collection_cards WHERE userId = :userId")
-    suspend fun getTotalCardCountForUser(userId: String): Int?
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM collection_cards WHERE userId = :userId")
+    suspend fun getTotalCardCountForUser(userId: String): Int
+    
+    @Query("SELECT COUNT(*) FROM collection_cards WHERE userId = :userId")
+    suspend fun getCardRecordCountForUser(userId: String): Int
+    
+    @Query("SELECT * FROM collection_cards WHERE userId = :userId")
+    suspend fun getAllCardsForUser(userId: String): List<CollectionCardEntity>
 
     @Query("DELETE FROM collection_cards WHERE collectionId = :collectionId AND userId = :userId")
     suspend fun deleteAllCardsForCollection(collectionId: Long, userId: String)

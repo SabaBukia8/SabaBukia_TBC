@@ -1,7 +1,8 @@
-package com.example.mtgcollectionmanager.presentation.screen.common.dialog
+package com.example.mtgcollectionmanager.presentation.screen.cardprintings.dialog
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -41,10 +42,10 @@ class CardPrintingsAdapter(
                 tvPrice.text = card.priceFormatted
                 tvReleaseDate.text = "Released: ${card.releasedAt}"
 
-                // Highlight current printing
+
                 if (card.cardId == currentCardId) {
                     root.strokeWidth = 4
-                    root.strokeColor = root.context.getColor(android.R.color.holo_blue_dark)
+                    root.strokeColor = androidx.core.content.ContextCompat.getColor(root.context, android.R.color.holo_blue_dark)
                 } else {
                     root.strokeWidth = 0
                 }

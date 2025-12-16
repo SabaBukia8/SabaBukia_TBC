@@ -100,7 +100,7 @@ class EditCardBottomSheet : BottomSheetDialogFragment() {
         }
 
         // Condition spinner
-        val conditions = CardCondition.values()
+        val conditions = CardCondition.entries.toTypedArray()
         val conditionNames = conditions.map { condition ->
             when (condition) {
                 CardCondition.NEAR_MINT -> getString(R.string.condition_near_mint)

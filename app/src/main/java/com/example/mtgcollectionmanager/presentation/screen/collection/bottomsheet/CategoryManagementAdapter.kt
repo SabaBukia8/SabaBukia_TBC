@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.ItemCategoryBinding
 import com.example.mtgcollectionmanager.domain.model.Category
+import androidx.core.graphics.toColorInt
 
 class CategoryManagementAdapter(
     private val onEditClick: (Category) -> Unit,
@@ -38,7 +39,7 @@ class CategoryManagementAdapter(
                 tvCardCount.text = root.context.getString(R.string.card_count_format, category.cardCount)
 
                 try {
-                    vColorIndicator.setBackgroundColor(Color.parseColor(category.color))
+                    vColorIndicator.setBackgroundColor(category.color.toColorInt())
                 } catch (e: Exception) {
                     vColorIndicator.setBackgroundColor(Color.GRAY)
                 }

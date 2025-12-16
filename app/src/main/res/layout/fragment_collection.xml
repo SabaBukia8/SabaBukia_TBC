@@ -27,6 +27,12 @@
             app:title="@string/collection_title"
             app:titleTextAppearance="@style/TextAppearance.MTG.HeadlineMedium"
             app:titleTextColor="@color/text_primary" />
+            
+        <com.example.mtgcollectionmanager.presentation.common.NetworkStatusView
+            android:id="@+id/networkStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardStats"
@@ -48,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/spacing_md">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTotalValue"
                     style="@style/MTG.Text.Price"
                     android:layout_width="wrap_content"
@@ -58,18 +64,18 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="$125.00" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelTotalValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
-                    android:text="Total Value"
+                    android:text="@string/total_value_label"
                     android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_size_caption"
                     app:layout_constraintStart_toStartOf="@id/tvTotalValue"
                     app:layout_constraintTop_toBottomOf="@id/tvTotalValue" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTotalCards"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -141,7 +147,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toggleViewMode" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llEmptyState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -153,7 +159,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toggleViewMode">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="160dp"
                 android:layout_height="160dp"
                 android:alpha="0.3"
@@ -161,7 +167,7 @@
                 android:src="@drawable/ic_empty_collection"
                 app:tint="@color/text_tertiary" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvEmptyStateTitle"
                 style="@style/MTG.EmptyState.Title"
                 android:layout_width="wrap_content"
@@ -169,14 +175,14 @@
                 android:layout_marginTop="@dimen/spacing_lg"
                 android:text="@string/empty_collection" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvEmptyStateSubtitle"
                 style="@style/MTG.EmptyState.Subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_sm"
                 android:text="@string/start_collecting" />
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCollection"

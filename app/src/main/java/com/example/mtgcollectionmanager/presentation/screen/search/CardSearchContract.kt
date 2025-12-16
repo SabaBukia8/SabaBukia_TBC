@@ -7,6 +7,7 @@ import com.example.mtgcollectionmanager.presentation.util.UiText
 object CardSearchContract {
     data class State(
         val isLoading: Boolean = false,
+        val isNetworkAvailable: Boolean = true,
         val searchQuery: String = "",
         val cards: List<CardUiModel> = emptyList(),
         val hasSearched: Boolean = false,

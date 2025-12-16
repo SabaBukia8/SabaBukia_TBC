@@ -1,4 +1,4 @@
-package com.example.mtgcollectionmanager.presentation.screen.common.dialog
+package com.example.mtgcollectionmanager.presentation.screen.cardprintings.dialog
 
 import android.app.Dialog
 import android.os.Bundle
@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.databinding.DialogCardPrintingsBinding
 import com.example.mtgcollectionmanager.presentation.common.hide
 import com.example.mtgcollectionmanager.presentation.common.show
@@ -58,7 +59,7 @@ class CardPrintingsDialog(
         observeState()
         setupListeners()
 
-        // Load printings
+
         viewModel.loadPrintings(cardName)
     }
 
@@ -87,6 +88,14 @@ class CardPrintingsDialog(
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     with(binding) {
+
+                        networkStatusView.updateNetworkStatus(
+                            if (state.isNetworkAvailable)
+                                NetworkConnectivityManager.NetworkState.Available
+                            else
+                                NetworkConnectivityManager.NetworkState.Unavailable
+                        )
+                        
                         when {
                             state.isLoading -> {
                                 progressBar.show()

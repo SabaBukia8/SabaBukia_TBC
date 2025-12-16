@@ -6,19 +6,25 @@
     android:background="@color/surface"
     android:padding="@dimen/dialog_padding">
 
-    <TextView
+    <com.example.mtgcollectionmanager.presentation.common.NetworkStatusView
+        android:id="@+id/networkStatusView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
         style="@style/MTG.Text.SectionHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Select Printing"
+        android:text="@string/select_printing"
         android:textColor="@color/text_primary"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/networkStatusView" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCardName"
         style="@style/MTG.Text.CardNameSmall"
         android:layout_width="0dp"
@@ -40,14 +46,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/rvPrintings" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvError"
         style="@style/MTG.EmptyState.Subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/spacing_xxxl"
-        android:text="Failed to load printings"
+        android:text="@string/failed_to_load_printings"
         android:textColor="@color/text_secondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvPrintings"

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetUserCollectionsUseCase @Inject constructor(
     private val userCollectionsRepository: UserCollectionsRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<Collection>>> {
+    suspend operator fun invoke(): Flow<Resource<List<Collection>>> {
         return userCollectionsRepository.getAllCollections()
     }
 }

@@ -37,7 +37,7 @@
             app:layout_constraintStart_toEndOf="@id/vRarityStrip"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivCardImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -46,7 +46,7 @@
                 android:scaleType="centerCrop"
                 tools:src="@android:color/darker_gray" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvQuantityBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,14 +56,13 @@
                 android:minWidth="24dp"
                 android:paddingHorizontal="@dimen/spacing_xs"
                 android:paddingVertical="2dp"
-                android:textAlignment="center"
                 android:textColor="@color/on_primary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="x3" />
         </FrameLayout>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCardName"
             style="@style/MTG.Text.CardNameSmall"
             android:layout_width="0dp"
@@ -74,7 +73,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Lightning Bolt" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llManaSymbols"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,7 +82,7 @@
             app:layout_constraintStart_toStartOf="@id/tvCardName"
             app:layout_constraintTop_toBottomOf="@id/tvCardName" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCondition"
             style="@style/MTG.Text.Metadata"
             android:layout_width="0dp"
@@ -94,7 +93,7 @@
             app:layout_constraintTop_toBottomOf="@id/llManaSymbols"
             tools:text="Near Mint" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTotalValue"
             style="@style/MTG.Text.Price"
             android:layout_width="0dp"

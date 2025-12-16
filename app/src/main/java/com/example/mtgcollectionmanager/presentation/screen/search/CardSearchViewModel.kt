@@ -3,24 +3,46 @@ package com.example.mtgcollectionmanager.presentation.screen.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.usecase.card.SearchCardsUseCase
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
 import com.example.mtgcollectionmanager.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CardSearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val searchCardsUseCase: SearchCardsUseCase
+    private val searchCardsUseCase: SearchCardsUseCase,
+    private val networkConnectivityManager: NetworkConnectivityManager
 ) : BaseViewModel<CardSearchContract.State, CardSearchContract.Event, CardSearchContract.SideEffect>(
-    CardSearchContract.State()
+    CardSearchContract.State(isNetworkAvailable = networkConnectivityManager.isNetworkAvailable())
 ) {
 
     val collectionId: Long = savedStateHandle.get<Long>("collectionId") ?: 1L
+
+    init {
+        observeNetworkStatus()
+    }
+    
+    private fun observeNetworkStatus() {
+        networkConnectivityManager.observeNetworkState()
+            .onEach { networkState -> 
+                val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
+                updateState { it.copy(isNetworkAvailable = isAvailable) }
+                
+                // If network becomes available and we have an active search query, refresh results
+                if (isAvailable && state.value.searchQuery.isNotEmpty() && state.value.hasSearched) {
+                    searchCards()
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
     override fun onEvent(event: CardSearchContract.Event) {
         when (event) {
@@ -70,9 +92,12 @@ class CardSearchViewModel @Inject constructor(
                         }
                         is Resource.Error -> {
                             updateState { it.copy(hasSearched = true) }
-                            emitSideEffect(CardSearchContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
-                            ))
+                            // Only show error messages if we're online - avoid showing network errors when offline
+                            if (state.value.isNetworkAvailable) {
+                                emitSideEffect(CardSearchContract.SideEffect.ShowError(
+                                    UiText.DynamicString(resource.errorMessage)
+                                ))
+                            }
                         }
                     }
                 }

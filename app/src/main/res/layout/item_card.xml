@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/rarity_rare" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivCardImage"
             android:layout_width="@dimen/card_image_width_sm"
             android:layout_height="@dimen/card_image_height_sm"
@@ -41,7 +41,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:color/darker_gray" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCardName"
             style="@style/MTG.Text.CardNameSmall"
             android:layout_width="0dp"
@@ -52,7 +52,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Lightning Bolt" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llManaSymbols"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="@id/tvCardName"
             app:layout_constraintTop_toBottomOf="@id/tvCardName" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvSetInfo"
             style="@style/MTG.Text.SetInfo"
             android:layout_width="0dp"
@@ -72,7 +72,7 @@
             app:layout_constraintTop_toBottomOf="@id/llManaSymbols"
             tools:text="M15 - Magic 2015" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPrice"
             style="@style/MTG.Text.Price"
             android:layout_width="0dp"

@@ -2,22 +2,47 @@ package com.example.mtgcollectionmanager.presentation.screen.collection.dialog
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.ItemColorFilterBinding
 import com.example.mtgcollectionmanager.presentation.screen.collection.CollectionContract
 
 data class ColorFilterItem(
     val code: String,
     val name: String,
-    var state: CollectionContract.FilterState
+    val state: CollectionContract.FilterState
 )
 
 class ColorFilterAdapter(
-    private val colors: List<ColorFilterItem>,
+    colors: List<ColorFilterItem>,
     private val onColorStateChanged: (String, CollectionContract.FilterState) -> Unit
-) : RecyclerView.Adapter<ColorFilterAdapter.ColorViewHolder>() {
+) : ListAdapter<ColorFilterItem, ColorFilterAdapter.ColorViewHolder>(ColorFilterDiffCallback()) {
+
+    init {
+
+        submitList(colors)
+    }
+    
+
+    fun updateColorState(code: String, newState: CollectionContract.FilterState) {
+        val newList = currentList.map { item ->
+            if (item.code == code) {
+                item.copy(state = newState)
+            } else {
+                item
+            }
+        }
+        submitList(newList)
+    }
+    
+
+    fun clearAllFilters() {
+        val clearedList = currentList.map { item ->
+            item.copy(state = CollectionContract.FilterState.NEUTRAL)
+        }
+        submitList(clearedList)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
         val binding = ItemColorFilterBinding.inflate(
@@ -29,10 +54,8 @@ class ColorFilterAdapter(
     }
 
     override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
-        holder.bind(colors[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int = colors.size
 
     inner class ColorViewHolder(
         private val binding: ItemColorFilterBinding
@@ -44,14 +67,17 @@ class ColorFilterAdapter(
                 updateStateIcon(colorItem.state)
 
                 root.setOnClickListener {
-                    // Cycle through states: NEUTRAL -> INCLUDE -> EXCLUDE -> NEUTRAL
+
                     val newState = when (colorItem.state) {
                         CollectionContract.FilterState.NEUTRAL -> CollectionContract.FilterState.INCLUDE
                         CollectionContract.FilterState.INCLUDE -> CollectionContract.FilterState.EXCLUDE
                         CollectionContract.FilterState.EXCLUDE -> CollectionContract.FilterState.NEUTRAL
                     }
-                    colorItem.state = newState
-                    updateStateIcon(newState)
+                    
+
+                    updateColorState(colorItem.code, newState)
+                    
+
                     onColorStateChanged(colorItem.code, newState)
                 }
             }
@@ -73,6 +99,16 @@ class ColorFilterAdapter(
                     }
                 }
             }
+        }
+    }
+    
+    class ColorFilterDiffCallback : DiffUtil.ItemCallback<ColorFilterItem>() {
+        override fun areItemsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
+            return oldItem.code == newItem.code
+        }
+
+        override fun areContentsTheSame(oldItem: ColorFilterItem, newItem: ColorFilterItem): Boolean {
+            return oldItem == newItem
         }
     }
 }

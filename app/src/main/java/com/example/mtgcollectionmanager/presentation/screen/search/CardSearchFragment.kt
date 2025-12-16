@@ -10,6 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.databinding.FragmentCardSearchBinding
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
 import com.example.mtgcollectionmanager.presentation.common.hide
@@ -71,6 +72,14 @@ class CardSearchFragment : BaseFragment<FragmentCardSearchBinding>(
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     with(binding) {
+                        // Update network status view
+                        binding.networkStatusView.updateNetworkStatus(
+                            if (state.isNetworkAvailable)
+                                NetworkConnectivityManager.NetworkState.Available
+                            else
+                                NetworkConnectivityManager.NetworkState.Unavailable
+                        )
+                        
                         when {
                             state.isLoading -> {
                                 progressBar.show()

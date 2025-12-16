@@ -13,5 +13,13 @@ data class CardUiModel(
     val releasedAt: String,
     val setInfo: String,
     val colorsDisplay: String,
-    val priceFormatted: String
+    val priceFormatted: String,
+    val marketPrices: List<MarketPriceUiModel> = emptyList()
+)
+
+data class MarketPriceUiModel(
+    val marketName: String,
+    val normalPrice: String,
+    val foilPrice: String,
+    val purchaseUrl: String?
 )

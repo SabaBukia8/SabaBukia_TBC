@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <com.example.mtgcollectionmanager.presentation.common.NetworkStatusView
+        android:id="@+id/networkStatusView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilSearch"
         style="@style/Widget.MTG.TextInputLayout"
@@ -14,7 +20,7 @@
         android:hint="@string/search_cards"
         app:layout_constraintEnd_toStartOf="@id/btnFilters"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/networkStatusView"
         app:startIconDrawable="@drawable/ic_search_outlined"
         app:startIconTint="@color/text_tertiary">
 
@@ -34,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_sm"
-        android:text="Filters"
+        android:text="@string/filters"
         app:icon="@drawable/ic_filter_outlined"
         app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="@id/tilSearch"
@@ -65,7 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilSearch" />
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +83,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilSearch">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:alpha="0.3"
@@ -85,7 +91,7 @@
             android:src="@drawable/ic_search_outlined"
             app:tint="@color/text_tertiary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvEmptyStateTitle"
             style="@style/MTG.EmptyState.Title"
             android:layout_width="wrap_content"
@@ -93,14 +99,14 @@
             android:layout_marginTop="@dimen/spacing_lg"
             android:text="@string/search_empty_state" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvEmptyStateSubtitle"
             style="@style/MTG.EmptyState.Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
-            android:text="Enter a card name to search" />
-    </LinearLayout>
+            android:text="@string/search_empty_state" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCards"

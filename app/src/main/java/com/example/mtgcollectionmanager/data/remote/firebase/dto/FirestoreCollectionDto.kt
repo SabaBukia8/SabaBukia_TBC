@@ -21,7 +21,8 @@ data class FirestoreCollectionDto(
         name = name,
         description = description,
         createdDate = createdAt,
-        userId = userId
+        userId = userId,
+        firestoreId = id
     )
 
     companion object {
@@ -34,7 +35,7 @@ data class FirestoreCollectionDto(
             )
 
         fun fromEntity(entity: CollectionEntity): FirestoreCollectionDto = FirestoreCollectionDto(
-            id = entity.id.toString(),
+            id = entity.firestoreId.ifEmpty { entity.id.toString() },
             name = entity.name,
             description = entity.description,
             createdAt = entity.createdDate

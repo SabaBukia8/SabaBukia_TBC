@@ -16,7 +16,8 @@ fun Collection.toUi(): CollectionUi {
         totalValue = if (totalValue > 0) "$${String.format("%.2f", totalValue)}" else "$0.00",
         createdDate = dateFormat.format(Date(createdDate)),
         userId = userId,
-        createdDateMillis = createdDate
+        createdDateMillis = createdDate,
+        firestoreId = firestoreId
     )
 }
 
@@ -28,6 +29,7 @@ fun CollectionUi.toDomain(): Collection {
         createdDate = createdDateMillis,
         userId = userId,
         totalCards = totalCards,
-        totalValue = totalValue.removePrefix("$").toDoubleOrNull() ?: 0.0
+        totalValue = totalValue.removePrefix("$").toDoubleOrNull() ?: 0.0,
+        firestoreId = firestoreId
     )
 }

@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
+    <com.example.mtgcollectionmanager.presentation.common.NetworkStatusView
+        android:id="@+id/networkStatusView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -31,7 +37,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_lg">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivProfileAvatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
@@ -89,7 +95,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvMemberSince"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -117,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/spacing_lg">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvStatsTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -128,7 +134,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvCollectionCount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -143,7 +149,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tvStatsTitle"
                         tools:text="5 Collections" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvTotalCards"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

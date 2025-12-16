@@ -48,7 +48,6 @@
         <item name="android:statusBarColor">@color/mtg_black</item>
         <item name="android:navigationBarColor">@color/mtg_dark_surface</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
 
         <!-- Window Background -->
         <item name="android:windowBackground">@color/mtg_black</item>

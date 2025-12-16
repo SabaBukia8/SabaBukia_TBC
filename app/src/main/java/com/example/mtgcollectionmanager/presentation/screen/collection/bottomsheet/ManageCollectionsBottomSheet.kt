@@ -88,45 +88,64 @@ class ManageCollectionsBottomSheet : BottomSheetDialogFragment() {
 
         val etName = dialogView.findViewById<EditText>(R.id.etCollectionName)
         val etDescription = dialogView.findViewById<EditText>(R.id.etCollectionDescription)
+        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.create_collection)
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton(R.string.create) { _, _ ->
-                val name = etName.text.toString().trim()
-                val description = etDescription.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    onCreateCollection?.invoke(name, description)
-                    dismiss()
-                }
+            .create()
+
+        btnCreate.setOnClickListener {
+            val name = etName.text.toString().trim()
+            val description = etDescription.text.toString().trim()
+            if (name.isNotEmpty()) {
+                onCreateCollection?.invoke(name, description)
+                dialog.dismiss()
+                dismiss()
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showEditCollectionDialog(collection: CollectionUi) {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_create_collection, null)
 
+        val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
         val etName = dialogView.findViewById<EditText>(R.id.etCollectionName)
         val etDescription = dialogView.findViewById<EditText>(R.id.etCollectionDescription)
+        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
+        tvTitle.setText(R.string.edit_collection)
+        btnCreate.setText(R.string.save)
         etName.setText(collection.name)
         etDescription.setText(collection.description)
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.edit_collection)
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton(R.string.save) { _, _ ->
-                val name = etName.text.toString().trim()
-                val description = etDescription.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    onEditCollection?.invoke(collection.id, name, description)
-                    dismiss()
-                }
+            .create()
+
+        btnCreate.setOnClickListener {
+            val name = etName.text.toString().trim()
+            val description = etDescription.text.toString().trim()
+            if (name.isNotEmpty()) {
+                onEditCollection?.invoke(collection.id, name, description)
+                dialog.dismiss()
+                dismiss()
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showDeleteConfirmationDialog(collection: CollectionUi) {

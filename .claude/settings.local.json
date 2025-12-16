@@ -41,7 +41,11 @@
       "Bash(./gradlew.bat assembleDebug)",
       "Bash(./gradlew.bat clean:*)",
       "Bash(Remove-Item -Recurse -Force .gradle -ErrorAction SilentlyContinue)",
-      "Bash(Remove-Item -Recurse -Force app/build -ErrorAction SilentlyContinue)"
+      "Bash(Remove-Item -Recurse -Force app/build -ErrorAction SilentlyContinue)",
+      "Bash(.gradlew.bat clean build)",
+      "Bash(findstr:*)",
+      "WebFetch(domain:moxfield.com)",
+      "WebFetch(domain:magic.wizards.com)"
     ],
     "deny": [],
     "ask": []

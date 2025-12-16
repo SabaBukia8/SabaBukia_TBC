@@ -6,7 +6,7 @@
     android:background="@color/surface"
     android:padding="@dimen/dialog_padding">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
         style="@style/MTG.Text.SectionHeader"
         android:layout_width="0dp"

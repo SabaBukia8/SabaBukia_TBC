@@ -1,22 +1,23 @@
 package com.example.mtgcollectionmanager.presentation.screen.collectionslist
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.data.remote.util.executeWithFallback
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.usecase.collection.CreateCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.DeleteCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.EnsureDefaultCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.GetUserCollectionsUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.UpdateCollectionUseCase
+import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.mapper.toDomain
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
+import com.example.mtgcollectionmanager.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,17 +27,29 @@ class CollectionsListViewModel @Inject constructor(
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
-    private val ensureDefaultCollectionUseCase: EnsureDefaultCollectionUseCase
-) : ViewModel() {
-
-    private val _state = MutableStateFlow(CollectionsListContract.State())
-    val state: StateFlow<CollectionsListContract.State> = _state.asStateFlow()
-
-    private val _sideEffect = Channel<CollectionsListContract.SideEffect>()
-    val sideEffect = _sideEffect.receiveAsFlow()
+    private val ensureDefaultCollectionUseCase: EnsureDefaultCollectionUseCase,
+    private val networkConnectivityManager: NetworkConnectivityManager
+) : BaseViewModel<CollectionsListContract.State, CollectionsListContract.Event, CollectionsListContract.SideEffect>(
+    CollectionsListContract.State(isNetworkAvailable = networkConnectivityManager.isNetworkAvailable())
+) {
 
     init {
+        observeNetworkStatus()
         ensureDefaultCollectionAndLoad()
+    }
+    
+    private fun observeNetworkStatus() {
+        networkConnectivityManager.observeNetworkState()
+            .onEach { networkState -> 
+                val isAvailable = networkState is NetworkConnectivityManager.NetworkState.Available
+                updateState { it.copy(isNetworkAvailable = isAvailable) }
+                
+                // If network becomes available, refresh the collections
+                if (isAvailable) {
+                    loadCollections()
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun ensureDefaultCollectionAndLoad() {
@@ -51,25 +64,21 @@ class CollectionsListViewModel @Inject constructor(
                         loadCollections()
                     }
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = resource.isLoading) }
+                        updateState { it.copy(isLoading = resource.isLoading) }
                     }
                 }
             }
         }
     }
 
-    fun onEvent(event: CollectionsListContract.Event) {
+    override fun onEvent(event: CollectionsListContract.Event) {
         when (event) {
             is CollectionsListContract.Event.LoadCollections -> loadCollections()
             is CollectionsListContract.Event.OnCollectionClick -> {
-                viewModelScope.launch {
-                    _sideEffect.send(CollectionsListContract.SideEffect.NavigateToCollection(event.collectionId))
-                }
+                emitSideEffect(CollectionsListContract.SideEffect.NavigateToCollection(event.collectionId))
             }
             is CollectionsListContract.Event.OnCreateCollectionClick -> {
-                viewModelScope.launch {
-                    _sideEffect.send(CollectionsListContract.SideEffect.ShowCreateCollectionDialog)
-                }
+                emitSideEffect(CollectionsListContract.SideEffect.ShowCreateCollectionDialog)
             }
             is CollectionsListContract.Event.CreateCollection -> {
                 createCollection(event.name, event.description)
@@ -78,9 +87,7 @@ class CollectionsListViewModel @Inject constructor(
                 deleteCollection(event.collectionId)
             }
             is CollectionsListContract.Event.OnEditCollectionClick -> {
-                viewModelScope.launch {
-                    _sideEffect.send(CollectionsListContract.SideEffect.ShowEditCollectionDialog(event.collectionId))
-                }
+                emitSideEffect(CollectionsListContract.SideEffect.ShowEditCollectionDialog(event.collectionId))
             }
             is CollectionsListContract.Event.UpdateCollection -> {
                 updateCollection(event.collectionId, event.name, event.description)
@@ -90,13 +97,25 @@ class CollectionsListViewModel @Inject constructor(
 
     private fun loadCollections() {
         viewModelScope.launch {
-            getUserCollectionsUseCase().collect { resource ->
+            // Use executeWithFallback to handle network state gracefully
+            executeWithFallback(
+                networkManager = networkConnectivityManager,
+                networkOperation = { getUserCollectionsUseCase() },
+                fallbackOperation = { 
+                    // Return whatever collections we have in cache when offline
+                    flow {
+                        emit(Resource.Loading(true))
+                        emit(Resource.Success(state.value.collections.map { it.toDomain() }))
+                        emit(Resource.Loading(false))
+                    }
+                }
+            ).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = resource.isLoading) }
+                        updateState { it.copy(isLoading = resource.isLoading) }
                     }
                     is Resource.Success -> {
-                        _state.update {
+                        updateState {
                             it.copy(
                                 collections = resource.data.map { collection -> collection.toUi() },
                                 error = null
@@ -104,8 +123,13 @@ class CollectionsListViewModel @Inject constructor(
                         }
                     }
                     is Resource.Error -> {
-                        _state.update { it.copy(error = resource.errorMessage) }
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowError(resource.errorMessage))
+                        updateState { it.copy(error = resource.errorMessage) }
+                        // Only show error if we're online - avoid showing network errors when offline
+                        if (state.value.isNetworkAvailable) {
+                            emitSideEffect(CollectionsListContract.SideEffect.ShowError(
+                                UiText.DynamicString(resource.errorMessage)
+                            ))
+                        }
                     }
                 }
             }
@@ -117,14 +141,18 @@ class CollectionsListViewModel @Inject constructor(
             createCollectionUseCase(name, description).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = resource.isLoading) }
+                        updateState { it.copy(isLoading = resource.isLoading) }
                     }
                     is Resource.Success -> {
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowSuccess("Collection created"))
-                        loadCollections() // Reload collections
+                        emitSideEffect(CollectionsListContract.SideEffect.ShowSuccess(
+                            UiText.StringResource(R.string.collection_created_success)
+                        ))
+                        loadCollections()
                     }
                     is Resource.Error -> {
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowError(resource.errorMessage))
+                        emitSideEffect(CollectionsListContract.SideEffect.ShowError(
+                            UiText.DynamicString(resource.errorMessage)
+                        ))
                     }
                 }
             }
@@ -133,10 +161,8 @@ class CollectionsListViewModel @Inject constructor(
 
     private fun updateCollection(collectionId: Long, name: String, description: String) {
         viewModelScope.launch {
-            // Get the current collection from state to preserve other fields
-            val collection = _state.value.collections.find { it.id == collectionId } ?: return@launch
+            val collection = state.value.collections.find { it.id == collectionId } ?: return@launch
 
-            // Convert to domain model with updated name/description
             val domainCollection = collection.copy(
                 name = name,
                 description = description
@@ -145,14 +171,18 @@ class CollectionsListViewModel @Inject constructor(
             updateCollectionUseCase(domainCollection).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = resource.isLoading) }
+                        updateState { it.copy(isLoading = resource.isLoading) }
                     }
                     is Resource.Success -> {
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowSuccess("Collection updated"))
-                        loadCollections() // Reload collections
+                        emitSideEffect(CollectionsListContract.SideEffect.ShowSuccess(
+                            UiText.StringResource(R.string.collection_updated_success)
+                        ))
+                        loadCollections()
                     }
                     is Resource.Error -> {
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowError(resource.errorMessage))
+                        emitSideEffect(CollectionsListContract.SideEffect.ShowError(
+                            UiText.DynamicString(resource.errorMessage)
+                        ))
                     }
                 }
             }
@@ -164,14 +194,18 @@ class CollectionsListViewModel @Inject constructor(
             deleteCollectionUseCase(collectionId).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = resource.isLoading) }
+                        updateState { it.copy(isLoading = resource.isLoading) }
                     }
                     is Resource.Success -> {
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowSuccess("Collection deleted"))
-                        loadCollections() // Reload collections
+                        emitSideEffect(CollectionsListContract.SideEffect.ShowSuccess(
+                            UiText.StringResource(R.string.collection_deleted_success)
+                        ))
+                        loadCollections()
                     }
                     is Resource.Error -> {
-                        _sideEffect.send(CollectionsListContract.SideEffect.ShowError(resource.errorMessage))
+                        emitSideEffect(CollectionsListContract.SideEffect.ShowError(
+                            UiText.DynamicString(resource.errorMessage)
+                        ))
                     }
                 }
             }

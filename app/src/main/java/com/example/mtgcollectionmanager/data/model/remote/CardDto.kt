@@ -16,7 +16,8 @@ data class CardDto(
     @SerialName("collector_number") val collectorNumber: String? = null,
     @SerialName("released_at") val releasedAt: String? = null,
     @SerialName("colors") val colors: List<String>? = null,
-    @SerialName("prices") val prices: PricesDto? = null
+    @SerialName("prices") val prices: PricesDto? = null,
+    @SerialName("purchase_uris") val purchaseUris: Map<String, String>? = null
 )
 
 @Serializable
@@ -28,5 +29,9 @@ data class ImageUrisDto(
 
 @Serializable
 data class PricesDto(
-    @SerialName("usd") val usd: String? = null
+    @SerialName("usd") val usd: String? = null,
+    @SerialName("usd_foil") val usdFoil: String? = null,
+    @SerialName("eur") val eur: String? = null,
+    @SerialName("eur_foil") val eurFoil: String? = null,
+    @SerialName("tix") val tix: String? = null
 )

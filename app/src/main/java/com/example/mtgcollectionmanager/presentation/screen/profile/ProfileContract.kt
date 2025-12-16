@@ -5,6 +5,7 @@ import com.example.mtgcollectionmanager.presentation.util.UiText
 object ProfileContract {
     data class State(
         val isLoading: Boolean = false,
+        val isNetworkAvailable: Boolean = true,
         val nickname: String = "",
         val email: String = "",
         val memberSince: String = "",

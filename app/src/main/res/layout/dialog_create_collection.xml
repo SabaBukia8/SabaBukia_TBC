@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/surface"
-    android:orientation="vertical"
     android:padding="@dimen/dialog_padding">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvDialogTitle"
         style="@style/MTG.Text.SectionHeader"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Create Collection"
+        android:text="@string/create_collection"
         android:textColor="@color/text_primary"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilCollectionName"
         style="@style/Widget.MTG.TextInputLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_lg"
-        android:hint="Collection Name"
+        android:hint="@string/collection_name"
         app:counterEnabled="true"
         app:counterMaxLength="50"
-        app:counterTextColor="@color/text_tertiary">
+        app:counterTextColor="@color/text_tertiary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDialogTitle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCollectionName"
@@ -41,13 +46,16 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilCollectionDescription"
         style="@style/Widget.MTG.TextInputLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_md"
-        android:hint="Description (optional)"
+        android:hint="@string/collection_description"
         app:counterEnabled="true"
         app:counterMaxLength="200"
-        app:counterTextColor="@color/text_tertiary">
+        app:counterTextColor="@color/text_tertiary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tilCollectionName">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCollectionDescription"
@@ -62,28 +70,25 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.MTG.Button.Text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_xxl"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:text="@string/cancel"
+        app:layout_constraintEnd_toStartOf="@id/btnCreate"
+        app:layout_constraintTop_toBottomOf="@id/tilCollectionDescription" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancel"
-            style="@style/Widget.MTG.Button.Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCreate"
+        style="@style/Widget.MTG.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
+        android:text="@string/create"
+        app:layout_constraintBottom_toBottomOf="@id/btnCancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnCancel" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCreate"
-            style="@style/Widget.MTG.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_sm"
-            android:text="Create" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,13 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.BottomSheetManageCategoriesBinding
 import com.example.mtgcollectionmanager.domain.model.Category
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import androidx.core.graphics.toColorInt
 
 class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
 
@@ -106,6 +109,8 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
 
         val etName = dialogView.findViewById<EditText>(R.id.etCategoryName)
         val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
+        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
         var selectedColor = predefinedColors[0]
 
@@ -117,27 +122,38 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.create_category)
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton(R.string.create) { _, _ ->
-                val name = etName.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    onCreateCategory?.invoke(name, selectedColor)
-                    dismiss()
-                }
+            .create()
+
+        btnCreate.setOnClickListener {
+            val name = etName.text.toString().trim()
+            if (name.isNotEmpty()) {
+                onCreateCategory?.invoke(name, selectedColor)
+                dialog.dismiss()
+                dismiss()
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showEditCategoryDialog(category: Category) {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_create_category, null)
 
+        val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
         val etName = dialogView.findViewById<EditText>(R.id.etCategoryName)
         val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
+        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
+        tvTitle.setText(R.string.edit_category)
+        btnCreate.setText(R.string.save)
         etName.setText(category.name)
         var selectedColor = category.color
 
@@ -149,18 +165,24 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.edit_category)
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton(R.string.save) { _, _ ->
-                val name = etName.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    onEditCategory?.invoke(category.id, name, selectedColor)
-                    dismiss()
-                }
+            .create()
+
+        btnCreate.setOnClickListener {
+            val name = etName.text.toString().trim()
+            if (name.isNotEmpty()) {
+                onEditCategory?.invoke(category.id, name, selectedColor)
+                dialog.dismiss()
+                dismiss()
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showDeleteConfirmationDialog(category: Category) {
@@ -191,11 +213,32 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
     }
 
     // Simple color picker adapter
+    private data class ColorPickerItem(
+        val color: String,
+        val isSelected: Boolean
+    )
+
     private class ColorPickerAdapter(
-        private val colors: List<String>,
-        private var selectedColor: String? = null,
+        colors: List<String>,
+        initialSelectedColor: String? = null,
         private val onColorClick: (String) -> Unit
-    ) : RecyclerView.Adapter<ColorPickerAdapter.ColorViewHolder>() {
+    ) : ListAdapter<ColorPickerItem, ColorPickerAdapter.ColorViewHolder>(ColorDiffCallback()) {
+
+        init {
+            // Convert the colors list to ColorPickerItems and submit it
+            val items = colors.map { color ->
+                ColorPickerItem(color, color == initialSelectedColor)
+            }
+            submitList(items)
+        }
+
+        // Method to update the selection
+        fun updateSelection(color: String) {
+            val newList = currentList.map { item ->
+                item.copy(isSelected = item.color == color)
+            }
+            submitList(newList)
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
             val view = LayoutInflater.from(parent.context)
@@ -204,34 +247,46 @@ class ManageCategoriesBottomSheet : BottomSheetDialogFragment() {
         }
 
         override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
-            val color = colors[position]
-            holder.itemView.apply {
-                try {
-                    setBackgroundColor(Color.parseColor(color))
-                } catch (e: Exception) {
-                    setBackgroundColor(Color.GRAY)
-                }
+            holder.bind(getItem(position))
+        }
 
-                // Add border if selected
-                if (color == selectedColor) {
-                    setPadding(4, 4, 4, 4)
-                } else {
-                    setPadding(0, 0, 0, 0)
-                }
+        inner class ColorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            fun bind(item: ColorPickerItem) {
+                itemView.apply {
+                    try {
+                        setBackgroundColor(item.color.toColorInt())
+                    } catch (e: Exception) {
+                        setBackgroundColor(Color.GRAY)
+                    }
 
-                layoutParams = ViewGroup.LayoutParams(120, 120)
+                    // Add border if selected
+                    if (item.isSelected) {
+                        setPadding(4, 4, 4, 4)
+                    } else {
+                        setPadding(0, 0, 0, 0)
+                    }
 
-                setOnClickListener {
-                    selectedColor = color
-                    onColorClick(color)
-                    notifyDataSetChanged()
+                    layoutParams = ViewGroup.LayoutParams(120, 120)
+
+                    setOnClickListener {
+                        if (!item.isSelected) {
+                            updateSelection(item.color)
+                            onColorClick(item.color)
+                        }
+                    }
                 }
             }
         }
 
-        override fun getItemCount() = colors.size
+        private class ColorDiffCallback : DiffUtil.ItemCallback<ColorPickerItem>() {
+            override fun areItemsTheSame(oldItem: ColorPickerItem, newItem: ColorPickerItem): Boolean {
+                return oldItem.color == newItem.color
+            }
 
-        class ColorViewHolder(view: View) : RecyclerView.ViewHolder(view)
+            override fun areContentsTheSame(oldItem: ColorPickerItem, newItem: ColorPickerItem): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     companion object {

@@ -1,5 +1,8 @@
 package com.example.mtgcollectionmanager.presentation.screen.details
 
+import android.content.Intent
+import android.net.Uri
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -12,13 +15,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.databinding.FragmentCardDetailsBinding
+import com.example.mtgcollectionmanager.databinding.ItemMarketPriceBinding
 import com.example.mtgcollectionmanager.domain.model.CardCondition
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
 import com.example.mtgcollectionmanager.presentation.common.hide
 import com.example.mtgcollectionmanager.presentation.common.loadImage
 import com.example.mtgcollectionmanager.presentation.common.show
 import com.example.mtgcollectionmanager.presentation.common.showErrorSnackbar
 import com.example.mtgcollectionmanager.presentation.common.showSuccessSnackbar
+import com.example.mtgcollectionmanager.presentation.model.CardUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -56,19 +62,70 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
         val cardName = viewModel.state.value.card?.name ?: return
         val currentCardId = viewModel.state.value.card?.cardId
 
-        val dialog = com.example.mtgcollectionmanager.presentation.screen.common.dialog.CardPrintingsDialog(
-            cardName = cardName,
-            currentCardId = currentCardId,
-            onPrintingSelected = { newCardId ->
-                // Reload the card details with the new printing
-                viewModel.onEvent(CardDetailsContract.Event.LoadCard(newCardId))
-            }
-        )
+        val dialog =
+            com.example.mtgcollectionmanager.presentation.screen.cardprintings.dialog.CardPrintingsDialog(
+                cardName = cardName,
+                currentCardId = currentCardId,
+                onPrintingSelected = { newCardId ->
+                    viewModel.onEvent(CardDetailsContract.Event.LoadCard(newCardId))
+                }
+            )
         dialog.show(parentFragmentManager, "CardPrintingsDialog")
     }
 
+    private fun displayMarketPrices(card: CardUiModel) {
+
+        binding.llMarketPricesContainer.removeAllViews()
+
+
+        val headerBinding = ItemMarketPriceBinding.inflate(
+            LayoutInflater.from(requireContext()),
+            binding.llMarketPricesContainer,
+            false
+        )
+
+
+        headerBinding.tvMarketName.text = ""
+        headerBinding.tvNormalPrice.text = getString(R.string.normal_price)
+        headerBinding.tvFoilPrice.text = getString(R.string.foil_price)
+        headerBinding.btnViewListings.visibility = View.INVISIBLE
+
+
+        headerBinding.tvNormalPrice.setTypeface(null, android.graphics.Typeface.BOLD)
+        headerBinding.tvFoilPrice.setTypeface(null, android.graphics.Typeface.BOLD)
+
+        binding.llMarketPricesContainer.addView(headerBinding.root)
+        card.marketPrices.forEach { market ->
+            val itemBinding = ItemMarketPriceBinding.inflate(
+                LayoutInflater.from(requireContext()),
+                binding.llMarketPricesContainer,
+                false
+            )
+
+            itemBinding.tvMarketName.text = market.marketName
+            itemBinding.tvNormalPrice.text = market.normalPrice
+            itemBinding.tvFoilPrice.text = market.foilPrice
+
+
+            itemBinding.btnViewListings.text = "View"
+
+            if (market.purchaseUrl != null) {
+                itemBinding.btnViewListings.visibility = View.VISIBLE
+                itemBinding.btnViewListings.setOnClickListener {
+                    viewModel.onEvent(CardDetailsContract.Event.OpenMarketUrl(market.purchaseUrl))
+                }
+            } else {
+
+                itemBinding.btnViewListings.visibility = View.INVISIBLE
+            }
+
+
+            binding.llMarketPricesContainer.addView(itemBinding.root)
+        }
+    }
+
     private fun setupSpinners() {
-        // Quantity spinner (1-20)
+
         val quantities = (1..20).toList()
         binding.spinnerQuantity.apply {
             adapter = ArrayAdapter(
@@ -79,14 +136,20 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     viewModel.onEvent(CardDetailsContract.Event.QuantityChanged(quantities[position]))
                 }
+
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
         }
 
-        // Condition spinner
+
         val conditions = CardCondition.values()
         val conditionNames = conditions.map { condition ->
             when (condition) {
@@ -106,9 +169,15 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     viewModel.onEvent(CardDetailsContract.Event.ConditionSelected(conditions[position]))
                 }
+
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
         }
@@ -119,6 +188,14 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     with(binding) {
+
+                        networkStatusView.updateNetworkStatus(
+                            if (state.isNetworkAvailable) 
+                                NetworkConnectivityManager.NetworkState.Available 
+                            else 
+                                NetworkConnectivityManager.NetworkState.Unavailable
+                        )
+                        
                         if (state.isLoading) {
                             progressBar.show()
                         } else {
@@ -128,7 +205,7 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                         state.card?.let { card ->
                             ivCardImage.loadImage(card.imageUrl)
                             tvCardName.text = card.name
-                            // Render mana symbols using the helper
+
                             com.example.mtgcollectionmanager.presentation.common.ManaSymbolRenderer.renderManaSymbols(
                                 requireContext(),
                                 card.manaCost,
@@ -136,7 +213,7 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                             )
                             tvType.text = getString(R.string.type) + ": " + card.type
                             tvSetInfo.text = getString(R.string.set) + ": " + card.setInfo
-                            tvPrice.text = card.priceFormatted
+                            displayMarketPrices(card)
                         }
 
                         if (state.isInCollection) {
@@ -160,15 +237,34 @@ class CardDetailsFragment : BaseFragment<FragmentCardDetailsBinding>(
                         is CardDetailsContract.SideEffect.NavigateBack -> {
                             findNavController().popBackStack()
                         }
+
                         is CardDetailsContract.SideEffect.ShowAddedToCollection -> {
                             binding.root.showSuccessSnackbar(getString(R.string.card_added_success))
                         }
+
                         is CardDetailsContract.SideEffect.ShowError -> {
-                            binding.root.showErrorSnackbar(sideEffect.message.asString(requireContext()))
+                            binding.root.showErrorSnackbar(
+                                sideEffect.message.asString(
+                                    requireContext()
+                                )
+                            )
+                        }
+
+                        is CardDetailsContract.SideEffect.OpenBrowser -> {
+                            openUrl(sideEffect.url)
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun openUrl(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        } catch (e: Exception) {
+            binding.root.showErrorSnackbar(getString(R.string.error_opening_url))
         }
     }
 }

@@ -13,7 +13,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
-    <string name="no_account">Don\'t have an account? Register</string>
+    <string name="no_account">Do not have an account? Register</string>
     <string name="have_account">Already have an account? Login</string>
     <string name="error_empty_email">Email cannot be empty</string>
     <string name="error_empty_password">Password cannot be empty</string>
@@ -43,6 +43,13 @@
     <string name="rarity">Rarity</string>
     <string name="colors">Colors</string>
     <string name="price">Price</string>
+    <string name="market_prices">Market Prices</string>
+    <string name="normal_price">Normal</string>
+    <string name="foil_price">Foil</string>
+    <string name="view_listings">View Listings</string>
+    <string name="not_available">N/A</string>
+    <string name="price_not_available">Price not available</string>
+    <string name="error_opening_url">Could not open the website</string>
 
     <!-- Collection -->
     <string name="collection_title">My Collection</string>
@@ -118,7 +125,6 @@
     <string name="filter_by_color">Filter by Color</string>
     <string name="filter_by_set">Filter by Set</string>
     <string name="apply">Apply</string>
-    <string name="clear_all">Clear All</string>
     <string name="search_sets">Search sets…</string>
     <string name="no_sets_found">No sets found</string>
     <string name="loading_sets">Loading sets…</string>
@@ -157,4 +163,56 @@
     <string name="edit">Edit</string>
     <string name="save">Save</string>
     <string name="create">Create</string>
+    <string name="to">to</string>
+    <string name="select_printing">Select Printing</string>
+    <string name="failed_to_load_printings">Failed to load printings</string>
+    <string name="select_color">Select Color</string>
+    <string name="my_collections">My Collections</string>
+    <string name="no_collections_yet">No collections yet</string>
+    <string name="create_first_collection">Tap + to create your first collection!</string>
+    <string name="error_empty_collection_name">Collection name is required</string>
+    <string name="more_options">More options</string>
+    <string name="select_sets">Select Sets</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="min_value">Min</string>
+    <string name="max_value">Max</string>
+    <string name="search_filters_title">Search Filters</string>
+    <string name="filter_colors">Colors</string>
+    <string name="filter_card_types">Card Types</string>
+    <string name="filter_sets">Sets</string>
+    <string name="filter_mana_value">Mana Value</string>
+    <string name="filter_price_usd">Price (USD)</string>
+    <string name="filter_year_released">Year Released</string>
+    <string name="filter_artist">Artist</string>
+    <string name="filter_artist_name">Artist name</string>
+    <string name="filter_rules_text">Rules Text Contains</string>
+    <string name="filter_rules_text_hint">e.g., flying, trample</string>
+    <string name="filter_flavor_text">Flavor Text Contains</string>
+    <string name="filter_flavor_text_hint">Search flavor text</string>
+    <string name="clear_all">Clear All</string>
+
+    <!-- Card Types -->
+    <string name="card_type_creature">Creature</string>
+    <string name="card_type_instant">Instant</string>
+    <string name="card_type_sorcery">Sorcery</string>
+    <string name="card_type_enchantment">Enchantment</string>
+    <string name="card_type_artifact">Artifact</string>
+    <string name="card_type_land">Land</string>
+    <string name="card_type_planeswalker">Planeswalker</string>
+    <string name="card_type_battle">Battle</string>
+
+    <!-- Rarities -->
+    <string name="rarity_common">Common</string>
+    <string name="rarity_uncommon">Uncommon</string>
+    <string name="rarity_rare">Rare</string>
+    <string name="rarity_mythic">Mythic</string>
+    <string name="bullet_point">•</string>
+    <string name="view_other_printings">View Other Printings</string>
+    <string name="filters">Filters</string>
+    <string name="total_value_label">Total Value</string>
+    <string name="edit_the_collection">Edit The Collection</string>
+    <string name="update">Update</string>
+    <string name="collection_name_is_required">Collection name is required</string>
+    <string name="no_sets_selected">No sets selected</string>
+    <string name="cards">%1$s (%2$s) - %3$d cards</string>
 </resources>

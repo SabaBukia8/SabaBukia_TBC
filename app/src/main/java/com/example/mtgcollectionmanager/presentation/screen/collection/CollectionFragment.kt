@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.databinding.DrawerNavigationBinding
 import com.example.mtgcollectionmanager.databinding.FragmentCollectionBinding
 import com.example.mtgcollectionmanager.presentation.common.BaseFragment
+import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.presentation.common.hide
 import com.example.mtgcollectionmanager.presentation.common.show
 import com.example.mtgcollectionmanager.presentation.common.showErrorSnackbar
@@ -99,10 +101,12 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
+                val position = viewHolder.bindingAdapterPosition
+
+                if (position == RecyclerView.NO_POSITION) return
                 val card = adapter.currentList[position]
                 viewModel.onEvent(CollectionContract.Event.DeleteCardClicked(card.cardId))
-                // Restore the item immediately to prevent visual glitch
+
                 adapter.notifyItemChanged(position)
             }
         })
@@ -111,6 +115,7 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
     }
 
     private fun setupDrawer() {
+        // Get the drawer's RecyclerView and button
         val drawerRecyclerView = binding.root.findViewById<RecyclerView>(R.id.rvCategories)
         drawerRecyclerView?.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -125,24 +130,26 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
     }
 
     private fun setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
-        }
-
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_manage_collections -> {
-                    viewModel.onEvent(CollectionContract.Event.ManageCollectionsClicked)
-                    true
-                }
-                R.id.action_logout -> {
-                    viewModel.onEvent(CollectionContract.Event.LogoutClicked)
-                    true
-                }
-                else -> false
+        with(binding) {
+            toolbar.setNavigationOnClickListener {
+                drawerLayout.open()
             }
+
+            toolbar.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_manage_collections -> {
+                        viewModel.onEvent(CollectionContract.Event.ManageCollectionsClicked)
+                        true
+                    }
+                    R.id.action_logout -> {
+                        viewModel.onEvent(CollectionContract.Event.LogoutClicked)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            toolbar.inflateMenu(R.menu.menu_collection)
         }
-        binding.toolbar.inflateMenu(R.menu.menu_collection)
     }
 
     private fun observeState() {
@@ -150,29 +157,37 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     with(binding) {
-                        when {
-                            state.isLoading -> {
-                                progressBar.show()
-                                rvCollection.hide()
-                                llEmptyState.hide()
+
+                            networkStatusView.updateNetworkStatus(
+                                if (state.isNetworkAvailable) 
+                                    NetworkConnectivityManager.NetworkState.Available 
+                                else 
+                                    NetworkConnectivityManager.NetworkState.Unavailable
+                            )
+                            
+                            when {
+                                state.isLoading -> {
+                                    progressBar.show()
+                                    rvCollection.hide()
+                                    llEmptyState.hide()
+                                }
+                                state.cards.isEmpty() -> {
+                                    progressBar.hide()
+                                    rvCollection.hide()
+                                    llEmptyState.show()
+                                }
+                                else -> {
+                                    progressBar.hide()
+                                    llEmptyState.hide()
+                                    rvCollection.show()
+                                    adapter.submitList(state.cards)
+                                }
                             }
-                            state.cards.isEmpty() -> {
-                                progressBar.hide()
-                                rvCollection.hide()
-                                llEmptyState.show()
-                            }
-                            else -> {
-                                progressBar.hide()
-                                llEmptyState.hide()
-                                rvCollection.show()
-                                adapter.submitList(state.cards)
-                            }
-                        }
 
                         tvTotalValue.text = getString(R.string.total_value, state.totalValue)
                         tvTotalCards.text = getString(R.string.total_cards, state.totalCards)
 
-                        // Update drawer categories
+
                         drawerAdapter.submitList(state.categories)
                         drawerAdapter.setSelectedCategory(state.selectedCategoryId)
                     }
@@ -264,13 +279,13 @@ class CollectionFragment : BaseFragment<FragmentCollectionBinding>(
     }
 
     private fun showEditCardDialog(card: com.example.mtgcollectionmanager.presentation.model.CollectionCardUiModel) {
-        // Extract categories from drawer items
+
         val categories = viewModel.state.value.categories.mapNotNull { item ->
             when (item) {
                 is com.example.mtgcollectionmanager.presentation.screen.collection.drawer.CategoryDrawerItem.Category -> {
                     com.example.mtgcollectionmanager.domain.model.Category(
                         id = item.id,
-                        collectionId = 1L, // Hardcoded
+                        collectionId = 1L,
                         name = item.name,
                         color = item.color,
                         createdDate = 0L,

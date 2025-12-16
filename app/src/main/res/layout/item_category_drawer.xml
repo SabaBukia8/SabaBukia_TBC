@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@color/primary" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -33,7 +33,7 @@
         app:tint="@color/text_secondary"
         tools:src="@drawable/ic_category_outlined" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCategoryName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Creatures" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCardCount"
         style="@style/MTG.CategoryBadge"
         android:layout_width="wrap_content"

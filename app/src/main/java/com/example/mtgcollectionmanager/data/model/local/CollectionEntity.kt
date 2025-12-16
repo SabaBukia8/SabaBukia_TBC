@@ -9,5 +9,6 @@ data class CollectionEntity(
     val name: String,
     val description: String,
     val createdDate: Long,
-    val userId: String
+    val userId: String,
+    val firestoreId: String = ""
 )

@@ -1,31 +1,23 @@
 package com.example.mtgcollectionmanager.presentation.screen.collectionslist
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mtgcollectionmanager.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.mtgcollectionmanager.databinding.FragmentCollectionsListBinding
+import com.example.mtgcollectionmanager.presentation.common.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CollectionsListFragment : Fragment() {
-
+class CollectionsListFragment : BaseFragment<FragmentCollectionsListBinding>(
+    FragmentCollectionsListBinding::inflate
+) {
     private val viewModel: CollectionsListViewModel by viewModels()
-    private lateinit var rvCollections: RecyclerView
-    private lateinit var fabCreateCollection: FloatingActionButton
-    private lateinit var progressBar: View
-    private lateinit var llEmptyState: View
 
     private val adapter by lazy {
         CollectionsListAdapter(
@@ -41,35 +33,22 @@ class CollectionsListFragment : Fragment() {
         )
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_collections_list, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        rvCollections = view.findViewById(R.id.rvCollections)
-        fabCreateCollection = view.findViewById(R.id.fabCreateCollection)
-        progressBar = view.findViewById(R.id.progressBar)
-        llEmptyState = view.findViewById(R.id.llEmptyState)
-
-        rvCollections.adapter = adapter
-
-        fabCreateCollection.setOnClickListener {
-            viewModel.onEvent(CollectionsListContract.Event.OnCreateCollectionClick)
+    override fun bind() {
+        with(binding) {
+            rvCollections.adapter = adapter
         }
-
         observeState()
         observeSideEffects()
     }
 
+    override fun listeners() {
+        binding.fabCreateCollection.setOnClickListener {
+            viewModel.onEvent(CollectionsListContract.Event.OnCreateCollectionClick)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        // Refresh collections to show updated stats
         viewModel.onEvent(CollectionsListContract.Event.LoadCollections)
     }
 
@@ -77,12 +56,21 @@ class CollectionsListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
-                    progressBar.isVisible = state.isLoading
-
-                    adapter.submitList(state.collections)
-
-                    llEmptyState.isVisible = state.collections.isEmpty() && !state.isLoading
-                    rvCollections.isVisible = state.collections.isNotEmpty()
+                    with(binding) {
+                        progressBar.isVisible = state.isLoading
+                        adapter.submitList(state.collections)
+                        llEmptyState.isVisible = state.collections.isEmpty() && !state.isLoading
+                        rvCollections.isVisible = state.collections.isNotEmpty()
+                        
+                        // Update network status view
+                        if (state.isNetworkAvailable) {
+                            networkStatusView.visibility = View.GONE
+                        } else {
+                            networkStatusView.updateNetworkStatus(
+                                com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager.NetworkState.Unavailable
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -106,10 +94,10 @@ class CollectionsListFragment : Fragment() {
                             showEditCollectionDialog(sideEffect.collectionId)
                         }
                         is CollectionsListContract.SideEffect.ShowError -> {
-                            showMessage(sideEffect.message)
+                            showMessage(sideEffect.message.asString(requireContext()))
                         }
                         is CollectionsListContract.SideEffect.ShowSuccess -> {
-                            showMessage(sideEffect.message)
+                            showMessage(sideEffect.message.asString(requireContext()))
                         }
                     }
                 }
@@ -118,27 +106,24 @@ class CollectionsListFragment : Fragment() {
     }
 
     private fun showMessage(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showCreateCollectionDialog() {
-        val dialog = CreateCollectionDialog { name, description ->
+        CreateCollectionDialog { name, description ->
             viewModel.onEvent(CollectionsListContract.Event.CreateCollection(name, description))
-        }
-        dialog.show(parentFragmentManager, "CreateCollectionDialog")
+        }.show(parentFragmentManager, "CreateCollectionDialog")
     }
 
     private fun showEditCollectionDialog(collectionId: Long) {
-        // Find the collection from state
         val collection = viewModel.state.value.collections.find { it.id == collectionId } ?: return
 
-        val dialog = EditCollectionDialog(
+        EditCollectionDialog(
             collectionId = collectionId,
             currentName = collection.name,
             currentDescription = collection.description
         ) { id, name, description ->
             viewModel.onEvent(CollectionsListContract.Event.UpdateCollection(id, name, description))
-        }
-        dialog.show(parentFragmentManager, "EditCollectionDialog")
+        }.show(parentFragmentManager, "EditCollectionDialog")
     }
 }

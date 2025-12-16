@@ -69,15 +69,18 @@ class ColorFilterDialog : DialogFragment() {
     }
 
     private fun setupRecyclerView() {
-        // Initialize color items with current filter states
         colorItems.clear()
         colors.forEach { (code, name) ->
             val state = colorFilters[code] ?: CollectionContract.FilterState.NEUTRAL
             colorItems.add(ColorFilterItem(code, name, state))
         }
 
-        adapter = ColorFilterAdapter(colorItems) { _, _ ->
-            // State changes are handled directly in the adapter
+        adapter = ColorFilterAdapter(colorItems) { code, newState ->
+            val item = colorItems.find { it.code == code }
+            val index = colorItems.indexOf(item)
+            if (index >= 0) {
+                colorItems[index] = ColorFilterItem(code, item!!.name, newState)
+            }
         }
 
         binding.rvColors.apply {
@@ -100,8 +103,12 @@ class ColorFilterDialog : DialogFragment() {
         }
 
         binding.btnClearAll.setOnClickListener {
-            colorItems.forEach { it.state = CollectionContract.FilterState.NEUTRAL }
-            adapter.notifyDataSetChanged()
+            adapter.clearAllFilters()
+            
+            for (i in colorItems.indices) {
+                val item = colorItems[i]
+                colorItems[i] = item.copy(state = CollectionContract.FilterState.NEUTRAL)
+            }
         }
     }
 

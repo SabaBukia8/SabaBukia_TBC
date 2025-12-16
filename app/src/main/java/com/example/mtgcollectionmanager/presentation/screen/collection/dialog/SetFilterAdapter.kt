@@ -2,7 +2,6 @@ package com.example.mtgcollectionmanager.presentation.screen.collection.dialog
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -36,15 +35,12 @@ class SetFilterAdapter(
             with(binding) {
                 tvSetName.text = "${set.name} (${set.code}) - ${set.cardCount} cards"
 
-                // Update icon based on current state
                 val currentState = filterStates[set.code] ?: CollectionContract.FilterState.NEUTRAL
                 updateStateIcon(currentState)
 
                 root.setOnClickListener {
-                    // Read the CURRENT state from the map, not the captured value
                     val currentStateNow = filterStates[set.code] ?: CollectionContract.FilterState.NEUTRAL
 
-                    // Cycle through states: NEUTRAL -> INCLUDE -> EXCLUDE -> NEUTRAL
                     val newState = when (currentStateNow) {
                         CollectionContract.FilterState.NEUTRAL -> CollectionContract.FilterState.INCLUDE
                         CollectionContract.FilterState.INCLUDE -> CollectionContract.FilterState.EXCLUDE
