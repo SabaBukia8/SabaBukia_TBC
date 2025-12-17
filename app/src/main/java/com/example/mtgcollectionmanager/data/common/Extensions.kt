@@ -8,9 +8,6 @@ import kotlinx.coroutines.flow.flow
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-/**
- * Converts an exception to an appropriate AppError
- */
 fun Exception.toAppError(default: AppError = AppError.Unknown(message)): AppError {
     return when (this) {
         is UnknownHostException -> AppError.Network.NoConnection
@@ -19,23 +16,14 @@ fun Exception.toAppError(default: AppError = AppError.Unknown(message)): AppErro
     }
 }
 
-/**
- * Converts a nullable string to a Firestore ID, using fallback if null or empty
- */
 fun String?.toFirestoreId(fallback: Long): String {
     return this?.takeIf { it.isNotEmpty() } ?: fallback.toString()
 }
 
-/**
- * Converts a string to a positive long ID
- */
 fun String.toPositiveLongId(): Long {
     return hashCode().toLong().let { if (it < 0) -it else it }
 }
 
-/**
- * Creates a Flow that automatically handles loading state and error handling
- */
 fun <T> resourceFlow(
     block: suspend FlowCollector<Resource<T>>.() -> Unit
 ): Flow<Resource<T>> = flow {
