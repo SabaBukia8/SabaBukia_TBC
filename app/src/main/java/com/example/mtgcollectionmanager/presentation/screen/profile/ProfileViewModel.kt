@@ -3,7 +3,9 @@ package com.example.mtgcollectionmanager.presentation.screen.profile
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.usecase.auth.ChangePasswordUseCase
 import com.example.mtgcollectionmanager.domain.usecase.auth.DeleteAccountUseCase
 import com.example.mtgcollectionmanager.domain.usecase.auth.GetUserProfileUseCase
@@ -35,11 +37,6 @@ class ProfileViewModel @Inject constructor(
     init {
         observeNetworkStatus()
         loadProfile()
-
-        viewModelScope.launch {
-            kotlinx.coroutines.delay(1000)
-            syncCollections()
-        }
     }
 
     private fun observeNetworkStatus() {
@@ -118,9 +115,7 @@ class ProfileViewModel @Inject constructor(
                     is Resource.Error -> {
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
-                                ProfileContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
-                                )
+                                ProfileContract.SideEffect.ShowError(resource.error.toUiText())
                             )
                         }
                     }
@@ -147,7 +142,6 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        // Update nickname in state immediately to show the change
                         updateState {
                             it.copy(
                                 nickname = nickname,
@@ -164,9 +158,7 @@ class ProfileViewModel @Inject constructor(
                     is Resource.Error -> {
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
-                                ProfileContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
-                                )
+                                ProfileContract.SideEffect.ShowError(resource.error.toUiText())
                             )
                         }
                     }
@@ -236,9 +228,7 @@ class ProfileViewModel @Inject constructor(
                     is Resource.Error -> {
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
-                                ProfileContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
-                                )
+                                ProfileContract.SideEffect.ShowError(resource.error.toUiText())
                             )
                         }
                     }
@@ -276,9 +266,7 @@ class ProfileViewModel @Inject constructor(
                     is Resource.Error -> {
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
-                                ProfileContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
-                                )
+                                ProfileContract.SideEffect.ShowError(resource.error.toUiText())
                             )
                         }
                     }
@@ -292,54 +280,5 @@ class ProfileViewModel @Inject constructor(
         emitSideEffect(ProfileContract.SideEffect.NavigateToLogin)
     }
 
-    fun syncCollections() {
-        viewModelScope.launch {
-            updateState { it.copy(isLoading = true) }
 
-            try {
-                getUserProfileUseCase().collect { resource ->
-                    when (resource) {
-                        is Resource.Loading -> {
-                            updateState { it.copy(isLoading = resource.isLoading) }
-                        }
-
-                        is Resource.Success -> {
-                            val profile = resource.data
-                            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                            val memberSince = dateFormat.format(Date(profile.createdAt))
-
-                            updateState {
-                                it.copy(
-                                    nickname = profile.nickname,
-                                    email = profile.email,
-                                    memberSince = memberSince,
-                                    collectionCount = profile.collectionCount,
-                                    totalCards = profile.totalCards,
-                                    isLoading = false
-                                )
-                            }
-                        }
-
-                        is Resource.Error -> {
-                            if (state.value.isNetworkAvailable) {
-                                emitSideEffect(
-                                    ProfileContract.SideEffect.ShowError(
-                                        UiText.DynamicString("Failed to sync: ${resource.errorMessage}")
-                                    )
-                                )
-                            }
-                            updateState { it.copy(isLoading = false) }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                updateState { it.copy(isLoading = false) }
-                emitSideEffect(
-                    ProfileContract.SideEffect.ShowError(
-                        UiText.DynamicString("Sync error: ${e.message ?: "Unknown error"}")
-                    )
-                )
-            }
-        }
-    }
 }

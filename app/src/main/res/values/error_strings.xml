@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Error Messages not already defined in strings.xml -->
+    <string name="error_not_logged_in">You are not logged in. Please sign in to continue.</string>
+    <string name="error_server_error">Server error occurred. Please try again later.</string>
+    <string name="error_profile_load_failed">Failed to load profile. Please try again.</string>
+    <string name="error_profile_update_failed">Failed to update profile. Please try again.</string>
+    <string name="error_profile_delete_failed">Failed to delete profile. Please try again.</string>
+    <string name="error_nickname_update_failed">Failed to update nickname. Please try again.</string>
+    <string name="error_collection_load_failed">Failed to load collections. Please try again.</string>
+    <string name="error_collection_create_failed">Failed to create collection. Please try again.</string>
+    <string name="error_collection_update_failed">Failed to update collection. Please try again.</string>
+    <string name="error_collection_delete_failed">Failed to delete collection. Please try again.</string>
+    <string name="error_card_load_failed">Failed to load cards. Please try again.</string>
+    <string name="error_card_search_failed">Search failed. Please try different search terms.</string>
+    <string name="error_card_add_failed">Failed to add card. Please try again.</string>
+    <string name="error_card_remove_failed">Failed to remove card. Please try again.</string>
+    <string name="error_card_update_failed">Failed to update card. Please try again.</string>
+    <string name="error_category_load_failed">Failed to load categories. Please try again.</string>
+    <string name="error_category_create_failed">Failed to create category. Please try again.</string>
+    <string name="error_category_update_failed">Failed to update category. Please try again.</string>
+    <string name="error_category_delete_failed">Failed to delete category. Please try again.</string>
+    <string name="error_move_card_failed">Failed to move card. Please try again.</string>
+</resources>

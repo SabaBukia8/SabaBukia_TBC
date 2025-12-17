@@ -1,5 +1,6 @@
 package com.example.mtgcollectionmanager.data.remote.util
 
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -7,7 +8,6 @@ import kotlinx.coroutines.flow.flow
 
 suspend fun <T> executeIfNetworkAvailable(
     networkManager: NetworkConnectivityManager,
-    errorMessage: String = "Network unavailable. Please check your connection.",
     operation: suspend () -> Flow<Resource<T>>
 ): Flow<Resource<T>> = flow {
     emit(Resource.Loading(true))
@@ -15,7 +15,7 @@ suspend fun <T> executeIfNetworkAvailable(
     if (networkManager.isNetworkAvailable()) {
         operation().collect { emit(it) }
     } else {
-        emit(Resource.Error(errorMessage))
+        emit(Resource.Error(AppError.Network.NoConnection))
         emit(Resource.Loading(false))
     }
 }

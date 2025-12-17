@@ -37,9 +37,9 @@ class CollectionsListAdapter(
             with(binding) {
                 tvCollectionName.text = collection.name
                 tvCollectionDescription.text = collection.description
-                tvCardCount.text = "${collection.totalCards} cards"
-                tvTotalValue.text = collection.totalValue
-                tvCreatedDate.text = "Created: ${collection.createdDate}"
+                tvCardCount.text = root.context.getString(R.string.card_count_format, collection.totalCards)
+                tvTotalValue.text = root.context.getString(R.string.collection_value_format, collection.totalValue)
+                tvCreatedDate.text = root.context.getString(R.string.created_date_format, collection.createdDate)
 
                 tvCollectionDescription.visibility =
                     if (collection.description.isEmpty()) View.GONE else View.VISIBLE

@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.usecase.card.SearchCardsUseCase
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
@@ -101,7 +103,7 @@ class CardSearchViewModel @Inject constructor(
                             if (state.value.isNetworkAvailable) {
                                 emitSideEffect(
                                     CardSearchContract.SideEffect.ShowError(
-                                        UiText.DynamicString(resource.errorMessage)
+                                        resource.error.toUiText()
                                     )
                                 )
                             }

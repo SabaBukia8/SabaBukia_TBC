@@ -1,15 +1,15 @@
 package com.example.mtgcollectionmanager.data.repository
 
+import com.example.mtgcollectionmanager.data.common.resourceFlow
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.data.remote.util.executeWithFallback
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.repository.NetworkAwareRepository
 import kotlinx.coroutines.flow.Flow
 
-abstract class NetworkAwareRepositoryImpl(
+abstract class BaseRepository(
     protected val networkConnectivityManager: NetworkConnectivityManager
 ) : NetworkAwareRepository {
-
     override suspend fun <T> executeNetworkOperationWithFallback(
         networkOperation: suspend () -> Flow<Resource<T>>,
         fallbackOperation: suspend () -> Flow<Resource<T>>
@@ -24,4 +24,6 @@ abstract class NetworkAwareRepositoryImpl(
     override fun isNetworkAvailable(): Boolean {
         return networkConnectivityManager.isNetworkAvailable()
     }
+
+    override suspend fun syncFromRemote(): Result<Unit> = Result.success(Unit)
 }

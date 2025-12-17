@@ -49,7 +49,7 @@ private fun mapPricing(
         MarketPrice(
             marketName = "Card Kingdom",
             marketId = MarketPrice.MARKET_CARD_KINGDOM,
-            normalPrice = null, // Scryfall doesn't provide separate Card Kingdom prices
+            normalPrice = null,
             foilPrice = null,
             purchaseUrl = purchaseUris?.get("cardkingdom")
         )

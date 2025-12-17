@@ -1,6 +1,9 @@
 package com.example.mtgcollectionmanager.data.repository
 
 import com.example.mtgcollectionmanager.data.common.UserProvider
+import com.example.mtgcollectionmanager.data.common.resourceFlow
+import com.example.mtgcollectionmanager.data.common.toAppError
+import com.example.mtgcollectionmanager.data.common.toPositiveLongId
 import com.example.mtgcollectionmanager.data.local.dao.CategoryDao
 import com.example.mtgcollectionmanager.data.local.dao.CollectionCardDao
 import com.example.mtgcollectionmanager.data.mapper.toDomain
@@ -9,11 +12,11 @@ import com.example.mtgcollectionmanager.data.model.local.CategoryEntity
 import com.example.mtgcollectionmanager.data.remote.firebase.FirestoreDataSource
 import com.example.mtgcollectionmanager.data.remote.firebase.dto.FirestoreCategoryDto
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.model.Category
 import com.example.mtgcollectionmanager.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +27,7 @@ class CategoryRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource,
     private val userProvider: UserProvider,
     networkConnectivityManager: NetworkConnectivityManager
-) : NetworkAwareRepositoryImpl(networkConnectivityManager), CategoryRepository {
+) : BaseRepository(networkConnectivityManager), CategoryRepository {
 
     private val userId: String
         get() = userProvider.getCurrentUserId()
@@ -32,52 +35,27 @@ class CategoryRepositoryImpl @Inject constructor(
     override suspend fun getCategoriesByCollection(collectionId: Long): Flow<Resource<List<Category>>> =
         executeNetworkOperationWithFallback(
             networkOperation = {
-                flow {
-                    emit(Resource.Loading(true))
+                resourceFlow {
                     try {
-                        val firestoreCategories =
-                            firestoreDataSource.getCategoriesOnce(userId, collectionId.toString())
-
-                        categoryDao.deleteAllCategoriesForCollection(collectionId)
-
-                        firestoreCategories.forEach { dto ->
-                            val entity = dto.toEntity(collectionId)
-                            categoryDao.insertCategory(entity)
-                        }
-
-                        val categories = firestoreCategories.map { dto ->
-                            val entity = dto.toEntity(collectionId)
-                            val cardCount = categoryDao.getCardCountByCategory(entity.id, userId)
-                            entity.toDomain(cardCount = cardCount)
-                        }
+                        val categories = fetchAndSyncCategoriesFromNetwork(collectionId)
                         emit(Resource.Success(categories))
-                        emit(Resource.Loading(false))
                     } catch (e: Exception) {
-                        emit(Resource.Error(e.message ?: "Failed to load categories from network"))
-                        emit(Resource.Loading(false))
+                        emit(Resource.Error(e.toAppError()))
                     }
                 }
             },
             fallbackOperation = {
-                flow {
-                    emit(Resource.Loading(true))
+                resourceFlow {
                     try {
                         categoryDao.getCategoriesByCollection(collectionId).collect { entities ->
                             val categories = entities.map { entity ->
-                                val cardCount =
-                                    categoryDao.getCardCountByCategory(entity.id, userId)
+                                val cardCount = categoryDao.getCardCountByCategory(entity.id, userId)
                                 entity.toDomain(cardCount = cardCount)
                             }
                             emit(Resource.Success(categories))
                         }
-                        emit(Resource.Loading(false))
-                    } catch (cacheError: Exception) {
-                        emit(
-                            Resource.Error(
-                                cacheError.message ?: "Failed to load categories from cache"
-                            )
-                        )
-                        emit(Resource.Loading(false))
+                    } catch (_: Exception) {
+                        emit(Resource.Error(AppError.Category.LoadFailed))
                     }
                 }
             }
@@ -85,48 +63,15 @@ class CategoryRepositoryImpl @Inject constructor(
 
     override suspend fun getCategoryById(categoryId: Long): Flow<Resource<Category?>> =
         executeNetworkOperationWithFallback(
-            networkOperation = {
-                flow {
-                    emit(Resource.Loading(true))
-                    try {
-                        val entity = categoryDao.getCategoryById(categoryId)
-                        if (entity != null) {
-                            emit(Resource.Success(entity.toDomain()))
-                        } else {
-                            emit(Resource.Success(null))
-                        }
-                        emit(Resource.Loading(false))
-                    } catch (e: Exception) {
-                        emit(Resource.Error(e.message ?: "Failed to load category from network"))
-                        emit(Resource.Loading(false))
-                    }
-                }
-            },
-            fallbackOperation = {
-                flow {
-                    emit(Resource.Loading(true))
-                    try {
-                        val entity = categoryDao.getCategoryById(categoryId)
-                        if (entity != null) {
-                            emit(Resource.Success(entity.toDomain()))
-                        } else {
-                            emit(Resource.Success(null))
-                        }
-                        emit(Resource.Loading(false))
-                    } catch (e: Exception) {
-                        emit(Resource.Error(e.message ?: "Failed to load category from cache"))
-                        emit(Resource.Loading(false))
-                    }
-                }
-            }
+            networkOperation = { getCategoryByIdFromLocal(categoryId) },
+            fallbackOperation = { getCategoryByIdFromLocal(categoryId) }
         )
 
     override suspend fun createCategory(
         collectionId: Long,
         name: String,
         color: String
-    ): Flow<Resource<Long>> = flow {
-        emit(Resource.Loading(true))
+    ): Flow<Resource<Long>> = resourceFlow {
         try {
             val dto = FirestoreCategoryDto(
                 name = name,
@@ -134,27 +79,21 @@ class CategoryRepositoryImpl @Inject constructor(
                 createdDate = System.currentTimeMillis()
             )
 
-            val firestoreId =
-                firestoreDataSource.createCategory(userId, collectionId.toString(), dto)
-
-            val entity = CategoryEntity(
-                id = firestoreId.hashCode().toLong().let { if (it < 0) -it else it },
-                collectionId = collectionId,
-                name = name,
-                color = color,
-                createdDate = dto.createdDate
+            val firestoreId = firestoreDataSource.createCategory(
+                userId,
+                collectionId.toString(),
+                dto
             )
+
+            val entity = createCategoryEntity(firestoreId, collectionId, name, color, dto.createdDate)
             val id = categoryDao.insertCategory(entity)
             emit(Resource.Success(id))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to create category"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Category.CreateFailed)))
         }
     }
 
-    override suspend fun updateCategory(category: Category): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    override suspend fun updateCategory(category: Category): Flow<Resource<Unit>> = resourceFlow {
         try {
             firestoreDataSource.updateCategory(
                 userId,
@@ -169,18 +108,13 @@ class CategoryRepositoryImpl @Inject constructor(
             categoryDao.updateCategory(category.toEntity())
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to update category"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Category.UpdateFailed)))
         }
     }
 
-    override suspend fun deleteCategory(categoryId: Long): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    override suspend fun deleteCategory(categoryId: Long): Flow<Resource<Unit>> = resourceFlow {
         try {
-            val category = categoryDao.getCategoryById(categoryId)
-
-            if (category != null) {
+            categoryDao.getCategoryById(categoryId)?.let { category ->
                 firestoreDataSource.deleteCategory(
                     userId,
                     category.collectionId.toString(),
@@ -191,9 +125,7 @@ class CategoryRepositoryImpl @Inject constructor(
             categoryDao.deleteCategoryById(categoryId)
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to delete category"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Category.DeleteFailed)))
         }
     }
 
@@ -201,32 +133,91 @@ class CategoryRepositoryImpl @Inject constructor(
         collectionId: Long,
         scryfallCardId: String,
         categoryId: Long?
-    ): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    ): Flow<Resource<Unit>> = resourceFlow {
         try {
-            val firestoreCard =
-                firestoreDataSource.getCardByCardId(userId, collectionId.toString(), scryfallCardId)
-            if (firestoreCard != null) {
-                firestoreDataSource.updateCard(
-                    userId,
-                    collectionId.toString(),
-                    firestoreCard.id,
-                    mapOf("categoryId" to categoryId?.toString())
-                )
-            }
+            updateCardCategoryInFirestore(collectionId, scryfallCardId, categoryId)
 
-            val cardEntity =
-                collectionCardDao.getCardInCollection(scryfallCardId, collectionId, userId)
+            val cardEntity = collectionCardDao.getCardInCollection(
+                scryfallCardId,
+                collectionId,
+                userId
+            )
+
             if (cardEntity != null) {
                 collectionCardDao.moveCardToCategory(cardEntity.id, categoryId, userId)
                 emit(Resource.Success(Unit))
             } else {
-                emit(Resource.Error("Card not found in collection"))
+                emit(Resource.Error(AppError.Card.NotFound))
             }
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to move card to category"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Category.MoveCardFailed)))
         }
+    }
+
+    private suspend fun fetchAndSyncCategoriesFromNetwork(collectionId: Long): List<Category> {
+        val firestoreCategories = firestoreDataSource.getCategoriesOnce(
+            userId,
+            collectionId.toString()
+        )
+
+        categoryDao.deleteAllCategoriesForCollection(collectionId)
+
+        firestoreCategories.forEach { dto ->
+            val entity = dto.toEntity(collectionId)
+            categoryDao.insertCategory(entity)
+        }
+
+        return firestoreCategories.map { dto ->
+            val entity = dto.toEntity(collectionId)
+            val cardCount = categoryDao.getCardCountByCategory(entity.id, userId)
+            entity.toDomain(cardCount = cardCount)
+        }
+    }
+
+    private fun getCategoryByIdFromLocal(categoryId: Long): Flow<Resource<Category?>> = resourceFlow {
+        try {
+            val entity = categoryDao.getCategoryById(categoryId)
+            emit(Resource.Success(entity?.toDomain()))
+        } catch (_: Exception) {
+            emit(Resource.Error(AppError.Category.LoadFailed))
+        }
+    }
+
+    private suspend fun updateCardCategoryInFirestore(
+        collectionId: Long,
+        scryfallCardId: String,
+        categoryId: Long?
+    ) {
+        val firestoreCard = firestoreDataSource.getCardByCardId(
+            userId,
+            collectionId.toString(),
+            scryfallCardId
+        )
+
+        firestoreCard?.let {
+            firestoreDataSource.updateCard(
+                userId,
+                collectionId.toString(),
+                it.id,
+                mapOf("categoryId" to categoryId?.toString())
+            )
+        }
+    }
+
+    private fun createCategoryEntity(
+        firestoreId: String,
+        collectionId: Long,
+        name: String,
+        color: String,
+        createdDate: Long
+    ): CategoryEntity {
+        val id = firestoreId.toPositiveLongId()
+        return CategoryEntity(
+            id = id,
+            collectionId = collectionId,
+            name = name,
+            color = color,
+            createdDate = createdDate
+        )
     }
 }

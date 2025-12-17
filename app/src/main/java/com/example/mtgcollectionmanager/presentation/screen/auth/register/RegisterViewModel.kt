@@ -2,7 +2,9 @@ package com.example.mtgcollectionmanager.presentation.screen.auth.register
 
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.usecase.auth.RegisterUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.EnsureDefaultCollectionUseCase
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
@@ -109,7 +111,7 @@ class RegisterViewModel @Inject constructor(
                         is Resource.Error -> {
                             emitSideEffect(
                                 RegisterContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }

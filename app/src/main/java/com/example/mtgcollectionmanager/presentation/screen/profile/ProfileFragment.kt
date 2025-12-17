@@ -55,17 +55,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(
             viewModel.onEvent(ProfileContract.Event.DeleteAccountClicked)
         }
 
-        // Debug: Add a manual refresh for profile
-        tvTotalCards.setOnClickListener {
-            viewModel.onEvent(ProfileContract.Event.LoadProfile)
-            showSnackbar("Refreshing profile data...")
-        }
 
-        // Debug: Add a manual sync for collections
-        tvCollectionCount.setOnClickListener {
-            viewModel.syncCollections()
-            showSnackbar("Syncing collections and cards...")
-        }
     }
 
     private fun observeState() {
@@ -73,7 +63,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     with(binding) {
-                        // Update network status view
+
                         networkStatusView.updateNetworkStatus(
                             if (state.isNetworkAvailable)
                                 NetworkConnectivityManager.NetworkState.Available

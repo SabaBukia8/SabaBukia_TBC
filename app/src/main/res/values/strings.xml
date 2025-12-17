@@ -19,7 +19,7 @@
     <string name="error_empty_password">Password cannot be empty</string>
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="error_password_too_short">Password must be at least 6 characters</string>
-    <string name="error_login_failed">Login failed: %s</string>
+    <string name="error_login_failed">Login failed. Please try again</string>
     <string name="error_register_failed">Registration failed: %s</string>
 
     <!-- Search -->
@@ -82,6 +82,7 @@
     <string name="collection_deleted_success">Collection deleted successfully</string>
     <string name="card_count_format">%d cards</string>
     <string name="created_date_format">Created: %s</string>
+    <string name="collection_value_format">$%s</string>
     <string name="close">Close</string>
 
     <!-- Category Management -->
@@ -215,4 +216,47 @@
     <string name="collection_name_is_required">Collection name is required</string>
     <string name="no_sets_selected">No sets selected</string>
     <string name="cards">%1$s (%2$s) - %3$d cards</string>
+
+    <!-- Error Messages - Auth -->
+    <string name="error_user_not_logged_in">Please log in to continue</string>
+    <string name="error_registration_failed">Registration failed. Please try again</string>
+    <string name="error_invalid_credentials">Invalid email or password</string>
+    <string name="error_weak_password">Password is too weak</string>
+    <string name="error_email_in_use">Email is already registered</string>
+    <string name="error_password_change_failed">Failed to change password</string>
+
+    <!-- Error Messages - Network -->
+    <string name="error_no_connection">No internet connection</string>
+    <string name="error_timeout">Request timed out. Please try again</string>
+    <string name="error_server">Server error. Please try later</string>
+
+    <!-- Error Messages - Profile -->
+    <string name="error_profile_load">Failed to load profile</string>
+    <string name="error_profile_update">Failed to update profile</string>
+    <string name="error_profile_delete">Failed to delete account</string>
+    <string name="error_nickname_update">Failed to update nickname</string>
+
+    <!-- Error Messages - Collection -->
+    <string name="error_collection_load">Failed to load collections</string>
+    <string name="error_collection_create">Failed to create collection</string>
+    <string name="error_collection_update">Failed to update collection</string>
+    <string name="error_collection_delete">Failed to delete collection</string>
+
+    <!-- Error Messages - Card -->
+    <string name="error_card_load">Failed to load card</string>
+    <string name="error_card_search">Failed to search cards</string>
+    <string name="error_card_add">Failed to add card</string>
+    <string name="error_card_remove">Failed to remove card</string>
+    <string name="error_card_update">Failed to update card</string>
+    <string name="error_card_not_found">No cards found with that name. Please try a different search term.</string>
+
+    <!-- Error Messages - Category -->
+    <string name="error_category_load">Failed to load categories</string>
+    <string name="error_category_create">Failed to create category</string>
+    <string name="error_category_update">Failed to update category</string>
+    <string name="error_category_delete">Failed to delete category</string>
+    <string name="error_category_move_card">Failed to move card to category</string>
+
+    <!-- Error Messages - Unknown -->
+    <string name="error_unknown">Something went wrong</string>
 </resources>

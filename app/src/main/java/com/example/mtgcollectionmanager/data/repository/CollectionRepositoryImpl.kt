@@ -1,6 +1,9 @@
 package com.example.mtgcollectionmanager.data.repository
 
 import com.example.mtgcollectionmanager.data.common.UserProvider
+import com.example.mtgcollectionmanager.data.common.resourceFlow
+import com.example.mtgcollectionmanager.data.common.toAppError
+import com.example.mtgcollectionmanager.data.common.toFirestoreId
 import com.example.mtgcollectionmanager.data.local.dao.CollectionCardDao
 import com.example.mtgcollectionmanager.data.local.dao.CollectionDao
 import com.example.mtgcollectionmanager.data.mapper.toDomain
@@ -8,14 +11,16 @@ import com.example.mtgcollectionmanager.data.mapper.toEntity
 import com.example.mtgcollectionmanager.data.remote.firebase.FirestoreDataSource
 import com.example.mtgcollectionmanager.data.remote.firebase.dto.FirestoreCardDto
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.data.sync.CardSyncManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.model.Card
 import com.example.mtgcollectionmanager.domain.model.CardCondition
 import com.example.mtgcollectionmanager.domain.model.CardPricing
 import com.example.mtgcollectionmanager.domain.model.CollectionCard
+import com.example.mtgcollectionmanager.domain.model.MarketPrice
 import com.example.mtgcollectionmanager.domain.repository.CollectionRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,9 +30,10 @@ class CollectionRepositoryImpl @Inject constructor(
     private val dao: CollectionCardDao,
     private val collectionDao: CollectionDao,
     private val firestoreDataSource: FirestoreDataSource,
+    private val cardSyncManager: CardSyncManager,
     private val userProvider: UserProvider,
     networkConnectivityManager: NetworkConnectivityManager
-) : NetworkAwareRepositoryImpl(networkConnectivityManager), CollectionRepository {
+) : BaseRepository(networkConnectivityManager), CollectionRepository {
 
     private val userId: String
         get() = userProvider.getCurrentUserId()
@@ -35,50 +41,23 @@ class CollectionRepositoryImpl @Inject constructor(
     override suspend fun getCollectionCards(collectionId: Long): Flow<Resource<List<CollectionCard>>> =
         executeNetworkOperationWithFallback(
             networkOperation = {
-                flow {
-                    emit(Resource.Loading(true))
+                resourceFlow {
                     try {
-
-                        val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                        val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
-                            ?: collectionId.toString()
-
-                        val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
-
-
-                        dao.deleteAllCardsForCollection(collectionId, userId)
-                        firestoreCards.forEach { dto ->
-                            val entity = dto.toEntity(collectionId, userId)
-                            // Make sure we're setting the correct userId
-                            val cardWithUserId = entity.copy(userId = userId)
-                            dao.insertCard(cardWithUserId)
-                        }
-
-                        emit(Resource.Success(firestoreCards.map {
-                            it.toEntity(collectionId, userId).toDomain()
-                        }))
-                        emit(Resource.Loading(false))
+                        val cards = fetchAndSyncCardsFromNetwork(collectionId)
+                        emit(Resource.Success(cards))
                     } catch (e: Exception) {
-                        emit(Resource.Error(e.message ?: "Failed to load collection from network"))
-                        emit(Resource.Loading(false))
+                        emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
                     }
                 }
             },
             fallbackOperation = {
-                flow {
-                    emit(Resource.Loading(true))
+                resourceFlow {
                     try {
                         dao.getCardsByCollection(collectionId, userId).collect { entities ->
                             emit(Resource.Success(entities.map { it.toDomain() }))
                         }
-                        emit(Resource.Loading(false))
-                    } catch (cacheError: Exception) {
-                        emit(
-                            Resource.Error(
-                                cacheError.message ?: "Failed to load collection from cache"
-                            )
-                        )
-                        emit(Resource.Loading(false))
+                    } catch (_: Exception) {
+                        emit(Resource.Error(AppError.Card.LoadFailed))
                     }
                 }
             }
@@ -89,51 +68,29 @@ class CollectionRepositoryImpl @Inject constructor(
         color: String
     ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
         networkOperation = {
-            flow {
-                emit(Resource.Loading(true))
+            resourceFlow {
                 try {
+                    val firestoreId = getFirestoreId(collectionId)
+                    val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
 
-                    val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
-                        ?: collectionId.toString()
+                    val filteredCards = firestoreCards
+                        .filter { it.colorsJson.contains(color, ignoreCase = true) }
+                        .map { it.toEntity(collectionId, userId).toDomain() }
 
-                    val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
-                    val filteredCards =
-                        firestoreCards.filter { it.colorsJson.contains(color, ignoreCase = true) }
-
-
-                    firestoreCards.forEach { dto ->
-                        val entity = dto.toEntity(collectionId, userId)
-// Make sure we're setting the correct userId
-                        val cardWithUserId = entity.copy(userId = userId)
-                        dao.insertCard(cardWithUserId)
-                    }
-
-                    emit(Resource.Success(filteredCards.map {
-                        it.toEntity(collectionId, userId).toDomain()
-                    }))
-                    emit(Resource.Loading(false))
+                    emit(Resource.Success(filteredCards))
                 } catch (e: Exception) {
-                    emit(Resource.Error(e.message ?: "Failed to load cards by color from network"))
-                    emit(Resource.Loading(false))
+                    emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
                 }
             }
         },
         fallbackOperation = {
-            flow {
-                emit(Resource.Loading(true))
+            resourceFlow {
                 try {
                     dao.getCardsByColor(collectionId, userId, "%$color%").collect { entities ->
                         emit(Resource.Success(entities.map { it.toDomain() }))
                     }
-                    emit(Resource.Loading(false))
-                } catch (cacheError: Exception) {
-                    emit(
-                        Resource.Error(
-                            cacheError.message ?: "Failed to load cards by color from cache"
-                        )
-                    )
-                    emit(Resource.Loading(false))
+                } catch (_: Exception) {
+                    emit(Resource.Error(AppError.Card.LoadFailed))
                 }
             }
         }
@@ -144,51 +101,66 @@ class CollectionRepositoryImpl @Inject constructor(
         setCode: String
     ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
         networkOperation = {
-            flow {
-                emit(Resource.Loading(true))
+            resourceFlow {
                 try {
+                    val firestoreId = getFirestoreId(collectionId)
+                    val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
 
-                    val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
-                        ?: collectionId.toString()
+                    val filteredCards = firestoreCards
+                        .filter { it.setCode.equals(setCode, ignoreCase = true) }
+                        .map { it.toEntity(collectionId, userId).toDomain() }
 
-                    val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
-                    val filteredCards =
-                        firestoreCards.filter { it.setCode.equals(setCode, ignoreCase = true) }
-
-
-                    firestoreCards.forEach { dto ->
-                        val entity = dto.toEntity(collectionId, userId)
-// Make sure we're setting the correct userId
-                        val cardWithUserId = entity.copy(userId = userId)
-                        dao.insertCard(cardWithUserId)
-                    }
-
-                    emit(Resource.Success(filteredCards.map {
-                        it.toEntity(collectionId, userId).toDomain()
-                    }))
-                    emit(Resource.Loading(false))
+                    emit(Resource.Success(filteredCards))
                 } catch (e: Exception) {
-                    emit(Resource.Error(e.message ?: "Failed to load cards by set from network"))
-                    emit(Resource.Loading(false))
+                    emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
                 }
             }
         },
         fallbackOperation = {
-            flow {
-                emit(Resource.Loading(true))
+            resourceFlow {
                 try {
                     dao.getCardsBySet(collectionId, userId, setCode).collect { entities ->
                         emit(Resource.Success(entities.map { it.toDomain() }))
                     }
-                    emit(Resource.Loading(false))
-                } catch (cacheError: Exception) {
-                    emit(
-                        Resource.Error(
-                            cacheError.message ?: "Failed to load cards by set from cache"
-                        )
-                    )
-                    emit(Resource.Loading(false))
+                } catch (_: Exception) {
+                    emit(Resource.Error(AppError.Card.LoadFailed))
+                }
+            }
+        }
+    )
+
+    override suspend fun getCardsByCategory(
+        collectionId: Long,
+        categoryId: Long?
+    ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
+        networkOperation = {
+            resourceFlow {
+                try {
+                    val firestoreId = getFirestoreId(collectionId)
+                    val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
+
+                    val filteredCards = filterCardsByCategory(firestoreCards, categoryId)
+                        .map { it.toEntity(collectionId, userId).toDomain() }
+
+                    emit(Resource.Success(filteredCards))
+                } catch (e: Exception) {
+                    emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
+                }
+            }
+        },
+        fallbackOperation = {
+            resourceFlow {
+                try {
+                    val cardsFlow = if (categoryId == null) {
+                        dao.getUncategorizedCards(collectionId, userId)
+                    } else {
+                        dao.getCardsByCategory(collectionId, categoryId, userId)
+                    }
+                    cardsFlow.collect { entities ->
+                        emit(Resource.Success(entities.map { it.toDomain() }))
+                    }
+                } catch (_: Exception) {
+                    emit(Resource.Error(AppError.Card.LoadFailed))
                 }
             }
         }
@@ -200,32 +172,12 @@ class CollectionRepositoryImpl @Inject constructor(
         quantity: Int,
         condition: CardCondition,
         notes: String
-    ): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    ): Flow<Resource<Unit>> = resourceFlow {
         try {
-            val dto = FirestoreCardDto(
-                cardId = card.id,
-                name = card.name,
-                manaCost = card.manaCost,
-                imageUrl = card.imageUrl,
-                type = card.type,
-                rarity = card.rarity,
-                setCode = card.setCode,
-                setName = card.setName,
-                colorsJson = Json.encodeToString(card.colors),
-                price = calculateDefaultPrice(card.pricing),
-                quantity = quantity,
-                condition = condition.name,
-                addedDate = System.currentTimeMillis(),
-                notes = notes
-            )
+            val firestoreId = getFirestoreId(collectionId)
+            val dto = createFirestoreCardDto(card, quantity, condition, notes)
 
-
-            val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId =
-                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-
-            firestoreDataSource.addCard(userId, firestoreId, dto)
+            cardSyncManager.addCard(userId, firestoreId, dto)
 
             val entity = card.toEntity(
                 collectionId = collectionId,
@@ -236,48 +188,25 @@ class CollectionRepositoryImpl @Inject constructor(
                 notes = notes,
                 userId = userId
             )
-            // Double check the userId is set correctly
-            val cardWithUserId = entity.copy(userId = userId)
-            dao.insertCard(cardWithUserId)
+            dao.insertCard(entity)
 
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to add card"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Card.AddFailed)))
         }
     }
 
     override suspend fun removeCard(collectionId: Long, cardId: String): Flow<Resource<Unit>> =
-        flow {
-            emit(Resource.Loading(true))
+        resourceFlow {
             try {
+                val firestoreId = getFirestoreId(collectionId)
 
-                val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                val firestoreId =
-                    localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-
-                val firestoreCard =
-                    firestoreDataSource.getCardByCardId(userId, firestoreId, cardId)
-
-                if (firestoreCard != null) {
-                    firestoreDataSource.deleteCard(
-                        userId,
-                        firestoreId,
-                        firestoreCard.id
-                    )
-                }
-
-                val existingCard = dao.getCardInCollection(cardId, collectionId, userId)
-                if (existingCard != null) {
-                    dao.deleteCardByInternalId(existingCard.id, userId)
-                }
+                deleteCardFromFirestore(firestoreId, cardId)
+                deleteCardFromLocal(collectionId, cardId)
 
                 emit(Resource.Success(Unit))
             } catch (e: Exception) {
-                emit(Resource.Error(e.message ?: "Failed to remove card"))
-            } finally {
-                emit(Resource.Loading(false))
+                emit(Resource.Error(e.toAppError(AppError.Card.RemoveFailed)))
             }
         }
 
@@ -285,106 +214,24 @@ class CollectionRepositoryImpl @Inject constructor(
         collectionId: Long,
         cardId: String,
         quantity: Int
-    ): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    ): Flow<Resource<Unit>> = resourceFlow {
         try {
+            val firestoreId = getFirestoreId(collectionId)
 
-            val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId =
-                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-
-            val firestoreCard =
-                firestoreDataSource.getCardByCardId(userId, firestoreId, cardId)
-
-            if (firestoreCard != null) {
-                firestoreDataSource.updateCard(
-                    userId,
-                    firestoreId,
-                    firestoreCard.id,
-                    mapOf("quantity" to quantity)
-                )
-            }
+            updateCardInFirestore(firestoreId, cardId, mapOf("quantity" to quantity))
 
             val existingCard = dao.getCardInCollection(cardId, collectionId, userId)
-            if (existingCard != null) {
-                dao.updateCard(existingCard.copy(quantity = quantity))
-                emit(Resource.Success(Unit))
-            } else {
-                emit(Resource.Error("Card not found in collection"))
-            }
+                ?: run {
+                    emit(Resource.Error(AppError.Card.NotFound))
+                    return@resourceFlow
+                }
+
+            dao.updateCard(existingCard.copy(quantity = quantity))
+            emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to update quantity"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Card.UpdateFailed)))
         }
     }
-
-    override suspend fun getCardsByCategory(
-        collectionId: Long,
-        categoryId: Long?
-    ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
-        networkOperation = {
-            flow {
-                emit(Resource.Loading(true))
-                try {
-
-                    val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                    val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
-                        ?: collectionId.toString()
-
-                    val firestoreCards = firestoreDataSource.getCardsOnce(userId, firestoreId)
-                    val filteredCards = if (categoryId == null) {
-                        firestoreCards.filter { it.categoryId == null }
-                    } else {
-                        firestoreCards.filter { it.categoryId == categoryId.toString() }
-                    }
-
-
-                    firestoreCards.forEach { dto ->
-                        val entity = dto.toEntity(collectionId, userId)
-// Make sure we're setting the correct userId
-                        val cardWithUserId = entity.copy(userId = userId)
-                        dao.insertCard(cardWithUserId)
-                    }
-
-                    emit(Resource.Success(filteredCards.map {
-                        it.toEntity(collectionId, userId).toDomain()
-                    }))
-                    emit(Resource.Loading(false))
-                } catch (e: Exception) {
-                    emit(
-                        Resource.Error(
-                            e.message ?: "Failed to load cards by category from network"
-                        )
-                    )
-                    emit(Resource.Loading(false))
-                }
-            }
-        },
-        fallbackOperation = {
-            flow {
-                emit(Resource.Loading(true))
-                try {
-                    val cardsFlow = if (categoryId == null) {
-                        dao.getUncategorizedCards(collectionId, userId)
-                    } else {
-                        dao.getCardsByCategory(collectionId, categoryId, userId)
-                    }
-                    cardsFlow.collect { entities ->
-                        emit(Resource.Success(entities.map { it.toDomain() }))
-                    }
-                    emit(Resource.Loading(false))
-                } catch (cacheError: Exception) {
-                    emit(
-                        Resource.Error(
-                            cacheError.message ?: "Failed to load cards by category from cache"
-                        )
-                    )
-                    emit(Resource.Loading(false))
-                }
-            }
-        }
-    )
 
     override suspend fun updateCardDetails(
         collectionId: Long,
@@ -392,47 +239,36 @@ class CollectionRepositoryImpl @Inject constructor(
         quantity: Int,
         condition: CardCondition,
         notes: String
-    ): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    ): Flow<Resource<Unit>> = resourceFlow {
         try {
+            val firestoreId = getFirestoreId(collectionId)
 
-            val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId =
-                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-
-            val firestoreCard =
-                firestoreDataSource.getCardByCardId(userId, firestoreId, cardId)
-
-            if (firestoreCard != null) {
-                firestoreDataSource.updateCard(
-                    userId,
-                    firestoreId,
-                    firestoreCard.id,
-                    mapOf(
-                        "quantity" to quantity,
-                        "condition" to condition.name,
-                        "notes" to notes
-                    )
+            updateCardInFirestore(
+                firestoreId,
+                cardId,
+                mapOf(
+                    "quantity" to quantity,
+                    "condition" to condition.name,
+                    "notes" to notes
                 )
-            }
+            )
 
             val existingCard = dao.getCardInCollection(cardId, collectionId, userId)
-            if (existingCard != null) {
-                dao.updateCard(
-                    existingCard.copy(
-                        quantity = quantity,
-                        condition = condition.name,
-                        notes = notes
-                    )
+                ?: run {
+                    emit(Resource.Error(AppError.Card.NotFound))
+                    return@resourceFlow
+                }
+
+            dao.updateCard(
+                existingCard.copy(
+                    quantity = quantity,
+                    condition = condition.name,
+                    notes = notes
                 )
-                emit(Resource.Success(Unit))
-            } else {
-                emit(Resource.Error("Card not found in collection"))
-            }
+            )
+            emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to update card details"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Card.UpdateFailed)))
         }
     }
 
@@ -441,29 +277,86 @@ class CollectionRepositoryImpl @Inject constructor(
         if (localCard != null) return true
 
         return try {
-
-            val localEntity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId =
-                localEntity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
-
+            val firestoreId = getFirestoreId(collectionId)
             firestoreDataSource.getCardByCardId(userId, firestoreId, cardId) != null
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
 
+
+    private suspend fun getFirestoreId(collectionId: Long): String {
+        val localEntity = collectionDao.getCollectionById(collectionId, userId)
+        return localEntity?.firestoreId.toFirestoreId(collectionId)
+    }
+
+
+    private suspend fun fetchAndSyncCardsFromNetwork(collectionId: Long): List<CollectionCard> {
+        val firestoreId = getFirestoreId(collectionId)
+        val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
+        return firestoreCards.map { it.toEntity(collectionId, userId).toDomain() }
+    }
+
+
+    private suspend fun deleteCardFromFirestore(firestoreId: String, cardId: String) {
+        cardSyncManager.deleteCard(userId, firestoreId, cardId)
+    }
+
+    private suspend fun deleteCardFromLocal(collectionId: Long, cardId: String) {
+        val existingCard = dao.getCardInCollection(cardId, collectionId, userId)
+        existingCard?.let {
+            dao.deleteCardByInternalId(it.id, userId)
+        }
+    }
+
+    private suspend fun updateCardInFirestore(
+        firestoreId: String,
+        cardId: String,
+        updates: Map<String, Any?>
+    ) {
+        cardSyncManager.updateCard(userId, firestoreId, cardId, updates)
+    }
+
+    private fun filterCardsByCategory(
+        cards: List<FirestoreCardDto>,
+        categoryId: Long?
+    ): List<FirestoreCardDto> {
+        return if (categoryId == null) {
+            cards.filter { it.categoryId == null }
+        } else {
+            cards.filter { it.categoryId == categoryId.toString() }
+        }
+    }
+
+    private fun createFirestoreCardDto(
+        card: Card,
+        quantity: Int,
+        condition: CardCondition,
+        notes: String
+    ): FirestoreCardDto {
+        return FirestoreCardDto(
+            cardId = card.id,
+            name = card.name,
+            manaCost = card.manaCost,
+            imageUrl = card.imageUrl,
+            type = card.type,
+            rarity = card.rarity,
+            setCode = card.setCode,
+            setName = card.setName,
+            colorsJson = Json.encodeToString(card.colors),
+            price = calculateDefaultPrice(card.pricing),
+            quantity = quantity,
+            condition = condition.name,
+            addedDate = System.currentTimeMillis(),
+            notes = notes
+        )
+    }
+
     private fun calculateDefaultPrice(pricing: CardPricing): Double {
-
-        pricing.markets.find { it.marketId == com.example.mtgcollectionmanager.domain.model.MarketPrice.MARKET_TCGPLAYER }?.normalPrice?.let {
-            return it
-        }
-
-
-        pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice?.let {
-            return it
-        }
-
-
-        return 0.0
+        return pricing.markets
+            .find { it.marketId == MarketPrice.MARKET_TCGPLAYER }
+            ?.normalPrice
+            ?: pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice
+            ?: 0.0
     }
 }

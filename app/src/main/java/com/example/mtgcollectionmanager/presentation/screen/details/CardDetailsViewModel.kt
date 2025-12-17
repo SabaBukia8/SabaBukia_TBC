@@ -3,7 +3,9 @@ package com.example.mtgcollectionmanager.presentation.screen.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.model.Card
 import com.example.mtgcollectionmanager.domain.usecase.card.GetCardDetailsUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.AddCardToCollectionUseCase
@@ -95,7 +97,7 @@ class CardDetailsViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CardDetailsContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -130,7 +132,7 @@ class CardDetailsViewModel @Inject constructor(
                                 if (state.value.isNetworkAvailable) {
                                     emitSideEffect(
                                         CardDetailsContract.SideEffect.ShowError(
-                                            UiText.DynamicString(resource.errorMessage)
+                                            resource.error.toUiText()
                                         )
                                     )
                                 }

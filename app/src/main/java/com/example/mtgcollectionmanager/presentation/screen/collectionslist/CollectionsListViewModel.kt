@@ -4,7 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
 import com.example.mtgcollectionmanager.data.remote.util.executeWithFallback
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.usecase.collection.CreateCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.DeleteCollectionUseCase
 import com.example.mtgcollectionmanager.domain.usecase.collection.EnsureDefaultCollectionUseCase
@@ -119,11 +121,11 @@ class CollectionsListViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        updateState { it.copy(error = resource.errorMessage) }
+                        updateState { it.copy(error = resource.error.toString()) }
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionsListContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -153,7 +155,7 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Error -> {
                         emitSideEffect(
                             CollectionsListContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                             )
                         )
                     }
@@ -189,7 +191,7 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Error -> {
                         emitSideEffect(
                             CollectionsListContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                             )
                         )
                     }
@@ -218,7 +220,7 @@ class CollectionsListViewModel @Inject constructor(
                     is Resource.Error -> {
                         emitSideEffect(
                             CollectionsListContract.SideEffect.ShowError(
-                                UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                             )
                         )
                     }

@@ -2,7 +2,9 @@ package com.example.mtgcollectionmanager.presentation.screen.cardprintings.dialo
 
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.usecase.card.GetCardPrintingsUseCase
 import com.example.mtgcollectionmanager.presentation.common.BaseViewModel
 import com.example.mtgcollectionmanager.presentation.mapper.toUi
@@ -82,7 +84,7 @@ class CardPrintingsViewModel @Inject constructor(
                         updateState {
                             it.copy(
                                 isLoading = false,
-                                error = resource.errorMessage
+                                error = resource.error.toString()
                             )
                         }
 
@@ -90,7 +92,7 @@ class CardPrintingsViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CardPrintingsContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }

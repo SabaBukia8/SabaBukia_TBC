@@ -24,6 +24,9 @@ interface CollectionDao {
     @Query("SELECT * FROM collections WHERE id = :collectionId AND userId = :userId")
     suspend fun getCollectionById(collectionId: Long, userId: String): CollectionEntity?
 
+    @Query("SELECT * FROM collections WHERE firestoreId = :firestoreId AND userId = :userId")
+    suspend fun getCollectionByFirestoreId(firestoreId: String, userId: String): CollectionEntity?
+
     @Query(
         """
         SELECT DISTINCT collections.* FROM collections

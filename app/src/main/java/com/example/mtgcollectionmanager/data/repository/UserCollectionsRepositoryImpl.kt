@@ -1,19 +1,22 @@
 package com.example.mtgcollectionmanager.data.repository
 
 import com.example.mtgcollectionmanager.data.common.UserProvider
+import com.example.mtgcollectionmanager.data.common.resourceFlow
+import com.example.mtgcollectionmanager.data.common.toAppError
+import com.example.mtgcollectionmanager.data.common.toFirestoreId
 import com.example.mtgcollectionmanager.data.local.dao.CollectionCardDao
 import com.example.mtgcollectionmanager.data.local.dao.CollectionDao
 import com.example.mtgcollectionmanager.data.mapper.toDomain
-import com.example.mtgcollectionmanager.data.mapper.toEntity
 import com.example.mtgcollectionmanager.data.model.local.CollectionEntity
 import com.example.mtgcollectionmanager.data.remote.firebase.FirestoreDataSource
 import com.example.mtgcollectionmanager.data.remote.firebase.dto.FirestoreCollectionDto
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.data.sync.CollectionSyncManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
 import com.example.mtgcollectionmanager.domain.model.Collection
 import com.example.mtgcollectionmanager.domain.repository.UserCollectionsRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,153 +25,85 @@ class UserCollectionsRepositoryImpl @Inject constructor(
     private val collectionDao: CollectionDao,
     private val collectionCardDao: CollectionCardDao,
     private val firestoreDataSource: FirestoreDataSource,
+    private val syncManager: CollectionSyncManager,
     private val userProvider: UserProvider,
     networkConnectivityManager: NetworkConnectivityManager
-) : NetworkAwareRepositoryImpl(networkConnectivityManager), UserCollectionsRepository {
+) : BaseRepository(networkConnectivityManager), UserCollectionsRepository {
 
     private val userId: String
         get() = userProvider.getCurrentUserId()
 
     override suspend fun getAllCollections(): Flow<Resource<List<Collection>>> =
         executeNetworkOperationWithFallback(
-            networkOperation = {
-                flow {
-                    emit(Resource.Loading(true))
-                    try {
-                        val firestoreCollections = firestoreDataSource.getCollectionsOnce(userId)
-
-                        // Only delete collections and cards if we have data from Firestore
-                        if (firestoreCollections.isNotEmpty()) {
-                            collectionDao.deleteAllCollectionsForUser(userId)
-                            collectionCardDao.deleteAllCards(userId)
-                        }
-
-                        firestoreCollections.forEach { dto ->
-                            val entity = dto.toEntity(userId)
-                            collectionDao.insertCollection(entity)
-                        }
-
-                        val collections = firestoreCollections.map { collectionDto ->
-                            val entity = collectionDto.toEntity(userId)
-
-
-                            val cards = firestoreDataSource.getCardsOnce(userId, collectionDto.id)
-
-
-                            val totalCards = cards.sumOf { it.quantity }
-                            val totalValue = cards.sumOf { it.price * it.quantity }
-
-                            entity.toDomain(totalCards, totalValue)
-                        }
-                        emit(Resource.Success(collections))
-                        emit(Resource.Loading(false))
-                    } catch (e: Exception) {
-                        emit(Resource.Error(e.message ?: "Failed to load collections from network"))
-                        emit(Resource.Loading(false))
-                    }
-                }
-            },
-            fallbackOperation = {
-                flow {
-                    emit(Resource.Loading(true))
-                    try {
-                        collectionDao.getAllCollections(userId).collect { entities ->
-                            val collections = entities.map { entity ->
-                                try {
-
-                                    val totalCards =
-                                        collectionCardDao.getTotalCardCount(entity.id, userId)
-                                    val totalValue =
-                                        collectionCardDao.getTotalValue(entity.id, userId)
-                                    entity.toDomain(totalCards, totalValue)
-                                } catch (e: Exception) {
-                                    entity.toDomain(0, 0.0)
-                                }
-                            }
-                            emit(Resource.Success(collections))
-                        }
-                        emit(Resource.Loading(false))
-                    } catch (cacheError: Exception) {
-                        emit(
-                            Resource.Error(
-                                cacheError.message ?: "Failed to load collections from cache"
-                            )
-                        )
-                        emit(Resource.Loading(false))
-                    }
-                }
-            }
+            networkOperation = { fetchFromNetwork() },
+            fallbackOperation = { fetchFromLocal() }
         )
+    
+    private fun fetchFromNetwork(): Flow<Resource<List<Collection>>> = resourceFlow {
+        try {
+            val remoteCollections = syncManager.syncCollections(userId)
+            val collections = remoteCollections.map { dto ->
+                val stats = syncManager.calculateCollectionStats(userId, dto.id)
+                val entity = dto.toEntity(userId)
+                entity.toDomain(stats.totalCards, stats.totalValue)
+            }
+            emit(Resource.Success(collections))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.toAppError(AppError.Collection.LoadFailed)))
+        }
+    }
+    
+    private fun fetchFromLocal(): Flow<Resource<List<Collection>>> = resourceFlow {
+        try {
+            collectionDao.getAllCollections(userId).collect { entities ->
+                val collections = entities.map { entity ->
+                    entity.toDomainWithStats()
+                }
+                emit(Resource.Success(collections))
+            }
+        } catch (_: Exception) {
+            emit(Resource.Error(AppError.Collection.LoadFailed))
+        }
+    }
 
     override suspend fun getCollectionById(collectionId: Long): Flow<Resource<Collection?>> =
         executeNetworkOperationWithFallback(
-            networkOperation = {
-                flow {
-                    emit(Resource.Loading(true))
-                    try {
-
-                        val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                        val firestoreId = localEntity?.firestoreId?.takeIf { it.isNotEmpty() }
-                            ?: collectionId.toString()
-
-                        val firestoreCollection =
-                            firestoreDataSource.getCollectionById(userId, firestoreId)
-
-                        if (firestoreCollection != null) {
-                            val entity = firestoreCollection.toEntity(userId)
-                            collectionDao.insertCollection(entity)
-
-
-                            val cards =
-                                firestoreDataSource.getCardsOnce(userId, firestoreCollection.id)
-
-
-                            val totalCards = cards.sumOf { it.quantity }
-                            val totalValue = cards.sumOf { it.price * it.quantity }
-
-                            emit(Resource.Success(entity.toDomain(totalCards, totalValue)))
-                        } else {
-
-                            emit(Resource.Success(null))
-                        }
-                        emit(Resource.Loading(false))
-                    } catch (e: Exception) {
-                        emit(Resource.Error(e.message ?: "Failed to load collection from network"))
-                        emit(Resource.Loading(false))
-                    }
-                }
-            },
-            fallbackOperation = {
-                flow {
-                    emit(Resource.Loading(true))
-                    try {
-                        val localEntity = collectionDao.getCollectionById(collectionId, userId)
-                        if (localEntity != null) {
-                            val totalCards =
-                                collectionCardDao.getTotalCardCount(localEntity.id, userId)
-                            val totalValue = collectionCardDao.getTotalValue(localEntity.id, userId)
-                            emit(Resource.Success(localEntity.toDomain(totalCards, totalValue)))
-                        } else {
-                            emit(Resource.Success(null))
-                        }
-                        emit(Resource.Loading(false))
-                    } catch (cacheError: Exception) {
-                        emit(
-                            Resource.Error(
-                                cacheError.message ?: "Failed to load collection from cache"
-                            )
-                        )
-                        emit(Resource.Loading(false))
-                    }
-                }
-            }
+            networkOperation = { fetchCollectionByIdFromNetwork(collectionId) },
+            fallbackOperation = { fetchCollectionByIdFromLocal(collectionId) }
         )
+        
+    private fun fetchCollectionByIdFromNetwork(collectionId: Long): Flow<Resource<Collection?>> = resourceFlow {
+        try {
+            val firestoreId = getFirestoreId(collectionId)
+            val remoteCollection = syncManager.syncCollection(userId, firestoreId)
+            
+            if (remoteCollection != null) {
+                val stats = syncManager.calculateCollectionStats(userId, remoteCollection.id)
+                val entity = remoteCollection.toEntity(userId)
+                val collection = entity.toDomain(stats.totalCards, stats.totalValue)
+                emit(Resource.Success(collection))
+            } else {
+                emit(Resource.Success(null))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.toAppError(AppError.Collection.LoadFailed)))
+        }
+    }
+    
+    private fun fetchCollectionByIdFromLocal(collectionId: Long): Flow<Resource<Collection?>> = resourceFlow {
+        try {
+            val localEntity = collectionDao.getCollectionById(collectionId, userId)
+            val collection = localEntity?.toDomainWithStats()
+            emit(Resource.Success(collection))
+        } catch (_: Exception) {
+            emit(Resource.Error(AppError.Collection.LoadFailed))
+        }
+    }
 
     override suspend fun createCollection(
         name: String,
         description: String
-    ): Flow<Resource<Long>> = flow {
-        emit(Resource.Loading(true))
+    ): Flow<Resource<Long>> = resourceFlow {
         try {
             val dto = FirestoreCollectionDto(
                 name = name,
@@ -177,33 +112,18 @@ class UserCollectionsRepositoryImpl @Inject constructor(
             )
 
             val firestoreId = firestoreDataSource.createCollection(userId, dto)
-
-            val entity = CollectionEntity(
-                id = firestoreId.hashCode().toLong().let { if (it < 0) -it else it },
-                name = name,
-                description = description,
-                createdDate = dto.createdAt,
-                userId = userId,
-                firestoreId = firestoreId
-            )
+            val entity = createCollectionEntity(firestoreId, name, description, dto.createdAt)
             val localId = collectionDao.insertCollection(entity)
 
             emit(Resource.Success(localId))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to create collection"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Collection.CreateFailed)))
         }
     }
 
-    override suspend fun updateCollection(collection: Collection): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    override suspend fun updateCollection(collection: Collection): Flow<Resource<Unit>> = resourceFlow {
         try {
-            val firestoreId = if (collection.firestoreId.isNotEmpty()) {
-                collection.firestoreId
-            } else {
-                collection.id.toString()
-            }
+            val firestoreId = getFirestoreIdFromCollection(collection)
 
             firestoreDataSource.updateCollection(
                 userId,
@@ -214,35 +134,80 @@ class UserCollectionsRepositoryImpl @Inject constructor(
                 )
             )
 
-            collectionDao.updateCollection(collection.toEntity())
-
+            // Convert domain model to entity
+            val entity = CollectionEntity(
+                id = collection.id,
+                name = collection.name,
+                description = collection.description,
+                createdDate = collection.createdDate,
+                userId = userId,
+                firestoreId = collection.firestoreId
+            )
+            collectionDao.updateCollection(entity)
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to update collection"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Collection.UpdateFailed)))
         }
     }
 
-    override suspend fun deleteCollection(collectionId: Long): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading(true))
+    override suspend fun deleteCollection(collectionId: Long): Flow<Resource<Unit>> = resourceFlow {
         try {
-
-            val entity = collectionDao.getCollectionById(collectionId, userId)
-            val firestoreId =
-                entity?.firestoreId?.takeIf { it.isNotEmpty() } ?: collectionId.toString()
+            val firestoreId = getFirestoreId(collectionId)
 
             firestoreDataSource.deleteCollection(userId, firestoreId)
-
             collectionDao.deleteCollectionById(collectionId, userId)
 
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Failed to delete collection"))
-        } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Error(e.toAppError(AppError.Collection.DeleteFailed)))
         }
     }
 
     override suspend fun getCollectionCount(): Int = collectionDao.getCollectionCount(userId)
+
+    // region Helper Methods
+
+    // Removed duplicated sync logic in favor of CollectionSyncManager
+
+    private suspend fun CollectionEntity.toDomainWithStats(): Collection {
+        return try {
+            val totalCards = collectionCardDao.getTotalCardCount(id, userId)
+            val totalValue = collectionCardDao.getTotalValue(id, userId)
+            toDomain(totalCards, totalValue)
+        } catch (_: Exception) {
+            toDomain(0, 0.0)
+        }
+    }
+
+    private suspend fun getFirestoreId(collectionId: Long): String {
+        val entity = collectionDao.getCollectionById(collectionId, userId)
+        return entity?.firestoreId.toFirestoreId(collectionId)
+    }
+
+    private fun getFirestoreIdFromCollection(collection: Collection): String {
+        return collection.firestoreId.toFirestoreId(collection.id)
+    }
+
+    private fun createCollectionEntity(
+        firestoreId: String,
+        name: String,
+        description: String,
+        createdAt: Long
+    ): CollectionEntity {
+        val id = firestoreId.hashCode().toLong().let { if (it < 0) -it else it }
+        return CollectionEntity(
+            id = id,
+            name = name,
+            description = description,
+            createdDate = createdAt,
+            userId = userId,
+            firestoreId = firestoreId
+        )
+    }
+
+    // Using the common extension function now
+
+    // endregion
+
+    // Using CollectionSyncManager.CollectionStats now
 }

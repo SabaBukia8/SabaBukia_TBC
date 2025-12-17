@@ -11,4 +11,6 @@ interface NetworkAwareRepository {
     ): Flow<Resource<T>>
 
     fun isNetworkAvailable(): Boolean
+
+    suspend fun syncFromRemote(): Result<Unit> = Result.success(Unit)
 }

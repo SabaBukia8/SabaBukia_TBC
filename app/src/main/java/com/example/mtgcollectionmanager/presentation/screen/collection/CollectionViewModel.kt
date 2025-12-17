@@ -3,7 +3,9 @@ package com.example.mtgcollectionmanager.presentation.screen.collection
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mtgcollectionmanager.data.remote.util.NetworkConnectivityManager
+import com.example.mtgcollectionmanager.domain.common.AppError
 import com.example.mtgcollectionmanager.domain.common.Resource
+import com.example.mtgcollectionmanager.presentation.util.toUiText
 import com.example.mtgcollectionmanager.domain.model.Card
 import com.example.mtgcollectionmanager.domain.model.CardCondition
 import com.example.mtgcollectionmanager.domain.usecase.auth.LogoutUseCase
@@ -258,7 +260,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -342,7 +344,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -413,7 +415,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -448,7 +450,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -503,7 +505,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -531,7 +533,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -566,7 +568,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -602,7 +604,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -656,7 +658,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -688,7 +690,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -715,7 +717,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -751,7 +753,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -793,7 +795,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
@@ -825,7 +827,7 @@ class CollectionViewModel @Inject constructor(
                         if (state.value.isNetworkAvailable) {
                             emitSideEffect(
                                 CollectionContract.SideEffect.ShowError(
-                                    UiText.DynamicString(resource.errorMessage)
+                                    resource.error.toUiText()
                                 )
                             )
                         }
