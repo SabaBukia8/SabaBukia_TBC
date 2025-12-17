@@ -1,48 +1,48 @@
-# MTG Collection Manager App
+MTG Collection Manager 🃏
+A native Android application for Magic: The Gathering collectors.
 
-## Architecture Refactoring
+Project Overview
+the MTG Collection Manager to solve a common problem for collectors: organizing thousands of cards while keeping track of their fluctuating market values. The goal was to create a seamless experience where users can manage their digital binders offline, but have everything safely backed up to the cloud the moment they go online.
 
-This project has been refactored to improve the architecture and follow better clean architecture principles. The main changes include:
+This project was a deep dive into modern Android development, focusing specifically on Clean Architecture and robust Offline-First data synchronization.
 
-### Repository Layer Improvements
+📱 What It Does
+The app is mainly designed to be the central hub for a player's collection, making it easy to manage and track your collection of magic the gathering cards:
 
-1. **Single Responsibility Principle**
-   - Separated sync logic from repositories
-   - Created dedicated sync managers for collection and card operations
-   - Simplified repository implementations
+Organize Your Way: Users can create unlimited collections (like "Commander Decks" or "Trade Binders") and use custom color-coded labels to sort cards.
 
-2. **Reduced Duplication**
-   - Created common extensions for error handling (`toAppError`)
-   - Added utilities for ID conversions (`toFirestoreId`, `toPositiveLongId`)
-   - Implemented flow helpers (`resourceFlow`) for cleaner code
+Price Tracking: It pulls real-time pricing data from major marketplaces like TCGPlayer and CardMarket, so users always know the total value of their collection.
 
-3. **Base Repository**
-   - Created a BaseRepository class with common functionality
-   - Standardized network-aware operations
-   - All repositories now extend from this base class
+Cloud Sync: I integrated Firebase so that data is accessible across devices.
 
-### Sync Layer
+Offline First: The app works perfectly without internet. You can view, edit, and manage cards on the subway or at a convention, and it syncs automatically when connection is restored.
 
-1. **Dedicated Sync Managers**
-   - CollectionSyncManager: Handles synchronization of collections between Firestore and local database
-   - CardSyncManager: Handles synchronization of cards between Firestore and local database
+🛠️ Tech Stack
+I chose a modern stack to ensure the app is scalable and maintainable:
 
-### Utility Classes
+Language: Kotlin (100%)
 
-1. **Error Handling**
-   - Added ErrorMapper to convert domain errors to user-friendly messages
-   - Standardized error flow throughout the application
+Architecture: MVI with Clean Architecture
 
-### Interface Updates
+UI: XML with ViewBinding & Material Design 3
 
-1. **NetworkAwareRepository**
-   - Updated the interface to include syncFromRemote method
-   - Standardized approach to network operations
+Async: Coroutines & Flow for reactive data handling
 
-## Benefits
+Local Data: Room Database (v3)
 
-- **Cleaner Code**: Reduced duplication, better organization
-- **Better Separation of Concerns**: Each class has a clear responsibility
-- **Improved Testability**: Easier to test individual components
-- **Enhanced Maintainability**: Easier to understand and extend
-- **Simplified Error Handling**: Consistent approach to errors across the app
+Remote Data: Firebase Firestore & Auth
+
+Network: Retrofit + OkHttp (communicating with Scryfall API)
+
+DI: Hilt
+
+🏗️ Architecture & Major Systems
+1. The "Offline-First" Sync Engine
+   The most complex part of this project was ensuring data integrity between the local device and the cloud. I implemented a Repository Pattern that acts as a single source of truth:
+
+Read Strategy: The app prioritizes the local Room database for instant UI loading, then fetches fresh data from Firestore in the background to update the cache.
+
+Write Strategy: When a user modifies a collection, it updates the local database immediately (for a snappy UX) and queues a worker to sync the change to Firestore.
+
+2. Scryfall API Integration
+   I integrated the Scryfall API to power the search and pricing features. This required handling complex JSON responses with Kotlin Serialization to map nested data (like different card printings and mana costs) into clean UI models.
