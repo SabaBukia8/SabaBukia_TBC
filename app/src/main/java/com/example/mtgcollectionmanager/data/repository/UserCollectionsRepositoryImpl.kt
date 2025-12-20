@@ -40,17 +40,13 @@ class UserCollectionsRepositoryImpl @Inject constructor(
         )
     
     private fun fetchFromNetwork(): Flow<Resource<List<Collection>>> = resourceFlow {
-        try {
-            val remoteCollections = syncManager.syncCollections(userId)
-            val collections = remoteCollections.map { dto ->
-                val stats = syncManager.calculateCollectionStats(userId, dto.id)
-                val entity = dto.toEntity(userId)
-                entity.toDomain(stats.totalCards, stats.totalValue)
-            }
-            emit(Resource.Success(collections))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.toAppError(AppError.Collection.LoadFailed)))
+        val remoteCollections = syncManager.syncCollections(userId)
+        val collections = remoteCollections.map { dto ->
+            val stats = syncManager.calculateCollectionStats(userId, dto.id)
+            val entity = dto.toEntity(userId)
+            entity.toDomain(stats.totalCards, stats.totalValue)
         }
+        emit(Resource.Success(collections))
     }
     
     private fun fetchFromLocal(): Flow<Resource<List<Collection>>> = resourceFlow {
@@ -112,6 +108,7 @@ class UserCollectionsRepositoryImpl @Inject constructor(
             )
 
             val firestoreId = firestoreDataSource.createCollection(userId, dto)
+
             val entity = createCollectionEntity(firestoreId, name, description, dto.createdAt)
             val localId = collectionDao.insertCollection(entity)
 
@@ -134,7 +131,6 @@ class UserCollectionsRepositoryImpl @Inject constructor(
                 )
             )
 
-            // Convert domain model to entity
             val entity = CollectionEntity(
                 id = collection.id,
                 name = collection.name,
@@ -155,6 +151,7 @@ class UserCollectionsRepositoryImpl @Inject constructor(
             val firestoreId = getFirestoreId(collectionId)
 
             firestoreDataSource.deleteCollection(userId, firestoreId)
+
             collectionDao.deleteCollectionById(collectionId, userId)
 
             emit(Resource.Success(Unit))
@@ -164,10 +161,6 @@ class UserCollectionsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCollectionCount(): Int = collectionDao.getCollectionCount(userId)
-
-    // region Helper Methods
-
-    // Removed duplicated sync logic in favor of CollectionSyncManager
 
     private suspend fun CollectionEntity.toDomainWithStats(): Collection {
         return try {
@@ -204,10 +197,4 @@ class UserCollectionsRepositoryImpl @Inject constructor(
             firestoreId = firestoreId
         )
     }
-
-    // Using the common extension function now
-
-    // endregion
-
-    // Using CollectionSyncManager.CollectionStats now
 }

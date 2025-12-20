@@ -3,9 +3,7 @@ package com.example.mtgcollectionmanager.presentation.util
 import com.example.mtgcollectionmanager.R
 import com.example.mtgcollectionmanager.domain.common.AppError
 
-/**
- * Extension function to convert AppError to UiText for presentation
- */
+
 fun AppError.toUiText(): UiText {
     return when (this) {
         // Auth errors

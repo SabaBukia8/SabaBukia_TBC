@@ -15,7 +15,7 @@ import com.example.mtgcollectionmanager.data.model.local.CollectionEntity
         CategoryEntity::class,
         CollectionCardEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class MTGDatabase : RoomDatabase() {

@@ -40,7 +40,7 @@ fun Card.toUi(): CardUiModel {
         marketPrices = marketPricesUi
     )
 }
-
+//topresentation davarqvat
 fun CollectionCard.toUi(): CollectionCardUiModel = with(card) {
     val defaultPrice = pricing.markets.firstOrNull { it.normalPrice != null }?.normalPrice ?: 0.0
 

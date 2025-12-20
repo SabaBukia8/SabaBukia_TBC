@@ -41,5 +41,6 @@ data class CollectionCardEntity(
     val condition: String,
     val addedDate: Long,
     val notes: String,
-    val userId: String
+    val userId: String,
+    val syncStatus: String = SyncStatus.SYNCED.name
 )

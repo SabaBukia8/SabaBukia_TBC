@@ -10,5 +10,6 @@ data class CollectionEntity(
     val description: String,
     val createdDate: Long,
     val userId: String,
-    val firestoreId: String = ""
+    val firestoreId: String = "",
+    val syncStatus: String = SyncStatus.SYNCED.name
 )

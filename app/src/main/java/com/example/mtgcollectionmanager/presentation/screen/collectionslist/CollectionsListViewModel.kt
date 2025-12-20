@@ -95,17 +95,7 @@ class CollectionsListViewModel @Inject constructor(
 
     private fun loadCollections() {
         viewModelScope.launch {
-            executeWithFallback(
-                networkManager = networkConnectivityManager,
-                networkOperation = { getUserCollectionsUseCase() },
-                fallbackOperation = {
-                    flow {
-                        emit(Resource.Loading(true))
-                        emit(Resource.Success(state.value.collections.map { it.toDomain() }))
-                        emit(Resource.Loading(false))
-                    }
-                }
-            ).collect { resource ->
+            getUserCollectionsUseCase().collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                         updateState { it.copy(isLoading = resource.isLoading) }
@@ -122,13 +112,11 @@ class CollectionsListViewModel @Inject constructor(
 
                     is Resource.Error -> {
                         updateState { it.copy(error = resource.error.toString()) }
-                        if (state.value.isNetworkAvailable) {
-                            emitSideEffect(
-                                CollectionsListContract.SideEffect.ShowError(
-                                    resource.error.toUiText()
-                                )
+                        emitSideEffect(
+                            CollectionsListContract.SideEffect.ShowError(
+                                resource.error.toUiText()
                             )
-                        }
+                        )
                     }
                 }
             }

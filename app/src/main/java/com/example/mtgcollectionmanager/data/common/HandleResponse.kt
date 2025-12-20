@@ -19,7 +19,7 @@ class HandleResponse @Inject constructor() {
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     emit(Resource.Success(body))
-                } ?: emit(Resource.Error(AppError.Unknown("Response body is null")))
+                }
             } else {
                 if (response.code() == 404) {
                     emit(Resource.Error(AppError.Card.NotFound))

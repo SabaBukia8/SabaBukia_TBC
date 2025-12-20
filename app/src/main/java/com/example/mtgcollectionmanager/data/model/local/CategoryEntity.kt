@@ -22,5 +22,6 @@ data class CategoryEntity(
     val collectionId: Long,
     val name: String,
     val color: String,
-    val createdDate: Long
+    val createdDate: Long,
+    val syncStatus: String = SyncStatus.SYNCED.name
 )

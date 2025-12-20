@@ -107,7 +107,7 @@ fun Card.toEntity(
     notes = notes,
     userId = userId
 )
-
+//gavyot entity mapperebi
 fun CollectionCardEntity.toDomain(): CollectionCard = CollectionCard(
     cardId = cardId,
     card = Card(

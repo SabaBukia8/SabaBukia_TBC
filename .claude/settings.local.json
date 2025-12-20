@@ -45,7 +45,8 @@
       "Bash(.gradlew.bat clean build)",
       "Bash(findstr:*)",
       "WebFetch(domain:moxfield.com)",
-      "WebFetch(domain:magic.wizards.com)"
+      "WebFetch(domain:magic.wizards.com)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

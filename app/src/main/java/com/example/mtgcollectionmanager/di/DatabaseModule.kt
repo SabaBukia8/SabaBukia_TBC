@@ -23,7 +23,7 @@ object DatabaseModule {
             "mtg_database"
         )
             .addMigrations(
-
+//migraciis shemtxvevashi sxva failshi vwert da aq viyenebt.
                 object : androidx.room.migration.Migration(2, 3) {
                     override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
                         database.execSQL("ALTER TABLE collections ADD COLUMN firestoreId TEXT NOT NULL DEFAULT ''")

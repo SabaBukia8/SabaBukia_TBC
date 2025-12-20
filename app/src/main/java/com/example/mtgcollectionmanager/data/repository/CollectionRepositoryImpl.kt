@@ -42,12 +42,8 @@ class CollectionRepositoryImpl @Inject constructor(
         executeNetworkOperationWithFallback(
             networkOperation = {
                 resourceFlow {
-                    try {
-                        val cards = fetchAndSyncCardsFromNetwork(collectionId)
-                        emit(Resource.Success(cards))
-                    } catch (e: Exception) {
-                        emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
-                    }
+                    val cards = fetchAndSyncCardsFromNetwork(collectionId)
+                    emit(Resource.Success(cards))
                 }
             },
             fallbackOperation = {
@@ -69,18 +65,14 @@ class CollectionRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
         networkOperation = {
             resourceFlow {
-                try {
-                    val firestoreId = getFirestoreId(collectionId)
-                    val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
+                val firestoreId = getFirestoreId(collectionId)
+                val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
 
-                    val filteredCards = firestoreCards
-                        .filter { it.colorsJson.contains(color, ignoreCase = true) }
-                        .map { it.toEntity(collectionId, userId).toDomain() }
+                val filteredCards = firestoreCards
+                    .filter { it.colorsJson.contains(color, ignoreCase = true) }
+                    .map { it.toEntity(collectionId, userId).toDomain() }
 
-                    emit(Resource.Success(filteredCards))
-                } catch (e: Exception) {
-                    emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
-                }
+                emit(Resource.Success(filteredCards))
             }
         },
         fallbackOperation = {
@@ -102,18 +94,14 @@ class CollectionRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
         networkOperation = {
             resourceFlow {
-                try {
-                    val firestoreId = getFirestoreId(collectionId)
-                    val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
+                val firestoreId = getFirestoreId(collectionId)
+                val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
 
-                    val filteredCards = firestoreCards
-                        .filter { it.setCode.equals(setCode, ignoreCase = true) }
-                        .map { it.toEntity(collectionId, userId).toDomain() }
+                val filteredCards = firestoreCards
+                    .filter { it.setCode.equals(setCode, ignoreCase = true) }
+                    .map { it.toEntity(collectionId, userId).toDomain() }
 
-                    emit(Resource.Success(filteredCards))
-                } catch (e: Exception) {
-                    emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
-                }
+                emit(Resource.Success(filteredCards))
             }
         },
         fallbackOperation = {
@@ -135,17 +123,13 @@ class CollectionRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<CollectionCard>>> = executeNetworkOperationWithFallback(
         networkOperation = {
             resourceFlow {
-                try {
-                    val firestoreId = getFirestoreId(collectionId)
-                    val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
+                val firestoreId = getFirestoreId(collectionId)
+                val firestoreCards = cardSyncManager.syncCards(userId, firestoreId, collectionId)
 
-                    val filteredCards = filterCardsByCategory(firestoreCards, categoryId)
-                        .map { it.toEntity(collectionId, userId).toDomain() }
+                val filteredCards = filterCardsByCategory(firestoreCards, categoryId)
+                    .map { it.toEntity(collectionId, userId).toDomain() }
 
-                    emit(Resource.Success(filteredCards))
-                } catch (e: Exception) {
-                    emit(Resource.Error(e.toAppError(AppError.Card.LoadFailed)))
-                }
+                emit(Resource.Success(filteredCards))
             }
         },
         fallbackOperation = {
@@ -202,6 +186,7 @@ class CollectionRepositoryImpl @Inject constructor(
                 val firestoreId = getFirestoreId(collectionId)
 
                 deleteCardFromFirestore(firestoreId, cardId)
+
                 deleteCardFromLocal(collectionId, cardId)
 
                 emit(Resource.Success(Unit))

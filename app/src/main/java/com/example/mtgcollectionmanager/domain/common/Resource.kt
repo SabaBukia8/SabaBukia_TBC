@@ -5,7 +5,6 @@ sealed class Resource<out T> {
     data class Error<out T>(val error: AppError) : Resource<T>()
     data class Loading<out T>(val isLoading: Boolean) : Resource<T>()
 
-    // Extension function to support legacy code during migration
     companion object {
         fun <T> error(message: String): Resource<T> = Error(AppError.Unknown(message))
     }

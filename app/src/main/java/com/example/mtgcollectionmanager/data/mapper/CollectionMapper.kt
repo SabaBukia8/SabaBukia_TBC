@@ -2,7 +2,7 @@ package com.example.mtgcollectionmanager.data.mapper
 
 import com.example.mtgcollectionmanager.data.model.local.CollectionEntity
 import com.example.mtgcollectionmanager.domain.model.Collection
-
+//default argumentebi mappershi
 fun CollectionEntity.toDomain(
     totalCards: Int = 0,
     totalValue: Double = 0.0
@@ -16,7 +16,7 @@ fun CollectionEntity.toDomain(
     totalValue = totalValue,
     firestoreId = firestoreId
 )
-
+//dto da entity calke
 fun Collection.toEntity(): CollectionEntity = CollectionEntity(
     id = id,
     name = name,

@@ -1,12 +1,12 @@
 package com.example.mtgcollectionmanager.domain.usecase.auth
 
 import com.example.mtgcollectionmanager.domain.common.Resource
-import com.example.mtgcollectionmanager.domain.repository.AuthRepository
+import com.example.mtgcollectionmanager.domain.repository.AccountRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ChangePasswordUseCase @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AccountRepository
 ) {
     suspend operator fun invoke(
         currentPassword: String,

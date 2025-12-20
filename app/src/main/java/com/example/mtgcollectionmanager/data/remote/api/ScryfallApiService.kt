@@ -7,7 +7,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
+//default ar sheidzleba api servicshi
 interface ScryfallApiService {
     @GET("cards/search")
     suspend fun searchCards(

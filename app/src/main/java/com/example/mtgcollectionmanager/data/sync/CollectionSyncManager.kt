@@ -9,48 +9,45 @@ import com.example.mtgcollectionmanager.data.remote.firebase.dto.FirestoreCollec
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Manager responsible for synchronizing collection data between Firestore and local database
- */
 @Singleton
 class CollectionSyncManager @Inject constructor(
     private val collectionDao: CollectionDao,
     private val collectionCardDao: CollectionCardDao,
     private val firestoreDataSource: FirestoreDataSource
 ) {
-    /**
-     * Syncs collections from Firestore to local database
-     */
     suspend fun syncCollections(userId: String): List<FirestoreCollectionDto> {
         val remote = firestoreDataSource.getCollectionsOnce(userId)
+
         if (remote.isNotEmpty()) {
+            val entities = remote.map { dto ->
+                dto.toEntity(userId)
+            }
+
             collectionDao.deleteAllCollectionsForUser(userId)
-            remote.forEach { dto ->
-                collectionDao.insertCollection(dto.toEntity(userId))
+            entities.forEach { entity ->
+                collectionDao.insertCollection(entity)
             }
         }
         return remote
     }
 
-    /**
-     * Syncs cards for a specific collection from Firestore to local database
-     */
     suspend fun syncCardsForCollection(userId: String, collectionId: String, localCollectionId: Long): List<FirestoreCardDto> {
         val remoteCards = firestoreDataSource.getCardsOnce(userId, collectionId)
-        
-        collectionCardDao.deleteAllCardsForCollection(localCollectionId, userId)
-        
-        remoteCards.forEach { dto ->
-            val entity = dto.toEntity(localCollectionId, userId)
-            collectionCardDao.insertCard(entity)
+
+        if (remoteCards.isNotEmpty()) {
+            val entities = remoteCards.map { dto ->
+                dto.toEntity(localCollectionId, userId)
+            }
+
+            collectionCardDao.deleteAllCardsForCollection(localCollectionId, userId)
+            entities.forEach { entity ->
+                collectionCardDao.insertCard(entity)
+            }
         }
         
         return remoteCards
     }
 
-    /**
-     * Syncs a specific collection from Firestore to local database
-     */
     suspend fun syncCollection(userId: String, firestoreId: String): FirestoreCollectionDto? {
         val remoteCollection = firestoreDataSource.getCollectionById(userId, firestoreId) ?: return null
         
@@ -60,9 +57,6 @@ class CollectionSyncManager @Inject constructor(
         return remoteCollection
     }
 
-    /**
-     * Calculates statistics for a collection
-     */
     suspend fun calculateCollectionStats(userId: String, collectionId: String): CollectionStats {
         val cards = firestoreDataSource.getCardsOnce(userId, collectionId)
         return CollectionStats(

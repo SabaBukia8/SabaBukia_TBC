@@ -21,7 +21,7 @@ suspend fun <T> executeIfNetworkAvailable(
 }
 
 
-suspend fun <T> executeWithFallback(
+ fun <T> executeWithFallback(
     networkManager: NetworkConnectivityManager,
     networkOperation: suspend () -> Flow<Resource<T>>,
     fallbackOperation: suspend () -> Flow<Resource<T>>

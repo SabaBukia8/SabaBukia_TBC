@@ -6,7 +6,7 @@ data class FirestoreUserProfileDto(
     val createdAt: Long = System.currentTimeMillis()
 ) {
     constructor() : this("", "", System.currentTimeMillis())
-
+//kotlin date time
     fun toMap(): Map<String, Any> = mapOf(
         "nickname" to nickname,
         "email" to email,

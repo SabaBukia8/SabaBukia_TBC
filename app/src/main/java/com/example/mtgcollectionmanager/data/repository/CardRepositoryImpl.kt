@@ -12,7 +12,6 @@ import com.example.mtgcollectionmanager.domain.model.Card
 import com.example.mtgcollectionmanager.domain.repository.CardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
