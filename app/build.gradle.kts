@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.navigation.safeargs.kotlin)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -20,7 +23,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://mocki.io/v1/\"")
+        }
         release {
+            buildConfigField("String", "BASE_URL", "\"https://mocki.io/v1/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -37,6 +44,7 @@ android {
     }
     buildFeatures{
         viewBinding = true
+        buildConfig = true
     }
 
 }
@@ -50,6 +58,23 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment)
+
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+
+    implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    implementation(libs.coil)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

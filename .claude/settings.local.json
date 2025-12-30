@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(git -C \"D:\\\\AndroidProjects\\\\SabaBukia_TBC\" log --oneline -10)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC log --oneline -20)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC log --name-status --oneline)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC show bcf490c --stat)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC log --all --pretty=format:\"%h %s\" -- \"*.md\")",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC ls-tree:*)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC branch:*)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC log --all --oneline)",
+      "Bash(git -C D:/AndroidProjects/SabaBukia_TBC show Assignment29:app/src/main/java --name-only)",
+      "WebFetch(domain:mocki.io)",
+      "Bash(.gradlew.bat build:*)",
+      "Bash(./gradlew build:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(./gradlew clean:*)",
+      "Bash(find:*)"
+    ]
+  }
+}

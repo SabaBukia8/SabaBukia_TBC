@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_small">
+
+    <Space
+        android:id="@+id/space_indent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_category_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_xsmall"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:textSize="@dimen/text_size_normal"
+        android:textColor="@color/text_primary"
+        tools:text="Category Name"
+        app:layout_constraintStart_toEndOf="@id/iv_depth0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_depth0"
+        android:layout_width="@dimen/depth_indicator_size"
+        android:layout_height="@dimen/depth_indicator_size"
+        android:layout_marginStart="@dimen/spacing_xxsmall"
+        android:src="@drawable/ic_depth_indicator"
+        android:contentDescription="@string/depth_indicator"
+        app:tint="@color/depth_indicator_orange"
+        app:layout_constraintStart_toEndOf="@id/iv_depth1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_depth1"
+        android:layout_width="@dimen/depth_indicator_size"
+        android:layout_height="@dimen/depth_indicator_size"
+        android:layout_marginStart="@dimen/spacing_xxsmall"
+        android:src="@drawable/ic_depth_indicator"
+        android:contentDescription="@string/depth_indicator"
+        app:tint="@color/depth_indicator_orange"
+        app:layout_constraintStart_toEndOf="@id/iv_depth2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_depth2"
+        android:layout_width="@dimen/depth_indicator_size"
+        android:layout_height="@dimen/depth_indicator_size"
+        android:layout_marginStart="@dimen/spacing_xxsmall"
+        android:src="@drawable/ic_depth_indicator"
+        android:contentDescription="@string/depth_indicator"
+        app:tint="@color/depth_indicator_orange"
+        app:layout_constraintStart_toEndOf="@id/iv_depth3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_depth3"
+        android:layout_width="@dimen/depth_indicator_size"
+        android:layout_height="@dimen/depth_indicator_size"
+        android:layout_marginStart="@dimen/spacing_xxsmall"
+        android:src="@drawable/ic_depth_indicator"
+        android:contentDescription="@string/depth_indicator"
+        app:tint="@color/depth_indicator_orange"
+        app:layout_constraintStart_toEndOf="@id/iv_depth4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_depth4"
+        android:layout_width="@dimen/depth_indicator_size"
+        android:layout_height="@dimen/depth_indicator_size"
+        android:src="@drawable/ic_depth_indicator"
+        android:contentDescription="@string/depth_indicator"
+        app:tint="@color/depth_indicator_orange"
+        app:layout_constraintStart_toEndOf="@id/space_indent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

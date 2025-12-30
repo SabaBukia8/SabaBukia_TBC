@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">SabaBukia_TBC</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_categories">Search categories…</string>
+    <string name="category_icon">Category icon</string>
+    <string name="depth_indicator">Depth indicator</string>
+
+    <string name="error_no_internet">No Internet Connection</string>
+    <string name="error_server">Server Error: %d</string>
+    <string name="error_unexpected">Unexpected Error: %s</string>
 </resources>
