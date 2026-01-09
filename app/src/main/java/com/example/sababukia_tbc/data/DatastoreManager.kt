@@ -19,6 +19,10 @@ class DatastoreManager @Inject constructor(
 
     val rememberMe: Flow<Boolean> = appPreferencesStore.read { it.rememberMe }
 
+    val fcmToken: Flow<String> = appPreferencesStore.read { it.fcmToken }
+
+    val pendingDeepLink: Flow<String> = appPreferencesStore.read { it.pendingDeepLink }
+
     suspend fun saveRegisteredCredentials(username: String, email: String) {
         appPreferencesStore.write { preferences ->
             preferences.toBuilder()
@@ -48,6 +52,38 @@ class DatastoreManager @Inject constructor(
         appPreferencesStore.write { preferences ->
             preferences.toBuilder()
                 .setRememberMe(rememberMe)
+                .build()
+        }
+    }
+
+    suspend fun saveFcmToken(token: String) {
+        appPreferencesStore.write { preferences ->
+            preferences.toBuilder()
+                .setFcmToken(token)
+                .build()
+        }
+    }
+
+    suspend fun clearFcmToken() {
+        appPreferencesStore.write { preferences ->
+            preferences.toBuilder()
+                .clearFcmToken()
+                .build()
+        }
+    }
+
+    suspend fun savePendingDeepLink(uri: String) {
+        appPreferencesStore.write { preferences ->
+            preferences.toBuilder()
+                .setPendingDeepLink(uri)
+                .build()
+        }
+    }
+
+    suspend fun clearPendingDeepLink() {
+        appPreferencesStore.write { preferences ->
+            preferences.toBuilder()
+                .clearPendingDeepLink()
                 .build()
         }
     }

@@ -1,13 +1,19 @@
 package com.example.sababukia_tbc
 
 import android.app.Application
-import com.example.sababukia_tbc.presentation.util.StringResourceResolver
+import com.example.sababukia_tbc.presentation.notification.NotificationChannelManager
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
 class MyApplication : Application() {
+
+    @Inject
+    lateinit var notificationChannelManager: NotificationChannelManager
+
     override fun onCreate() {
         super.onCreate()
-        StringResourceResolver.initialize(this)
+        // Initialize notification channels on app startup
+        notificationChannelManager.createNotificationChannels()
     }
 }

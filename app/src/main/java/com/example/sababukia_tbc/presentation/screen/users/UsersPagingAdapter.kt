@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.sababukia_tbc.R
+import com.example.sababukia_tbc.presentation.extension.loadCircularImage
 import com.example.sababukia_tbc.databinding.ItemUserBinding
 import com.example.sababukia_tbc.presentation.screen.users.model.UserUiModel
 
@@ -37,12 +37,7 @@ class UsersPagingAdapter(
                 tvUserName.text = user.fullName
                 tvUserEmail.text = user.email
 
-                Glide.with(ivUserAvatar.context)
-                    .load(user.avatar)
-                    .placeholder(R.drawable.ic_person)
-                    .error(R.drawable.ic_person)
-                    .circleCrop()
-                    .into(ivUserAvatar)
+                ivUserAvatar.loadCircularImage(user.avatar)
 
                 root.setOnClickListener {
                     onUserClick(user.id)

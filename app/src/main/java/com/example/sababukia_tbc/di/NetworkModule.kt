@@ -1,8 +1,10 @@
 package com.example.sababukia_tbc.di
 
 import android.util.Log
+import com.example.sababukia_tbc.BuildConfig
 import com.example.sababukia_tbc.data.DatastoreManager
 import com.example.sababukia_tbc.data.model.remote.network.AuthInterceptor
+import com.example.sababukia_tbc.data.model.remote.network.FcmApiService
 import com.example.sababukia_tbc.data.model.remote.network.LoginApiService
 import com.example.sababukia_tbc.data.model.remote.network.RegisterApiService
 import com.example.sababukia_tbc.data.model.remote.network.UsersApiService
@@ -22,8 +24,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-//BaseUrl gradleshi gavitanot
-    private const val BASE_URL = "https://reqres.in/"
     private const val TAG = "NetworkModule"
     private const val API_KEY = "reqres-free-v1"
 
@@ -91,7 +91,7 @@ object NetworkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
@@ -113,5 +113,11 @@ object NetworkModule {
     @Singleton
     fun provideUsersApiService(retrofit: Retrofit): UsersApiService {
         return retrofit.create(UsersApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFcmApiService(retrofit: Retrofit): FcmApiService {
+        return retrofit.create(FcmApiService::class.java)
     }
 }

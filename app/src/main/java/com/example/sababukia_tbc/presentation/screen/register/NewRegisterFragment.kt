@@ -1,23 +1,21 @@
 package com.example.sababukia_tbc.presentation.screen.register
 
-import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.databinding.FragmentNewRegisterBinding
-import com.example.sababukia_tbc.presentation.common.BaseFragment
-import com.example.sababukia_tbc.presentation.common.hide
-import com.example.sababukia_tbc.presentation.common.show
+import com.example.sababukia_tbc.presentation.base.BaseFragment
+import com.example.sababukia_tbc.presentation.extension.disable
+import com.example.sababukia_tbc.presentation.extension.enable
+import com.example.sababukia_tbc.presentation.extension.hide
+import com.example.sababukia_tbc.presentation.extension.onClick
+import com.example.sababukia_tbc.presentation.extension.show
+import com.example.sababukia_tbc.presentation.extension.toUserMessage
 import com.example.sababukia_tbc.presentation.screen.login.NewLoginFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NewRegisterFragment :
@@ -25,16 +23,9 @@ class NewRegisterFragment :
 
     private val viewModel: RegisterViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-        observeState()
-        observeSideEffects()
-    }
-
-    override fun listeners() {
-        with(binding) {
-            btnRegister.setOnClickListener {
+    override fun setupListeners() {
+        binding.apply {
+            btnRegister.onClick {
                 val email = etEmail.text.toString()
                 val password = etPassword.text.toString()
                 val repeatPassword = etRepeatPassword.text.toString()
@@ -42,57 +33,43 @@ class NewRegisterFragment :
                 viewModel.onEvent(RegisterEvent.Register(email, password, repeatPassword))
             }
 
-            btnBack.setOnClickListener {
+            btnBack.onClick {
                 viewModel.onEvent(RegisterEvent.OnBackPressed)
             }
         }
     }
 
-    private fun setupListeners() {
-        listeners()
-    }
-
-    private fun observeState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    handleLoader(state.loader)
-                    binding.tilEmail.error = state.emailError
-                    binding.tilPassword.error = state.passwordError
-                    binding.tilRepeatPassword.error = state.repeatPasswordError
-                }
-            }
+    override fun observeState() {
+        collectStateFlow(viewModel.state) { state ->
+            handleLoader(state.loader)
+            binding.tilEmail.error = state.emailError
+            binding.tilPassword.error = state.passwordError
+            binding.tilRepeatPassword.error = state.repeatPasswordError
         }
-    }
 
-    private fun observeSideEffects() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sideEffect.collect { sideEffect ->
-                    when (sideEffect) {
-                        is RegisterSideEffect.NavigateBackToLogin -> {
-                            setFragmentResult(
-                                NewLoginFragment.REGISTRATION_KEY,
-                                bundleOf(
-                                    NewLoginFragment.EMAIL_KEY to sideEffect.email,
-                                    NewLoginFragment.PASSWORD_KEY to sideEffect.password
-                                )
-                            )
-                            findNavController().popBackStack()
-                        }
+        collectFlow(viewModel.sideEffect) { sideEffect ->
+            when (sideEffect) {
+                is RegisterSideEffect.NavigateBackToLogin -> {
+                    setFragmentResult(
+                        NewLoginFragment.REGISTRATION_KEY,
+                        bundleOf(
+                            NewLoginFragment.EMAIL_KEY to sideEffect.email,
+                            NewLoginFragment.PASSWORD_KEY to sideEffect.password
+                        )
+                    )
+                    findNavController().popBackStack()
+                }
 
-                        is RegisterSideEffect.NavigateBack -> {
-                            findNavController().popBackStack()
-                        }
+                is RegisterSideEffect.NavigateBack -> {
+                    findNavController().popBackStack()
+                }
 
-                        is RegisterSideEffect.ShowError -> {
-                            Toast.makeText(
-                                requireContext(),
-                                sideEffect.errorMessage,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
+                is RegisterSideEffect.ShowError -> {
+                    Toast.makeText(
+                        requireContext(),
+                        sideEffect.error.toUserMessage(requireContext()),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -102,22 +79,28 @@ class NewRegisterFragment :
         binding.apply {
             when (resource) {
                 is Resource.Loading -> {
-                    if (resource.isLoading) progressBar.show() else progressBar.hide()
-                    btnRegister.isEnabled = !resource.isLoading
-                    btnBack.isEnabled = !resource.isLoading
-                    tvError.hide()
+                    if (resource.isLoading) {
+                        progressBar.show()
+                        btnRegister.disable()
+                        btnBack.disable()
+                        tvError.hide()
+                    } else {
+                        progressBar.hide()
+                        btnRegister.enable()
+                        btnBack.enable()
+                    }
                 }
                 is Resource.Success -> {
                     progressBar.hide()
-                    btnRegister.isEnabled = true
-                    btnBack.isEnabled = true
+                    btnRegister.enable()
+                    btnBack.enable()
                     tvError.hide()
                 }
                 is Resource.Error -> {
                     progressBar.hide()
-                    btnRegister.isEnabled = true
-                    btnBack.isEnabled = true
-                    tvError.text = resource.errorMessage
+                    btnRegister.enable()
+                    btnBack.enable()
+                    tvError.text = resource.error.toUserMessage(requireContext())
                     tvError.show()
                 }
             }

@@ -1,33 +1,25 @@
 package com.example.sababukia_tbc.presentation.screen.userprofile
 
-import androidx.lifecycle.ViewModel
+import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.UserProfile
-import com.example.sababukia_tbc.UserProfiles
-import com.example.sababukia_tbc.data.model.local.datastore.ProtoDataStoreManager
-import com.example.sababukia_tbc.di.UserProfileDataStore
+import com.example.sababukia_tbc.domain.repository.UserProfileRepository
+import com.example.sababukia_tbc.presentation.base.BaseViewModel
 import com.example.sababukia_tbc.presentation.common.ValidationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
-    @UserProfileDataStore private val userProfileStore: ProtoDataStoreManager<UserProfiles>
-) : ViewModel() {
+    @ApplicationContext private val context: Context,
+    private val userProfileRepository: UserProfileRepository
+) : BaseViewModel<UserProfileState, UserProfileEvent, UserProfileSideEffect>(
+    initialState = UserProfileState()
+) {
 
-    private val _state = MutableStateFlow(UserProfileState())
-    val state = _state.asStateFlow()
-
-    private val _sideEffect = MutableSharedFlow<UserProfileSideEffect>()
-    val sideEffect = _sideEffect.asSharedFlow()
-
-    fun onEvent(event: UserProfileEvent) {
+    override fun onEvent(event: UserProfileEvent) {
         when (event) {
             is UserProfileEvent.OnFirstNameChanged -> updateFirstName(event.firstName)
             is UserProfileEvent.OnLastNameChanged -> updateLastName(event.lastName)
@@ -36,44 +28,58 @@ class UserProfileViewModel @Inject constructor(
             is UserProfileEvent.OnReadClicked -> loadProfiles()
             is UserProfileEvent.OnDeleteProfile -> deleteProfile(event.profileId)
             is UserProfileEvent.OnClearForm -> clearForm()
+            is UserProfileEvent.LoadUser -> loadUserFromApi(event.userId)
         }
     }
 
+    private fun loadUserFromApi(userId: String) {
+        // TODO: Implement API call to fetch user by ID
+        // For now, just log the userId to verify deep link works
+        android.util.Log.d("UserProfileViewModel", "Load user from API: $userId")
+    }
+
     private fun updateFirstName(firstName: String) {
-        _state.value = _state.value.copy(
-            firstName = firstName,
-            firstNameError = null
-        )
+        updateState {
+            copy(
+                firstName = firstName,
+                firstNameError = null
+            )
+        }
     }
 
     private fun updateLastName(lastName: String) {
-        _state.value = _state.value.copy(
-            lastName = lastName,
-            lastNameError = null
-        )
+        updateState {
+            copy(
+                lastName = lastName,
+                lastNameError = null
+            )
+        }
     }
 
     private fun updateEmail(email: String) {
-        _state.value = _state.value.copy(
-            email = email,
-            emailError = null
-        )
+        updateState {
+            copy(
+                email = email,
+                emailError = null
+            )
+        }
     }
 
     private fun validateInputs(): Boolean {
-        val currentState = _state.value
         var isValid = true
 
-        val firstNameError = ValidationUtils.getNameErrorMessage("First name", currentState.firstName)
-        val lastNameError = ValidationUtils.getNameErrorMessage("Last name", currentState.lastName)
-        val emailError = ValidationUtils.getEmailErrorMessage(currentState.email)
+        val firstNameError = ValidationUtils.getNameErrorMessage(context, "First name", currentState.firstName)
+        val lastNameError = ValidationUtils.getNameErrorMessage(context, "Last name", currentState.lastName)
+        val emailError = ValidationUtils.getEmailErrorMessage(context, currentState.email)
 
         if (firstNameError != null || lastNameError != null || emailError != null) {
-            _state.value = _state.value.copy(
-                firstNameError = firstNameError,
-                lastNameError = lastNameError,
-                emailError = emailError
-            )
+            updateState {
+                copy(
+                    firstNameError = firstNameError,
+                    lastNameError = lastNameError,
+                    emailError = emailError
+                )
+            }
             isValid = false
         }
 
@@ -81,10 +87,7 @@ class UserProfileViewModel @Inject constructor(
     }
 
     private suspend fun checkEmailDuplicate(email: String, excludeId: Long? = null): Boolean {
-        val currentProfiles = userProfileStore.data.first()
-        return currentProfiles.profilesList.any {
-            it.email.equals(email, ignoreCase = true) && it.id != excludeId
-        }
+        return userProfileRepository.checkEmailExists(email, excludeId)
     }
 
     private fun saveUserProfile() {
@@ -94,46 +97,35 @@ class UserProfileViewModel @Inject constructor(
                     return@launch
                 }
 
-                val currentState = _state.value
+                val state = currentState
 
-                if (checkEmailDuplicate(currentState.email)) {
-                    _state.value = _state.value.copy(
-                        emailError = "This email is already used"
-                    )
-                    _sideEffect.emit(
+                if (checkEmailDuplicate(state.email)) {
+                    updateState {
+                        copy(emailError = "This email is already used")
+                    }
+                    sendSideEffect(
                         UserProfileSideEffect.ShowError("This email is already registered")
                     )
                     return@launch
                 }
 
-                _state.value = _state.value.copy(isLoading = true)
+                updateState { copy(isLoading = true) }
 
-                val currentProfiles = userProfileStore.data.first()
-                val nextId = currentProfiles.nextId
-
-                val newProfile = UserProfile.newBuilder()
-                    .setId(nextId)
-                    .setFirstName(currentState.firstName.trim())
-                    .setLastName(currentState.lastName.trim())
-                    .setEmail(currentState.email.trim())
-                    .build()
-
-                userProfileStore.write { profiles ->
-                    profiles.toBuilder()
-                        .addProfiles(newProfile)
-                        .setNextId(nextId + 1)
-                        .build()
-                }
+                userProfileRepository.saveProfile(
+                    firstName = state.firstName,
+                    lastName = state.lastName,
+                    email = state.email
+                )
 
                 clearForm()
-                _state.value = _state.value.copy(isLoading = false)
+                updateState { copy(isLoading = false) }
 
-                _sideEffect.emit(
+                sendSideEffect(
                     UserProfileSideEffect.ShowMessage("Profile saved successfully! Click 'Read' to view all profiles.")
                 )
             } catch (e: Exception) {
-                _state.value = _state.value.copy(isLoading = false)
-                _sideEffect.emit(
+                updateState { copy(isLoading = false) }
+                sendSideEffect(
                     UserProfileSideEffect.ShowError("Failed to save profile: ${e.message}")
                 )
             }
@@ -143,11 +135,11 @@ class UserProfileViewModel @Inject constructor(
     private fun loadProfiles() {
         viewModelScope.launch {
             try {
-                _state.value = _state.value.copy(isLoading = true)
+                updateState { copy(isLoading = true) }
 
-                val profiles = userProfileStore.data.first()
+                val domainProfiles = userProfileRepository.getProfiles().first()
 
-                val profileModels = profiles.profilesList.map { profile ->
+                val profileModels = domainProfiles.map { profile ->
                     UserProfileModel(
                         id = profile.id,
                         firstName = profile.firstName,
@@ -156,23 +148,25 @@ class UserProfileViewModel @Inject constructor(
                     )
                 }
 
-                _state.value = _state.value.copy(
-                    savedProfiles = profileModels,
-                    isLoading = false
-                )
+                updateState {
+                    copy(
+                        savedProfiles = profileModels,
+                        isLoading = false
+                    )
+                }
 
                 if (profileModels.isNotEmpty()) {
-                    _sideEffect.emit(
+                    sendSideEffect(
                         UserProfileSideEffect.ShowMessage("${profileModels.size} profile(s) loaded")
                     )
                 } else {
-                    _sideEffect.emit(
+                    sendSideEffect(
                         UserProfileSideEffect.ShowMessage("No saved profiles found")
                     )
                 }
             } catch (e: Exception) {
-                _state.value = _state.value.copy(isLoading = false)
-                _sideEffect.emit(
+                updateState { copy(isLoading = false) }
+                sendSideEffect(
                     UserProfileSideEffect.ShowError("Failed to load profiles: ${e.message}")
                 )
             }
@@ -182,28 +176,24 @@ class UserProfileViewModel @Inject constructor(
     private fun deleteProfile(profileId: Long) {
         viewModelScope.launch {
             try {
-                _state.value = _state.value.copy(isLoading = true)
+                updateState { copy(isLoading = true) }
 
-                userProfileStore.write { profiles ->
-                    val updatedList = profiles.profilesList.filter { it.id != profileId }
-                    profiles.toBuilder()
-                        .clearProfiles()
-                        .addAllProfiles(updatedList)
-                        .build()
+                userProfileRepository.deleteProfile(profileId)
+
+                val updatedProfiles = currentState.savedProfiles.filter { it.id != profileId }
+                updateState {
+                    copy(
+                        savedProfiles = updatedProfiles,
+                        isLoading = false
+                    )
                 }
 
-                val updatedProfiles = _state.value.savedProfiles.filter { it.id != profileId }
-                _state.value = _state.value.copy(
-                    savedProfiles = updatedProfiles,
-                    isLoading = false
-                )
-
-                _sideEffect.emit(
+                sendSideEffect(
                     UserProfileSideEffect.ShowMessage("Profile deleted successfully")
                 )
             } catch (e: Exception) {
-                _state.value = _state.value.copy(isLoading = false)
-                _sideEffect.emit(
+                updateState { copy(isLoading = false) }
+                sendSideEffect(
                     UserProfileSideEffect.ShowError("Failed to delete profile: ${e.message}")
                 )
             }
@@ -211,14 +201,16 @@ class UserProfileViewModel @Inject constructor(
     }
 
     private fun clearForm() {
-        _state.value = _state.value.copy(
-            firstName = "",
-            lastName = "",
-            email = "",
-            firstNameError = null,
-            lastNameError = null,
-            emailError = null,
-            isLoading = false
-        )
+        updateState {
+            copy(
+                firstName = "",
+                lastName = "",
+                email = "",
+                firstNameError = null,
+                lastNameError = null,
+                emailError = null,
+                isLoading = false
+            )
+        }
     }
 }

@@ -5,7 +5,7 @@ import com.example.sababukia_tbc.data.mapper.toDomain
 import com.example.sababukia_tbc.data.model.remote.dto.register.RegisterRequestDTO
 import com.example.sababukia_tbc.data.model.remote.network.RegisterApiService
 import com.example.sababukia_tbc.domain.common.Resource
-import com.example.sababukia_tbc.domain.common.asResource
+import com.example.sababukia_tbc.domain.common.mapResource
 import com.example.sababukia_tbc.domain.model.AuthResponse
 import com.example.sababukia_tbc.domain.repository.RegisterRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +26,6 @@ class RegisterRepositoryImpl @Inject constructor(
 
         return handleResponse.safeApiCall {
             registerApiService.register(registerRequestDTO)
-        }.asResource { it.toDomain() }
+        }.mapResource { it.toDomain() }
     }
 }

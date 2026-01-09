@@ -8,4 +8,6 @@ message AppPreferences {
   string registered_email = 2;
   string auth_token = 3;
   bool remember_me = 4;
+  string fcm_token = 5;
+  string pending_deep_link = 6;
 }

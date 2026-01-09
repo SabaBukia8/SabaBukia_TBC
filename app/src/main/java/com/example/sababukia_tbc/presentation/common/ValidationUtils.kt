@@ -1,6 +1,8 @@
 package com.example.sababukia_tbc.presentation.common
 
+import android.content.Context
 import android.util.Patterns
+import com.example.sababukia_tbc.R
 
 object ValidationUtils {
 
@@ -18,26 +20,26 @@ object ValidationUtils {
         return password.length >= 6
     }
 
-    fun getNameErrorMessage(fieldName: String, name: String): String? {
+    fun getNameErrorMessage(context: Context, fieldName: String, name: String): String? {
         return when {
-            name.isBlank() -> "$fieldName is required"
-            !isValidName(name) -> "$fieldName can only contain letters and spaces"
+            name.isBlank() -> context.getString(R.string.error_validation_field_required, fieldName)
+            !isValidName(name) -> context.getString(R.string.error_validation_field_invalid, fieldName)
             else -> null
         }
     }
 
-    fun getEmailErrorMessage(email: String): String? {
+    fun getEmailErrorMessage(context: Context, email: String): String? {
         return when {
-            email.isBlank() -> "Email is required"
-            !isValidEmail(email) -> "Please enter a valid email address"
+            email.isBlank() -> context.getString(R.string.error_validation_email_required)
+            !isValidEmail(email) -> context.getString(R.string.error_validation_invalid_email)
             else -> null
         }
     }
 
-    fun getPasswordErrorMessage(password: String): String? {
+    fun getPasswordErrorMessage(context: Context, password: String): String? {
         return when {
-            password.isBlank() -> "Password is required"
-            !isValidPassword(password) -> "Password must be at least 6 characters"
+            password.isBlank() -> context.getString(R.string.error_validation_password_required)
+            !isValidPassword(password) -> context.getString(R.string.error_validation_password_min_length)
             else -> null
         }
     }

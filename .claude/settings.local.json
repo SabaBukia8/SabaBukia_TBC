@@ -9,7 +9,14 @@
       "Bash(./gradlew assembleDebug:*)",
       "Bash(find:*)",
       "WebFetch(domain:blog.stackademic.com)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(unzip:*)",
+      "Bash(ls:*)",
+      "Bash(./gradlew compileDebugKotlin:*)",
+      "Bash(gradlew generateDebugProto:*)",
+      "Bash(.gradlew.bat:*)",
+      "Bash(./gradlew generateDebugProto:*)",
+      "Bash(adb devices:*)"
     ],
     "deny": [],
     "ask": []

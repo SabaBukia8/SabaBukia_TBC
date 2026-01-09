@@ -1,74 +1,50 @@
 package com.example.sababukia_tbc.presentation.screen.profile
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.databinding.FragmentNewProfileBinding
-import com.example.sababukia_tbc.presentation.common.BaseFragment
-import com.example.sababukia_tbc.presentation.common.hide
-import com.example.sababukia_tbc.presentation.common.show
+import com.example.sababukia_tbc.presentation.base.BaseFragment
+import com.example.sababukia_tbc.presentation.extension.disable
+import com.example.sababukia_tbc.presentation.extension.enable
+import com.example.sababukia_tbc.presentation.extension.hide
+import com.example.sababukia_tbc.presentation.extension.onClick
+import com.example.sababukia_tbc.presentation.extension.show
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NewProfileFragment : BaseFragment<FragmentNewProfileBinding>(FragmentNewProfileBinding::inflate) {
 
     private val viewModel: ProfileViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-        observeState()
-        observeSideEffects()
-    }
-
-    override fun listeners() {
-        with(binding) {
-            btnLogout.setOnClickListener {
+    override fun setupListeners() {
+        binding.apply {
+            btnLogout.onClick {
                 viewModel.onEvent(ProfileEvent.OnLogout)
             }
 
-            btnBack.setOnClickListener {
+            btnBack.onClick {
                 viewModel.onEvent(ProfileEvent.OnBackPressed)
             }
         }
     }
 
-    private fun setupListeners() {
-        listeners()
-    }
-
-    private fun observeState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    handleLoader(state.loader)
-                    binding.tvEmail.text = state.userEmail
-                }
-            }
+    override fun observeState() {
+        collectStateFlow(viewModel.state) { state ->
+            binding.tvEmail.text = state.userEmail
+            handleLoader(state.loader)
         }
-    }
 
-    private fun observeSideEffects() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sideEffect.collect { sideEffect ->
-                    when (sideEffect) {
-                        is ProfileSideEffect.NavigateToLogin -> {
-                            findNavController().navigate(
-                                R.id.action_newProfileFragment_to_newLoginFragment
-                            )
-                        }
-                        is ProfileSideEffect.NavigateBack -> {
-                            findNavController().popBackStack()
-                        }
-                    }
+        collectFlow(viewModel.sideEffect) { sideEffect ->
+            when (sideEffect) {
+                is ProfileSideEffect.NavigateToLogin -> {
+                    findNavController().navigate(
+                        R.id.action_newProfileFragment_to_newLoginFragment
+                    )
+                }
+                is ProfileSideEffect.NavigateBack -> {
+                    findNavController().popBackStack()
                 }
             }
         }
@@ -78,19 +54,25 @@ class NewProfileFragment : BaseFragment<FragmentNewProfileBinding>(FragmentNewPr
         binding.apply {
             when (resource) {
                 is Resource.Loading -> {
-                    if (resource.isLoading) progressBar.show() else progressBar.hide()
-                    btnLogout.isEnabled = !resource.isLoading
-                    btnBack.isEnabled = !resource.isLoading
+                    if (resource.isLoading) {
+                        progressBar.show()
+                        btnLogout.disable()
+                        btnBack.disable()
+                    } else {
+                        progressBar.hide()
+                        btnLogout.enable()
+                        btnBack.enable()
+                    }
                 }
                 is Resource.Success -> {
                     progressBar.hide()
-                    btnLogout.isEnabled = true
-                    btnBack.isEnabled = true
+                    btnLogout.enable()
+                    btnBack.enable()
                 }
                 is Resource.Error -> {
                     progressBar.hide()
-                    btnLogout.isEnabled = true
-                    btnBack.isEnabled = true
+                    btnLogout.enable()
+                    btnBack.enable()
                 }
             }
         }

@@ -1,12 +1,16 @@
 package com.example.sababukia_tbc.di
 
+import com.example.sababukia_tbc.data.repository.FcmRepositoryImpl
 import com.example.sababukia_tbc.data.repository.LoginRepositoryImpl
 import com.example.sababukia_tbc.data.repository.RegisterRepositoryImpl
 import com.example.sababukia_tbc.data.repository.UserPreferencesRepositoryImpl
+import com.example.sababukia_tbc.data.repository.UserProfileRepositoryImpl
 import com.example.sababukia_tbc.data.repository.UsersRepositoryImpl
+import com.example.sababukia_tbc.domain.repository.FcmRepository
 import com.example.sababukia_tbc.domain.repository.LoginRepository
 import com.example.sababukia_tbc.domain.repository.RegisterRepository
 import com.example.sababukia_tbc.domain.repository.UserPreferencesRepository
+import com.example.sababukia_tbc.domain.repository.UserProfileRepository
 import com.example.sababukia_tbc.domain.repository.UsersRepository
 import dagger.Binds
 import dagger.Module
@@ -42,4 +46,16 @@ abstract class AppModule {
     abstract fun bindUsersRepository(
         usersRepositoryImpl: UsersRepositoryImpl
     ): UsersRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserProfileRepository(
+        userProfileRepositoryImpl: UserProfileRepositoryImpl
+    ): UserProfileRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFcmRepository(
+        fcmRepositoryImpl: FcmRepositoryImpl
+    ): FcmRepository
 }
