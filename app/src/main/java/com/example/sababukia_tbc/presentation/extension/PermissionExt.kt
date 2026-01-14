@@ -14,7 +14,6 @@ fun Fragment.hasNotificationPermission(): Boolean {
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
     } else {
-        // Notification permission not required for Android 12 and below
         true
     }
 }

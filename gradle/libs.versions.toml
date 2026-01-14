@@ -64,6 +64,7 @@ coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

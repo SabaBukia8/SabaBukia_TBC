@@ -9,17 +9,24 @@ sealed interface ErrorType {
         data class Unknown(val message: String) : Network
     }
 
-    sealed interface Auth : ErrorType {
-        data object InvalidCredentials : Auth
-        data object Unauthorized : Auth
-        data object SessionExpired : Auth
+    sealed interface Storage : ErrorType {
+        data object UploadFailed : Storage
+        data object NetworkUnavailable : Storage
+        data class QuotaExceeded(val maxSize: Long) : Storage
+        data class Unknown(val message: String) : Storage
     }
 
-    sealed interface Validation : ErrorType {
-        data object InvalidEmail : Validation
-        data object WeakPassword : Validation
-        data object PasswordMismatch : Validation
-        data object EmptyField : Validation
+    sealed interface Permission : ErrorType {
+        data object CameraDenied : Permission
+        data object StorageDenied : Permission
+        data object PermanentlyDenied : Permission
+    }
+
+    sealed interface Image : ErrorType {
+        data object InvalidFormat : Image
+        data class FileTooLarge(val maxSizeMb: Int) : Image
+        data object CompressionFailed : Image
+        data object NotSelected : Image
     }
 
     data class Generic(val message: String) : ErrorType

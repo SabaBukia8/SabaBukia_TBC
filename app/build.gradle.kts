@@ -2,11 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.navigation.safeargs.kotlin)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.protobuf)
     alias(libs.plugins.google.services)
 }
 
@@ -22,8 +19,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "BASE_URL", "\"https://reqres.in/\"")
     }
 
     buildTypes {
@@ -44,7 +39,6 @@ android {
     }
     buildFeatures{
         viewBinding = true
-        buildConfig = true
     }
 
 }
@@ -52,25 +46,6 @@ android {
 // KSP configuration for Hilt
 ksp {
     arg("correctErrorTypes", "true")
-}
-
-// Protobuf configuration
-protobuf {
-    protoc {
-        artifact = libs.protobuf.protoc.get().toString()
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                create("java") {
-                    option("lite")
-                }
-                create("kotlin") {
-                    option("lite")
-                }
-            }
-        }
-    }
 }
 
 dependencies {
@@ -85,21 +60,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // Paging 3
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.common)
-
-    // Proto DataStore
-    implementation(libs.androidx.datastore.core)
-    implementation(libs.protobuf.kotlin.lite)
-
-    // Networking
-    implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
-
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
@@ -112,7 +72,7 @@ dependencies {
 
     // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

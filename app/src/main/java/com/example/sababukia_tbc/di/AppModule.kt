@@ -1,17 +1,9 @@
 package com.example.sababukia_tbc.di
 
-import com.example.sababukia_tbc.data.repository.FcmRepositoryImpl
-import com.example.sababukia_tbc.data.repository.LoginRepositoryImpl
-import com.example.sababukia_tbc.data.repository.RegisterRepositoryImpl
-import com.example.sababukia_tbc.data.repository.UserPreferencesRepositoryImpl
-import com.example.sababukia_tbc.data.repository.UserProfileRepositoryImpl
-import com.example.sababukia_tbc.data.repository.UsersRepositoryImpl
-import com.example.sababukia_tbc.domain.repository.FcmRepository
-import com.example.sababukia_tbc.domain.repository.LoginRepository
-import com.example.sababukia_tbc.domain.repository.RegisterRepository
-import com.example.sababukia_tbc.domain.repository.UserPreferencesRepository
-import com.example.sababukia_tbc.domain.repository.UserProfileRepository
-import com.example.sababukia_tbc.domain.repository.UsersRepository
+import com.example.sababukia_tbc.data.repository.ImageRepositoryImpl
+import com.example.sababukia_tbc.data.repository.StorageRepositoryImpl
+import com.example.sababukia_tbc.domain.repository.ImageRepository
+import com.example.sababukia_tbc.domain.repository.StorageRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,37 +17,13 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindLoginRepository(
-        loginRepositoryImpl: LoginRepositoryImpl
-    ): LoginRepository
+    abstract fun bindImageRepository(
+        imageRepositoryImpl: ImageRepositoryImpl
+    ): ImageRepository
 
     @Binds
     @Singleton
-    abstract fun bindRegisterRepository(
-        registerRepositoryImpl: RegisterRepositoryImpl
-    ): RegisterRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindUserPreferencesRepository(
-        userPreferencesRepositoryImpl: UserPreferencesRepositoryImpl
-    ): UserPreferencesRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindUsersRepository(
-        usersRepositoryImpl: UsersRepositoryImpl
-    ): UsersRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindUserProfileRepository(
-        userProfileRepositoryImpl: UserProfileRepositoryImpl
-    ): UserProfileRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindFcmRepository(
-        fcmRepositoryImpl: FcmRepositoryImpl
-    ): FcmRepository
+    abstract fun bindStorageRepository(
+        storageRepositoryImpl: StorageRepositoryImpl
+    ): StorageRepository
 }
