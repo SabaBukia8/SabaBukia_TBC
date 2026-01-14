@@ -23,32 +23,17 @@ class ImageRepositoryImpl @Inject constructor(
     private val cacheDir: File
 ) : ImageRepository {
 
-    override fun getImageFromCamera(outputUriString: String): Flow<Resource<ImageData>> = flow {
+    override fun extractImageMetadata(uriString: String): Flow<Resource<ImageData>> = flow {
         emit(Resource.Loading(true))
         try {
-            val metadata = localImageDataSource.getImageMetadata(outputUriString)
+            val metadata = localImageDataSource.getImageMetadata(uriString)
             if (metadata != null) {
                 emit(Resource.Success(metadata.toDomain()))
             } else {
                 emit(Resource.Error(ErrorType.Image.NotSelected))
             }
         } catch (e: Exception) {
-            emit(Resource.Error(ErrorType.Generic(e.message ?: "Camera error")))
-        }
-        emit(Resource.Loading(false))
-    }.flowOn(Dispatchers.IO)
-
-    override fun getImageFromGallery(selectedUriString: String): Flow<Resource<ImageData>> = flow {
-        emit(Resource.Loading(true))
-        try {
-            val metadata = localImageDataSource.getImageMetadata(selectedUriString)
-            if (metadata != null) {
-                emit(Resource.Success(metadata.toDomain()))
-            } else {
-                emit(Resource.Error(ErrorType.Image.NotSelected))
-            }
-        } catch (e: Exception) {
-            emit(Resource.Error(ErrorType.Generic(e.message ?: "Gallery error")))
+            emit(Resource.Error(ErrorType.Image.NotSelected))
         }
         emit(Resource.Loading(false))
     }.flowOn(Dispatchers.IO)

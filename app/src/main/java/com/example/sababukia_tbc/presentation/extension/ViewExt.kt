@@ -12,10 +12,6 @@ fun View.hide() {
     isVisible = false
 }
 
-fun View.invisible() {
-    visibility = View.INVISIBLE
-}
-
 fun View.enable() {
     isEnabled = true
 }

@@ -25,5 +25,7 @@
     <string name="error_upload_failed">Upload failed. Please try again</string>
     <string name="error_network_unavailable">No internet connection</string>
     <string name="error_storage_quota_exceeded">Storage quota exceeded</string>
+    <string name="error_storage_configuration">Storage service unavailable. Please try again later</string>
+    <string name="error_unknown">An unexpected error occurred</string>
     <string name="error_no_image_selected">Please select an image first</string>
 </resources>

@@ -75,10 +75,10 @@ class StorageRepositoryImpl @Inject constructor(
                     StorageException.ERROR_OBJECT_NOT_FOUND,
                     StorageException.ERROR_BUCKET_NOT_FOUND,
                     StorageException.ERROR_PROJECT_NOT_FOUND ->
-                        ErrorType.Storage.Unknown("Storage configuration error: ${throwable.message}")
+                        ErrorType.Storage.ConfigurationError
 
                     else ->
-                        ErrorType.Storage.Unknown(throwable.message ?: "Upload failed")
+                        ErrorType.Storage.UploadFailed
                 }
             }
             is java.net.UnknownHostException,
@@ -86,7 +86,7 @@ class StorageRepositoryImpl @Inject constructor(
                 ErrorType.Storage.NetworkUnavailable
 
             else ->
-                ErrorType.Storage.Unknown(throwable.message ?: "Unknown error")
+                ErrorType.Storage.UploadFailed
         }
     }
 }

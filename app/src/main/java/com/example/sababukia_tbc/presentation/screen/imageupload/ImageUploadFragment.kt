@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import coil.load
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.databinding.FragmentImageUploadBinding
-import com.example.sababukia_tbc.domain.model.ImageData
 import com.example.sababukia_tbc.presentation.common.BaseFragment
 import com.example.sababukia_tbc.presentation.extension.disable
 import com.example.sababukia_tbc.presentation.extension.enable
@@ -19,11 +18,9 @@ import com.example.sababukia_tbc.presentation.extension.onClick
 import com.example.sababukia_tbc.domain.common.ImageConstants
 import com.example.sababukia_tbc.presentation.extension.show
 import com.example.sababukia_tbc.presentation.extension.showSnackbar
-import com.example.sababukia_tbc.presentation.mapper.ImageMetadataExtractor
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import javax.inject.Inject
 import androidx.core.net.toUri
 
 @AndroidEntryPoint
@@ -32,11 +29,6 @@ class ImageUploadFragment : BaseFragment<FragmentImageUploadBinding>(
 ) {
 
     private val viewModel: ImageUploadViewModel by viewModels()
-
-    @Inject
-    lateinit var imageMetadataExtractor: ImageMetadataExtractor
-
-    private val fragmentContext by lazy { requireContext() }
 
     private var currentPhotoUri: Uri? = null
 
@@ -193,26 +185,18 @@ class ImageUploadFragment : BaseFragment<FragmentImageUploadBinding>(
     }
 
     private fun handleImageSelected(uri: Uri) {
-        val metadata = imageMetadataExtractor.extract(uri, fragmentContext.contentResolver)
-
-        val imageData = ImageData(
-            uri = metadata.uri,
-            fileName = metadata.fileName,
-            mimeType = metadata.mimeType,
-            sizeInBytes = metadata.sizeInBytes
-        )
-
-        viewModel.onImageSelected(imageData)
+        viewModel.onImageUriSelected(uri.toString())
     }
 
     private fun createImageUri(): Uri {
+        val context = requireContext()
         val imageFile = File(
-            fragmentContext.filesDir,
+            context.filesDir,
             ImageConstants.generateFileName(ImageConstants.CAMERA_IMAGE_PREFIX)
         )
         return FileProvider.getUriForFile(
-            fragmentContext,
-            "${fragmentContext.packageName}.fileprovider",
+            context,
+            "${context.packageName}.fileprovider",
             imageFile
         )
     }

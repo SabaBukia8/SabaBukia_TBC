@@ -21,7 +21,8 @@ class ErrorMessageMapper @Inject constructor(
             is ErrorType.Storage.UploadFailed -> context.getString(R.string.error_upload_failed)
             is ErrorType.Storage.NetworkUnavailable -> context.getString(R.string.error_network_unavailable)
             is ErrorType.Storage.QuotaExceeded -> context.getString(R.string.error_storage_quota_exceeded)
-            is ErrorType.Storage.Unknown -> error.message
+            is ErrorType.Storage.ConfigurationError -> context.getString(R.string.error_storage_configuration)
+            is ErrorType.Storage.Unknown -> context.getString(R.string.error_unknown)
 
             is ErrorType.Permission.CameraDenied -> context.getString(R.string.error_camera_permission_denied)
             is ErrorType.Permission.StorageDenied -> context.getString(R.string.error_storage_permission_denied)

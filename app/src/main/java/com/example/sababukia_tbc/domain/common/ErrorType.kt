@@ -13,6 +13,7 @@ sealed interface ErrorType {
         data object UploadFailed : Storage
         data object NetworkUnavailable : Storage
         data class QuotaExceeded(val maxSize: Long) : Storage
+        data object ConfigurationError : Storage
         data class Unknown(val message: String) : Storage
     }
 

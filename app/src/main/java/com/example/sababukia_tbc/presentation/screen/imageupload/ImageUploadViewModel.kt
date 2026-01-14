@@ -5,21 +5,19 @@ import com.example.sababukia_tbc.domain.common.ErrorType
 import com.example.sababukia_tbc.domain.common.Resource
 import com.example.sababukia_tbc.domain.model.ImageData
 import com.example.sababukia_tbc.domain.usecase.CompressImageUseCase
+import com.example.sababukia_tbc.domain.usecase.ExtractImageMetadataUseCase
 import com.example.sababukia_tbc.domain.usecase.UploadImageToStorageUseCase
 import com.example.sababukia_tbc.domain.usecase.ValidateImageUseCase
 import com.example.sababukia_tbc.presentation.common.BaseViewModel
 import com.example.sababukia_tbc.presentation.mapper.ErrorMessageMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ImageUploadViewModel @Inject constructor(
+    private val extractImageMetadataUseCase: ExtractImageMetadataUseCase,
     private val validateImageUseCase: ValidateImageUseCase,
     private val compressImageUseCase: CompressImageUseCase,
     private val uploadImageToStorageUseCase: UploadImageToStorageUseCase,
@@ -59,46 +57,67 @@ class ImageUploadViewModel @Inject constructor(
         sendSideEffect(ImageUploadSideEffect.OpenGallery)
     }
 
-    fun onImageSelected(imageData: ImageData) {
+    fun onImageUriSelected(uriString: String) {
         viewModelScope.launch {
-            validateImageUseCase(imageData)
-                .flatMapLatest { result ->
-                    when (result) {
-                        is Resource.Loading -> flow { emit(result) }
-                        is Resource.Error -> flow { emit(result) }
-                        is Resource.Success -> compressImageUseCase(imageData)
+            extractImageMetadataUseCase(uriString).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> updateState { copy(isLoading = resource.isLoading) }
+                    is Resource.Error -> {
+                        updateState { copy(isLoading = false) }
+                        sendSideEffect(ImageUploadSideEffect.ShowError(
+                            errorMessageMapper.mapToMessage(resource.error)
+                        ))
+                    }
+                    is Resource.Success -> {
+                        processImage(resource.data)
                     }
                 }
-                .catch { exception ->
-                    updateState { copy(isLoading = false) }
-                    sendSideEffect(ImageUploadSideEffect.ShowError(
-                        errorMessageMapper.mapToMessage(
-                            ErrorType.Generic(exception.message ?: "Unknown error")
-                        )
-                    ))
-                }
-                .collect { resource ->
-                    when (resource) {
-                        is Resource.Loading ->
-                            updateState { copy(isLoading = resource.isLoading) }
-
-                        is Resource.Error -> {
-                            updateState { copy(isLoading = false) }
-                            sendSideEffect(ImageUploadSideEffect.ShowError(
-                                errorMessageMapper.mapToMessage(resource.error)
-                            ))
-                        }
-
-                        is Resource.Success ->
-                            updateState {
-                                copy(
-                                    isLoading = false,
-                                    selectedImage = resource.data
-                                )
-                            }
-                    }
-                }
+            }
         }
+    }
+
+    private suspend fun processImage(imageData: ImageData) {
+        updateState { copy(isLoading = true) }
+
+        val validationResult = validateImageUseCase(imageData)
+        if (validationResult is Resource.Error) {
+            updateState { copy(isLoading = false) }
+            sendSideEffect(ImageUploadSideEffect.ShowError(
+                errorMessageMapper.mapToMessage(validationResult.error)
+            ))
+            return
+        }
+
+        compressImageUseCase(imageData)
+            .catch { exception ->
+                updateState { copy(isLoading = false) }
+                sendSideEffect(ImageUploadSideEffect.ShowError(
+                    errorMessageMapper.mapToMessage(
+                        ErrorType.Generic(exception.message ?: "Unknown error")
+                    )
+                ))
+            }
+            .collect { resource ->
+                when (resource) {
+                    is Resource.Loading ->
+                        updateState { copy(isLoading = resource.isLoading) }
+
+                    is Resource.Error -> {
+                        updateState { copy(isLoading = false) }
+                        sendSideEffect(ImageUploadSideEffect.ShowError(
+                            errorMessageMapper.mapToMessage(resource.error)
+                        ))
+                    }
+
+                    is Resource.Success ->
+                        updateState {
+                            copy(
+                                isLoading = false,
+                                selectedImage = resource.data
+                            )
+                        }
+                }
+            }
     }
 
     private fun handleUploadClicked() {
