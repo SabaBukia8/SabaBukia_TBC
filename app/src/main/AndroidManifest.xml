@@ -14,15 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SabaBukia_TBC">
         <activity
-            android:name=".LoginPage"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterSecondStep"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterPage"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

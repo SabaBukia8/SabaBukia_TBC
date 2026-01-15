@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">SabaBukia_TBC</string>
+    <string name="navigate_back">Navigate back</string>
+    <string name="app_icon_description">App icon</string>
+    <string name="user_avatar_description">User avatar</string>
     <string name="photo">photo</string>
     <string name="pawel_czerwinski">Pawel Czerwinski</string>
     <string name="pawel_czerwinski1">\'@pawel_czerwinski\'</string>
