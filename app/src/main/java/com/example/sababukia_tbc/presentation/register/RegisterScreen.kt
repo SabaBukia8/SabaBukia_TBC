@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.sababukia_tbc.R
-import com.example.sababukia_tbc.domain.util.ValidationError
 import com.example.sababukia_tbc.presentation.common.components.AppTextField
 import com.example.sababukia_tbc.presentation.common.components.FormScreen
 import com.example.sababukia_tbc.presentation.common.toMessage
@@ -29,6 +28,7 @@ import com.example.sababukia_tbc.ui.theme.SabaBukiaTBCTheme
 fun RegisterScreen(
     onNavigateBack: () -> Unit,
     onRegisterSuccess: () -> Unit,
+    onShowSnackbar: (String) -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -44,7 +44,7 @@ fun RegisterScreen(
                         MessageType.SUCCESS -> context.getString(R.string.authentication_successful)
                         MessageType.ERROR -> effect.customMessage ?: context.getString(R.string.authentication_failed)
                     }
-                    snackbarHostState.showSnackbar(message)
+                    onShowSnackbar(message)
                 }
             }
         }
@@ -114,45 +114,6 @@ private fun RegisterScreenPreview() {
     SabaBukiaTBCTheme {
         RegisterScreenContent(
             state = RegisterState(),
-            snackbarHostState = SnackbarHostState(),
-            onNavigateBack = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onSubmit = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RegisterScreenWithErrorPreview() {
-    SabaBukiaTBCTheme {
-        RegisterScreenContent(
-            state = RegisterState(
-                email = "invalid-email",
-                emailError = ValidationError.INVALID_EMAIL_FORMAT,
-                password = "123",
-                passwordError = ValidationError.PASSWORD_TOO_SHORT
-            ),
-            snackbarHostState = SnackbarHostState(),
-            onNavigateBack = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onSubmit = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RegisterScreenLoadingPreview() {
-    SabaBukiaTBCTheme {
-        RegisterScreenContent(
-            state = RegisterState(
-                email = "user@example.com",
-                password = "password123",
-                isLoading = true
-            ),
             snackbarHostState = SnackbarHostState(),
             onNavigateBack = {},
             onEmailChanged = {},

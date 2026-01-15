@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.sababukia_tbc.R
-import com.example.sababukia_tbc.domain.util.ValidationError
 import com.example.sababukia_tbc.presentation.common.components.AppTextField
 import com.example.sababukia_tbc.presentation.common.components.FormScreen
 import com.example.sababukia_tbc.presentation.common.toMessage
@@ -32,6 +31,7 @@ import com.example.sababukia_tbc.ui.theme.SabaBukiaTBCTheme
 @Composable
 fun RegisterNicknameScreen(
     onComplete: () -> Unit,
+    onShowSnackbar: (String) -> Unit,
     viewModel: NicknameViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -47,7 +47,7 @@ fun RegisterNicknameScreen(
                         MessageType.SUCCESS -> context.getString(R.string.nickname_is_set)
                         MessageType.ERROR -> effect.customMessage ?: context.getString(R.string.couldn_t_set_a_nickname)
                     }
-                    snackbarHostState.showSnackbar(message)
+                    onShowSnackbar(message)
                 }
             }
         }
@@ -110,38 +110,6 @@ private fun RegisterNicknameScreenPreview() {
     SabaBukiaTBCTheme {
         RegisterNicknameScreenContent(
             state = NicknameState(),
-            snackbarHostState = SnackbarHostState(),
-            onNicknameChanged = {},
-            onSubmit = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RegisterNicknameScreenWithErrorPreview() {
-    SabaBukiaTBCTheme {
-        RegisterNicknameScreenContent(
-            state = NicknameState(
-                nickname = "",
-                nicknameError = ValidationError.EMPTY_NICKNAME
-            ),
-            snackbarHostState = SnackbarHostState(),
-            onNicknameChanged = {},
-            onSubmit = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RegisterNicknameScreenLoadingPreview() {
-    SabaBukiaTBCTheme {
-        RegisterNicknameScreenContent(
-            state = NicknameState(
-                nickname = "CoolUser123",
-                isLoading = true
-            ),
             snackbarHostState = SnackbarHostState(),
             onNicknameChanged = {},
             onSubmit = {}

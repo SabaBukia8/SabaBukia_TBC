@@ -97,7 +97,7 @@ private fun HomeScreenContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = R.mipmap.ic_user_round),
+                    painter = painterResource(id = R.mipmap.ic_user_foreground),
                     contentDescription = stringResource(R.string.user_avatar_description),
                     modifier = Modifier
                         .size(28.dp)

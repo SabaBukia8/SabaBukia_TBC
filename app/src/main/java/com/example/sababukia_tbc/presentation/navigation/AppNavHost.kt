@@ -1,6 +1,7 @@
 package com.example.sababukia_tbc.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,11 +13,14 @@ import com.example.sababukia_tbc.presentation.register.RegisterScreen
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    startDestination: String = Routes.Home.route
+    modifier: Modifier = Modifier,
+    startDestination: String = Routes.Home.route,
+    onShowSnackbar: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        modifier = modifier
     ) {
         composable(Routes.Home.route) {
             HomeScreen(
@@ -38,7 +42,8 @@ fun AppNavHost(
                     navController.navigate(Routes.Home.route) {
                         popUpTo(Routes.Home.route) { inclusive = true }
                     }
-                }
+                },
+                onShowSnackbar = onShowSnackbar
             )
         }
 
@@ -51,7 +56,8 @@ fun AppNavHost(
                     navController.navigate(Routes.RegisterNickname.route) {
                         popUpTo(Routes.Register.route) { inclusive = true }
                     }
-                }
+                },
+                onShowSnackbar = onShowSnackbar
             )
         }
 
@@ -61,7 +67,8 @@ fun AppNavHost(
                     navController.navigate(Routes.Home.route) {
                         popUpTo(Routes.Home.route) { inclusive = true }
                     }
-                }
+                },
+                onShowSnackbar = onShowSnackbar
             )
         }
     }
