@@ -1,7 +1,8 @@
 package com.example.sababukia_tbc.presentation.login
 
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.domain.model.AuthResult
+import com.example.sababukia_tbc.domain.model.AuthError
+import com.example.sababukia_tbc.domain.model.Result
 import com.example.sababukia_tbc.domain.repository.LoginRepository
 import com.example.sababukia_tbc.domain.util.ValidationError
 import com.example.sababukia_tbc.domain.util.ValidationResult
@@ -44,12 +45,12 @@ class LoginViewModel @Inject constructor(
             updateState { copy(isLoading = true) }
 
             when (val result = loginRepository.login(currentState.email, currentState.password)) {
-                is AuthResult.Success -> {
-                    sendSideEffect(LoginSideEffect.ShowMessage(MessageType.SUCCESS))
+                is Result.Success -> {
+                    sendSideEffect(LoginSideEffect.ShowSuccess)
                     sendSideEffect(LoginSideEffect.NavigateToHome)
                 }
-                is AuthResult.Error -> {
-                    sendSideEffect(LoginSideEffect.ShowMessage(MessageType.ERROR, result.message))
+                is Result.Error -> {
+                    sendSideEffect(LoginSideEffect.ShowError(result.error))
                 }
             }
 
@@ -74,10 +75,6 @@ sealed class LoginEvent {
 
 sealed class LoginSideEffect {
     data object NavigateToHome : LoginSideEffect()
-    data class ShowMessage(val type: MessageType, val customMessage: String? = null) : LoginSideEffect()
-}
-
-enum class MessageType {
-    SUCCESS,
-    ERROR
+    data object ShowSuccess : LoginSideEffect()
+    data class ShowError(val error: AuthError) : LoginSideEffect()
 }

@@ -42,12 +42,11 @@ fun RegisterNicknameScreen(
         viewModel.sideEffect.collect { effect ->
             when (effect) {
                 NicknameSideEffect.NavigateToHome -> onComplete()
-                is NicknameSideEffect.ShowMessage -> {
-                    val message = when (effect.type) {
-                        MessageType.SUCCESS -> context.getString(R.string.nickname_is_set)
-                        MessageType.ERROR -> effect.customMessage ?: context.getString(R.string.couldn_t_set_a_nickname)
-                    }
-                    onShowSnackbar(message)
+                NicknameSideEffect.ShowSuccess -> {
+                    onShowSnackbar(context.getString(R.string.nickname_is_set))
+                }
+                is NicknameSideEffect.ShowError -> {
+                    onShowSnackbar(effect.error.toMessage(context))
                 }
             }
         }

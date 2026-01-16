@@ -39,12 +39,11 @@ fun LoginScreen(
         viewModel.sideEffect.collect { effect ->
             when (effect) {
                 LoginSideEffect.NavigateToHome -> onLoginSuccess()
-                is LoginSideEffect.ShowMessage -> {
-                    val message = when (effect.type) {
-                        MessageType.SUCCESS -> context.getString(R.string.authentication_successful)
-                        MessageType.ERROR -> effect.customMessage ?: context.getString(R.string.authentication_failed)
-                    }
-                    onShowSnackbar(message)
+                LoginSideEffect.ShowSuccess -> {
+                    onShowSnackbar(context.getString(R.string.authentication_successful))
+                }
+                is LoginSideEffect.ShowError -> {
+                    onShowSnackbar(effect.error.toMessage(context))
                 }
             }
         }

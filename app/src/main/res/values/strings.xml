@@ -30,4 +30,14 @@
     <string name="couldn_t_set_a_nickname">couldn\'t set a nickname</string>
     <string name="you_are_not_signed_in">You are not signed in</string>
     <string name="please_enter_a_nickname">Please enter a nickname</string>
+
+    <!-- Auth Error Messages -->
+    <string name="error_user_not_found">Couldn\'t find a user with this email</string>
+    <string name="error_invalid_credentials">Invalid password. Please try again.</string>
+    <string name="error_email_already_used">Email already used!</string>
+    <string name="error_user_is_null">Authentication failed: user data unavailable</string>
+    <string name="error_user_not_signed_in">You are not signed in</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_nickname_update_failed">Couldn\'t update nickname</string>
+    <string name="error_unknown">An unexpected error occurred</string>
 </resources>

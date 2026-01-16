@@ -39,12 +39,11 @@ fun RegisterScreen(
         viewModel.sideEffect.collect { effect ->
             when (effect) {
                 RegisterSideEffect.NavigateToNickname -> onRegisterSuccess()
-                is RegisterSideEffect.ShowMessage -> {
-                    val message = when (effect.type) {
-                        MessageType.SUCCESS -> context.getString(R.string.authentication_successful)
-                        MessageType.ERROR -> effect.customMessage ?: context.getString(R.string.authentication_failed)
-                    }
-                    onShowSnackbar(message)
+                RegisterSideEffect.ShowSuccess -> {
+                    onShowSnackbar(context.getString(R.string.authentication_successful))
+                }
+                is RegisterSideEffect.ShowError -> {
+                    onShowSnackbar(effect.error.toMessage(context))
                 }
             }
         }

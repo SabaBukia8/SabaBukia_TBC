@@ -1,7 +1,8 @@
 package com.example.sababukia_tbc.presentation.register
 
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.domain.model.AuthResult
+import com.example.sababukia_tbc.domain.model.AuthError
+import com.example.sababukia_tbc.domain.model.Result
 import com.example.sababukia_tbc.domain.repository.RegisterRepository
 import com.example.sababukia_tbc.domain.util.ValidationError
 import com.example.sababukia_tbc.domain.util.ValidationResult
@@ -38,12 +39,12 @@ class NicknameViewModel @Inject constructor(
             updateState { copy(isLoading = true) }
 
             when (val result = registerRepository.updateDisplayName(currentState.nickname)) {
-                is AuthResult.Success -> {
-                    sendSideEffect(NicknameSideEffect.ShowMessage(MessageType.SUCCESS))
+                is Result.Success -> {
+                    sendSideEffect(NicknameSideEffect.ShowSuccess)
                     sendSideEffect(NicknameSideEffect.NavigateToHome)
                 }
-                is AuthResult.Error -> {
-                    sendSideEffect(NicknameSideEffect.ShowMessage(MessageType.ERROR, result.message))
+                is Result.Error -> {
+                    sendSideEffect(NicknameSideEffect.ShowError(result.error))
                 }
             }
 
@@ -65,5 +66,6 @@ sealed class NicknameEvent {
 
 sealed class NicknameSideEffect {
     data object NavigateToHome : NicknameSideEffect()
-    data class ShowMessage(val type: MessageType, val customMessage: String? = null) : NicknameSideEffect()
+    data object ShowSuccess : NicknameSideEffect()
+    data class ShowError(val error: AuthError) : NicknameSideEffect()
 }

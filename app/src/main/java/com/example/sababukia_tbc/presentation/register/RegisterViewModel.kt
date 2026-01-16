@@ -1,7 +1,8 @@
 package com.example.sababukia_tbc.presentation.register
 
 import androidx.lifecycle.viewModelScope
-import com.example.sababukia_tbc.domain.model.AuthResult
+import com.example.sababukia_tbc.domain.model.AuthError
+import com.example.sababukia_tbc.domain.model.Result
 import com.example.sababukia_tbc.domain.repository.RegisterRepository
 import com.example.sababukia_tbc.domain.util.ValidationError
 import com.example.sababukia_tbc.domain.util.ValidationResult
@@ -44,12 +45,12 @@ class RegisterViewModel @Inject constructor(
             updateState { copy(isLoading = true) }
 
             when (val result = registerRepository.register(currentState.email, currentState.password)) {
-                is AuthResult.Success -> {
-                    sendSideEffect(RegisterSideEffect.ShowMessage(MessageType.SUCCESS))
+                is Result.Success -> {
+                    sendSideEffect(RegisterSideEffect.ShowSuccess)
                     sendSideEffect(RegisterSideEffect.NavigateToNickname)
                 }
-                is AuthResult.Error -> {
-                    sendSideEffect(RegisterSideEffect.ShowMessage(MessageType.ERROR, result.message))
+                is Result.Error -> {
+                    sendSideEffect(RegisterSideEffect.ShowError(result.error))
                 }
             }
 
@@ -74,10 +75,6 @@ sealed class RegisterEvent {
 
 sealed class RegisterSideEffect {
     data object NavigateToNickname : RegisterSideEffect()
-    data class ShowMessage(val type: MessageType, val customMessage: String? = null) : RegisterSideEffect()
-}
-
-enum class MessageType {
-    SUCCESS,
-    ERROR
+    data object ShowSuccess : RegisterSideEffect()
+    data class ShowError(val error: AuthError) : RegisterSideEffect()
 }

@@ -68,6 +68,7 @@ private fun HomeScreenContent(
     ) {
         Box(
             modifier = Modifier
+
                 .fillMaxWidth()
                 .weight(0.85f)
                 .background(MaterialTheme.colorScheme.background)

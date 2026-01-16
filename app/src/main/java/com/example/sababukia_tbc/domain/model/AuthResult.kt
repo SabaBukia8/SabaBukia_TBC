@@ -1,6 +1,8 @@
 package com.example.sababukia_tbc.domain.model
 
-sealed class AuthResult<out T> {
-    data class Success<T>(val data: T) : AuthResult<T>()
-    data class Error(val message: String) : AuthResult<Nothing>()
-}
+
+typealias AuthResult<T> = Result<T, AuthError>
+
+fun <T> authSuccess(data: T): AuthResult<T> = Result.Success(data)
+
+fun authError(error: AuthError): AuthResult<Nothing> = Result.Error(error)
