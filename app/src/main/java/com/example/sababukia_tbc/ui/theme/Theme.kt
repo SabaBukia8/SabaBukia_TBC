@@ -33,7 +33,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun SabaBukiaTBCTheme(
+fun ApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

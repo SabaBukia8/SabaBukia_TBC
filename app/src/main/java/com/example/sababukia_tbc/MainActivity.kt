@@ -14,7 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.sababukia_tbc.presentation.navigation.AppNavHost
-import com.example.sababukia_tbc.ui.theme.SabaBukiaTBCTheme
+import com.example.sababukia_tbc.ui.theme.ApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            SabaBukiaTBCTheme {
+            ApplicationTheme {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 val navController = rememberNavController()

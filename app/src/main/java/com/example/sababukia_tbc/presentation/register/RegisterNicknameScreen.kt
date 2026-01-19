@@ -26,7 +26,7 @@ import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.presentation.common.components.AppTextField
 import com.example.sababukia_tbc.presentation.common.components.FormScreen
 import com.example.sababukia_tbc.presentation.common.toMessage
-import com.example.sababukia_tbc.ui.theme.SabaBukiaTBCTheme
+import com.example.sababukia_tbc.ui.theme.ApplicationTheme
 
 @Composable
 fun RegisterNicknameScreen(
@@ -106,7 +106,7 @@ private fun RegisterNicknameScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun RegisterNicknameScreenPreview() {
-    SabaBukiaTBCTheme {
+    ApplicationTheme {
         RegisterNicknameScreenContent(
             state = NicknameState(),
             snackbarHostState = SnackbarHostState(),

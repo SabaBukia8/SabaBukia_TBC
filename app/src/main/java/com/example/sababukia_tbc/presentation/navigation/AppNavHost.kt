@@ -9,66 +9,79 @@ import com.example.sababukia_tbc.presentation.home.HomeScreen
 import com.example.sababukia_tbc.presentation.login.LoginScreen
 import com.example.sababukia_tbc.presentation.register.RegisterNicknameScreen
 import com.example.sababukia_tbc.presentation.register.RegisterScreen
+import com.example.sababukia_tbc.presentation.store.StoreScreen
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String = Routes.Home.route,
     onShowSnackbar: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = Home,
         modifier = modifier
     ) {
-        composable(Routes.Home.route) {
+        composable<Home> {
             HomeScreen(
                 onNavigateToLogin = {
-                    navController.navigate(Routes.Login.route)
+                    navController.navigate(Login)
                 },
                 onNavigateToRegister = {
-                    navController.navigate(Routes.Register.route)
+                    navController.navigate(Register)
+                },
+                onNavigateToStore = {
+                    navController.navigate(Store)
                 }
             )
         }
 
-        composable(Routes.Login.route) {
+        composable<Login> {
             LoginScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 },
                 onLoginSuccess = {
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Home.route) { inclusive = true }
+                    navController.navigate(Store) {
+                        popUpTo<Home> { inclusive = true }
                     }
                 },
                 onShowSnackbar = onShowSnackbar
             )
         }
 
-        composable(Routes.Register.route) {
+        composable<Register> {
             RegisterScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 },
                 onRegisterSuccess = {
-                    navController.navigate(Routes.RegisterNickname.route) {
-                        popUpTo(Routes.Register.route) { inclusive = true }
+                    navController.navigate(RegisterNickname) {
+                        popUpTo<Register> { inclusive = true }
                     }
                 },
                 onShowSnackbar = onShowSnackbar
             )
         }
 
-        composable(Routes.RegisterNickname.route) {
+        composable<RegisterNickname> {
             RegisterNicknameScreen(
                 onComplete = {
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Home.route) { inclusive = true }
+                    navController.navigate(Home) {
+                        popUpTo<Home> { inclusive = true }
                     }
                 },
                 onShowSnackbar = onShowSnackbar
+            )
+        }
+
+        composable<Store> {
+            StoreScreen(
+                onNavigateToHome = {
+                    navController.navigate(Home) {
+                        popUpTo<Home> { inclusive = true }
+                    }
+                }
             )
         }
     }

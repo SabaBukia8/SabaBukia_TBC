@@ -22,7 +22,7 @@ import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.presentation.common.components.AppTextField
 import com.example.sababukia_tbc.presentation.common.components.FormScreen
 import com.example.sababukia_tbc.presentation.common.toMessage
-import com.example.sababukia_tbc.ui.theme.SabaBukiaTBCTheme
+import com.example.sababukia_tbc.ui.theme.ApplicationTheme
 
 @Composable
 fun RegisterScreen(
@@ -110,7 +110,7 @@ private fun RegisterScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun RegisterScreenPreview() {
-    SabaBukiaTBCTheme {
+    ApplicationTheme {
         RegisterScreenContent(
             state = RegisterState(),
             snackbarHostState = SnackbarHostState(),

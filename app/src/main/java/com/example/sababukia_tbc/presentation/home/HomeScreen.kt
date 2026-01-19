@@ -32,12 +32,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.sababukia_tbc.R
 import com.example.sababukia_tbc.presentation.common.components.AppButton
-import com.example.sababukia_tbc.ui.theme.SabaBukiaTBCTheme
+import com.example.sababukia_tbc.presentation.store.components.BottomNavBar
+import com.example.sababukia_tbc.presentation.store.components.SelectedScreen
+import com.example.sababukia_tbc.ui.theme.ApplicationTheme
 
 @Composable
 fun HomeScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit,
+    onNavigateToStore: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -50,6 +53,7 @@ fun HomeScreen(
         state = state,
         onNavigateToLogin = onNavigateToLogin,
         onNavigateToRegister = onNavigateToRegister,
+        onNavigateToStore = onNavigateToStore,
         onLogout = { viewModel.onEvent(HomeEvent.Logout) }
     )
 }
@@ -59,111 +63,124 @@ private fun HomeScreenContent(
     state: HomeState,
     onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit,
+    onNavigateToStore: () -> Unit,
     onLogout: () -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Box(
-            modifier = Modifier
-
-                .fillMaxWidth()
-                .weight(0.85f)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Row(
-                modifier = Modifier.align(Alignment.Center),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.app_icon),
-                    contentDescription = stringResource(R.string.app_icon_description),
-                    modifier = Modifier
-                        .size(60.dp)
-                        .padding(end = 8.dp)
-                )
-                Text(
-                    text = stringResource(R.string.photo),
-                    fontSize = 48.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, bottom = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.mipmap.ic_user_foreground),
-                    contentDescription = stringResource(R.string.user_avatar_description),
-                    modifier = Modifier
-                        .size(28.dp)
-                        .clip(CircleShape)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Column {
-                    Text(
-                        text = stringResource(R.string.pawel_czerwinski),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = stringResource(R.string.pawel_czerwinski1),
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        }
-
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize()
         ) {
-            if (state.isLoggedIn) {
-                AppButton(
-                    text = stringResource(R.string.logout),
-                    onClick = onLogout,
-                    modifier = Modifier.width(200.dp)
-                )
-            } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.85f)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier.align(Alignment.Center),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    AppButton(
-                        text = stringResource(R.string.log_in),
-                        onClick = onNavigateToLogin,
-                        modifier = Modifier.weight(1f),
-                        isOutlined = true
+                    Image(
+                        painter = painterResource(id = R.drawable.app_icon),
+                        contentDescription = stringResource(R.string.app_icon_description),
+                        modifier = Modifier
+                            .size(60.dp)
+                            .padding(end = 8.dp)
                     )
-                    AppButton(
-                        text = stringResource(R.string.register),
-                        onClick = onNavigateToRegister,
-                        modifier = Modifier.weight(1f)
+                    Text(
+                        text = stringResource(R.string.photo),
+                        fontSize = 48.sp,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
+
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 16.dp, bottom = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.mipmap.ic_user_foreground),
+                        contentDescription = stringResource(R.string.user_avatar_description),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column {
+                        Text(
+                            text = stringResource(R.string.pawel_czerwinski),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Text(
+                            text = stringResource(R.string.pawel_czerwinski1),
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(bottom = 64.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (state.isLoggedIn) {
+                    AppButton(
+                        text = stringResource(R.string.logout),
+                        onClick = onLogout,
+                        modifier = Modifier.width(200.dp)
+                    )
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        AppButton(
+                            text = stringResource(R.string.log_in),
+                            onClick = onNavigateToLogin,
+                            modifier = Modifier.weight(1f),
+                            isOutlined = true
+                        )
+                        AppButton(
+                            text = stringResource(R.string.register),
+                            onClick = onNavigateToRegister,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
+
+        BottomNavBar(
+            selectedScreen = SelectedScreen.HOME,
+            onHomeClick = {},
+            onStoreClick = onNavigateToStore,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun HomeScreenLoggedOutPreview() {
-    SabaBukiaTBCTheme {
+    ApplicationTheme {
         HomeScreenContent(
             state = HomeState(isLoggedIn = false),
             onNavigateToLogin = {},
             onNavigateToRegister = {},
+            onNavigateToStore = {},
             onLogout = {}
         )
     }
@@ -172,11 +189,12 @@ private fun HomeScreenLoggedOutPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun HomeScreenLoggedInPreview() {
-    SabaBukiaTBCTheme {
+    ApplicationTheme {
         HomeScreenContent(
             state = HomeState(isLoggedIn = true),
             onNavigateToLogin = {},
             onNavigateToRegister = {},
+            onNavigateToStore = {},
             onLogout = {}
         )
     }
