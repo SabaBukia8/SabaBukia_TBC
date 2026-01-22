@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.sababukia_tbc.domain.model.Event
+import com.example.sababukia_tbc.ui.theme.Radius
 import com.example.sababukia_tbc.ui.theme.StoreCardBg
 import com.example.sababukia_tbc.ui.theme.StoreCategoryText
 import com.example.sababukia_tbc.ui.theme.StoreHeartRed
@@ -48,7 +49,7 @@ fun ProductCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(25.dp))
+                .clip(RoundedCornerShape(Radius.radius25))
                 .background(StoreCardBg)
         ) {
             AsyncImage(

@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.sababukia_tbc.ui.theme.Radius
 import com.example.sababukia_tbc.ui.theme.StoreAccent
 import com.example.sababukia_tbc.ui.theme.StoreCategoryBg
 import com.example.sababukia_tbc.ui.theme.StoreCategoryText
@@ -43,7 +44,7 @@ fun BottomNavBar(
         modifier = modifier
             .fillMaxWidth()
             .height(64.dp)
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .clip(RoundedCornerShape(topStart = Radius.radius16, topEnd = Radius.radius16))
             .background(StoreCategoryBg)
             .padding(horizontal = 24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

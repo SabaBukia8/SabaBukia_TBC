@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sababukia_tbc.ui.theme.Radius
 import com.example.sababukia_tbc.ui.theme.StoreAccent
 import com.example.sababukia_tbc.ui.theme.StoreCategoryBg
 import com.example.sababukia_tbc.ui.theme.StoreCategoryText
@@ -33,7 +34,7 @@ fun CategoryChip(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(Radius.radius16))
             .background(backgroundColor)
             .clickable(onClick = onClick)
             .padding(horizontal = 20.dp, vertical = 8.dp),

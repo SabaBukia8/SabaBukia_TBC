@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.sababukia_tbc.ui.theme.Radius
 
 @Composable
 fun AppButton(
@@ -32,7 +33,7 @@ fun AppButton(
                 .fillMaxWidth()
                 .height(52.dp),
             enabled = enabled && !isLoading,
-            shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(Radius.radius5),
             border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface)
         ) {
             if (isLoading) {
@@ -55,7 +56,7 @@ fun AppButton(
                 .fillMaxWidth()
                 .height(52.dp),
             enabled = enabled && !isLoading,
-            shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(Radius.radius5),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.onSurface,
                 contentColor = MaterialTheme.colorScheme.surface

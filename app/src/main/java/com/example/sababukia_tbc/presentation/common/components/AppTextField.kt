@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.sababukia_tbc.ui.theme.Radius
 
 @Composable
 fun AppTextField(
@@ -44,7 +45,7 @@ fun AppTextField(
             isError = isError,
             singleLine = true,
             keyboardOptions = keyboardOptions,
-            shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(Radius.radius5),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
