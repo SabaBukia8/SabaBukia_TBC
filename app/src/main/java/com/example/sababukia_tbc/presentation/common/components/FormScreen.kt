@@ -10,19 +10,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sababukia_tbc.ui.theme.Spacing
 
 @Composable
 fun FormScreen(
     title: String,
-    snackbarHostState: SnackbarHostState,
     buttonText: String,
     onButtonClick: () -> Unit,
     isLoading: Boolean,
@@ -32,7 +29,6 @@ fun FormScreen(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = modifier
     ) { padding ->
         Column(
@@ -40,14 +36,14 @@ fun FormScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = Spacing.spacer16)
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(Spacing.spacer48))
 
             if (onNavigateBack != null) {
                 BackButton(
                     onClick = onNavigateBack,
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    modifier = Modifier.padding(bottom = Spacing.spacer24)
                 )
             }
 
@@ -56,7 +52,7 @@ fun FormScreen(
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(bottom = 32.dp)
+                modifier = Modifier.padding(bottom = Spacing.spacer32)
             )
 
             content()
@@ -71,7 +67,7 @@ fun FormScreen(
                 isLoading = isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 32.dp)
+                    .padding(bottom = Spacing.spacer32)
             )
         }
     }

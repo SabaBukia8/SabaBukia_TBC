@@ -1,5 +1,6 @@
 package com.example.sababukia_tbc.di
 
+import com.example.sababukia_tbc.BuildConfig
 import com.example.sababukia_tbc.data.remote.StoreApi
 import com.example.sababukia_tbc.data.repository.StoreRepositoryImpl
 import com.example.sababukia_tbc.domain.repository.StoreRepository
@@ -17,8 +18,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://c37108e6-8faf-4a15-a91c-7d1bc9b48d8a.mock.pstmn.io/"
-
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -33,7 +32,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
