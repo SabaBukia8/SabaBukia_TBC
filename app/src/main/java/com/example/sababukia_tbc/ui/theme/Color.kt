@@ -8,11 +8,14 @@ val Red = Color(0xFFFF0000)
 val Gray = Color(0xFF808080)
 val LightGray = Color(0xFFE0E0E0)
 
-// Store Gallery colors
-val StoreBackground = Color(0xFF22343C)
-val StoreBackgroundEnd = Color(0xFF1F2E35)
-val StoreCategoryBg = Color(0xFF30444E)
-val StoreCategoryText = Color(0xFF96A7AF)
-val StoreAccent = Color(0xFF3ED598)
-val StoreCardBg = Color(0xFFEDF1FA)
-val StoreHeartRed = Color(0xFFFF565E)
+// Order Status Colors
+val PendingBg = Color(0xFFFFF3E0)
+val PendingText = Color(0xFFFF9800)
+val DeliveredBg = Color(0xFFE8F5E9)
+val DeliveredText = Color(0xFF4CAF50)
+val CanceledBg = Color(0xFFFFEBEE)
+val CanceledText = Color(0xFFF44336)
+
+// Orders Screen Colors
+val OrderCardBg = Color(0xFFF5F5F5)
+val OrdersBackground = Color(0xFFFFFFFF)

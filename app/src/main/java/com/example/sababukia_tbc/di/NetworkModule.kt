@@ -1,9 +1,6 @@
 package com.example.sababukia_tbc.di
 
 import com.example.sababukia_tbc.BuildConfig
-import com.example.sababukia_tbc.data.remote.StoreApi
-import com.example.sababukia_tbc.data.repository.StoreRepositoryImpl
-import com.example.sababukia_tbc.domain.repository.StoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,12 +33,4 @@ object NetworkModule {
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
-    @Provides
-    @Singleton
-    fun provideStoreApi(retrofit: Retrofit): StoreApi = retrofit.create(StoreApi::class.java)
-
-    @Provides
-    @Singleton
-    fun provideStoreRepository(api: StoreApi): StoreRepository = StoreRepositoryImpl(api)
 }
