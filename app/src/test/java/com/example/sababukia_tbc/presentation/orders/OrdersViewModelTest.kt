@@ -102,18 +102,15 @@ class OrdersViewModelTest {
         viewModel = OrdersViewModel(orderRepository)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        // Default is PENDING
         assertEquals(OrderTab.PENDING, viewModel.state.value.selectedTab)
         assertEquals(1, viewModel.state.value.filteredOrders.size)
         assertEquals(OrderStatus.PENDING, viewModel.state.value.filteredOrders.first().status)
 
-        // Switch to DELIVERED
         viewModel.onEvent(OrdersEvent.SelectTab(OrderTab.DELIVERED))
         assertEquals(OrderTab.DELIVERED, viewModel.state.value.selectedTab)
         assertEquals(1, viewModel.state.value.filteredOrders.size)
         assertEquals(OrderStatus.DELIVERED, viewModel.state.value.filteredOrders.first().status)
 
-        // Switch to CANCELED
         viewModel.onEvent(OrdersEvent.SelectTab(OrderTab.CANCELED))
         assertEquals(OrderTab.CANCELED, viewModel.state.value.selectedTab)
         assertEquals(1, viewModel.state.value.filteredOrders.size)

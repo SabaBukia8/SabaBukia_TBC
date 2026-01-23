@@ -16,9 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.example.sababukia_tbc.presentation.orders.OrderTab
 import com.example.sababukia_tbc.ui.theme.LightGray
+import com.example.sababukia_tbc.ui.theme.Radius
+import com.example.sababukia_tbc.ui.theme.Spacing
 
 @Composable
 fun OrderTabs(
@@ -29,8 +30,8 @@ fun OrderTabs(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = Spacing.spacer16, vertical = Spacing.spacer8),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.spacer8)
     ) {
         OrderTab.entries.forEach { tab ->
             TabChip(
@@ -63,10 +64,10 @@ private fun TabChip(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(Radius.radius20))
             .background(backgroundColor)
             .clickable(onClick = onClick)
-            .padding(vertical = 10.dp, horizontal = 16.dp),
+            .padding(vertical = Spacing.spacer10, horizontal = Spacing.spacer16),
         contentAlignment = Alignment.Center
     ) {
         Text(

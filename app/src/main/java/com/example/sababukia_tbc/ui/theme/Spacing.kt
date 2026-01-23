@@ -3,9 +3,11 @@ package com.example.sababukia_tbc.ui.theme
 import androidx.compose.ui.unit.dp
 
 object Spacing {
+    val spacer2 = 2.dp
     val spacer4 = 4.dp
     val spacer5 = 5.dp
     val spacer8 = 8.dp
+    val spacer10 = 10.dp
     val spacer12 = 12.dp
     val spacer16 = 16.dp
     val spacer18 = 18.dp

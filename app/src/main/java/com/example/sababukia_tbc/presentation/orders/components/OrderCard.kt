@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.example.sababukia_tbc.domain.model.Order
 import com.example.sababukia_tbc.domain.model.OrderStatus
 import com.example.sababukia_tbc.ui.theme.CanceledBg
@@ -32,6 +31,8 @@ import com.example.sababukia_tbc.ui.theme.DeliveredText
 import com.example.sababukia_tbc.ui.theme.OrderCardBg
 import com.example.sababukia_tbc.ui.theme.PendingBg
 import com.example.sababukia_tbc.ui.theme.PendingText
+import com.example.sababukia_tbc.ui.theme.Radius
+import com.example.sababukia_tbc.ui.theme.Spacing
 
 @Composable
 fun OrderCard(
@@ -41,12 +42,12 @@ fun OrderCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(Radius.radius12),
         colors = CardDefaults.cardColors(containerColor = OrderCardBg),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.spacer2)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.spacer16)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -65,7 +66,7 @@ fun OrderCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Spacing.spacer8))
 
             Text(
                 text = "Tracking: ${order.trackingNumber}",
@@ -73,7 +74,7 @@ fun OrderCard(
                 color = Color.Gray
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Spacing.spacer8))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -90,7 +91,7 @@ fun OrderCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(Spacing.spacer12))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -106,7 +107,7 @@ fun OrderCard(
                         containerColor = MaterialTheme.colorScheme.primary,
                         disabledContainerColor = Color.LightGray
                     ),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(Radius.radius8)
                 ) {
                     Text("Details")
                 }
@@ -128,9 +129,9 @@ private fun StatusBadge(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(RoundedCornerShape(Radius.radius6))
             .background(backgroundColor)
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .padding(horizontal = Spacing.spacer12, vertical = Spacing.spacer4)
     ) {
         Text(
             text = text,

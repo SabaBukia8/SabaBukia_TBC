@@ -19,12 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.sababukia_tbc.domain.model.Order
 import com.example.sababukia_tbc.domain.model.OrderStatus
 import com.example.sababukia_tbc.ui.theme.CanceledText
 import com.example.sababukia_tbc.ui.theme.DeliveredText
+import com.example.sababukia_tbc.ui.theme.Radius
+import com.example.sababukia_tbc.ui.theme.Spacing
 import com.example.sababukia_tbc.ui.theme.White
 
 @Composable
@@ -37,11 +38,11 @@ fun OrderStatusDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(Radius.radius16),
             colors = CardDefaults.cardColors(containerColor = White)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier.padding(Spacing.spacer24),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -50,7 +51,7 @@ fun OrderStatusDialog(
                     fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(Spacing.spacer8))
 
                 Text(
                     text = "Order #${order.orderNumber}",
@@ -58,18 +59,18 @@ fun OrderStatusDialog(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(Spacing.spacer24))
 
                 Text(
                     text = "Change status to:",
                     style = MaterialTheme.typography.bodyLarge
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(Spacing.spacer16))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.spacer12)
                 ) {
                     Button(
                         onClick = { onStatusChange(OrderStatus.DELIVERED) },
@@ -77,7 +78,7 @@ fun OrderStatusDialog(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = DeliveredText
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(Radius.radius8)
                     ) {
                         Text("Delivered")
                     }
@@ -88,18 +89,18 @@ fun OrderStatusDialog(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CanceledText
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(Radius.radius8)
                     ) {
                         Text("Cancel")
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(Spacing.spacer16))
 
                 OutlinedButton(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(Radius.radius8)
                 ) {
                     Text("Close")
                 }
