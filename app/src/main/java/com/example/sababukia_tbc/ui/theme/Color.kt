@@ -8,14 +8,13 @@ val Red = Color(0xFFFF0000)
 val Gray = Color(0xFF808080)
 val LightGray = Color(0xFFE0E0E0)
 
-// Order Status Colors
-val PendingBg = Color(0xFFFFF3E0)
-val PendingText = Color(0xFFFF9800)
-val DeliveredBg = Color(0xFFE8F5E9)
-val DeliveredText = Color(0xFF4CAF50)
-val CanceledBg = Color(0xFFFFEBEE)
-val CanceledText = Color(0xFFF44336)
 
-// Orders Screen Colors
-val OrderCardBg = Color(0xFFF5F5F5)
-val OrdersBackground = Color(0xFFFFFFFF)
+val ChatBackground = Color(0xFF1A2F2A)
+val ChatSearchBarBg = Color(0xFF2A3F3A)
+val ChatPrimaryAccent = Color(0xFF4CAF50)
+val ChatTextSecondary = Color(0xFF8A9A95)
+val ChatDivider = Color(0xFF2A3F3A)
+
+val AvatarYellow = Color(0xFFFFC107)
+val AvatarGreen = Color(0xFF4CAF50)
+val AvatarCoral = Color(0xFFFF7043)

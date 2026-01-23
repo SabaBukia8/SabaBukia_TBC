@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.sababukia_tbc.presentation.orders.OrdersScreen
+import com.example.sababukia_tbc.presentation.chat.ChatScreen
 
 @Composable
 fun AppNavHost(
@@ -15,11 +15,11 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Orders,
+        startDestination = Chat,
         modifier = modifier
     ) {
-        composable<Orders> {
-            OrdersScreen(
+        composable<Chat> {
+            ChatScreen(
                 onShowSnackbar = onShowSnackbar
             )
         }
