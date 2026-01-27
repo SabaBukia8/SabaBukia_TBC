@@ -2,10 +2,10 @@ package com.example.sababukia_tbc.presentation.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<State, Event, SideEffect>(
@@ -15,18 +15,18 @@ abstract class BaseViewModel<State, Event, SideEffect>(
     private val _state = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
-    private val _sideEffect = MutableSharedFlow<SideEffect>()
-    val sideEffect = _sideEffect.asSharedFlow()
+    private val _sideEffect = Channel<SideEffect>(Channel.BUFFERED)
+    val sideEffect = _sideEffect.receiveAsFlow()
 
-    open fun onEvent(event: Event){}
+    open fun onEvent(event: Event) {}
 
-    protected fun updateState(update: (State) -> State) {
-        _state.value = update(_state.value)
+    protected fun updateState(update: State.() -> State) {
+        _state.value = _state.value.update()
     }
 
     protected fun emitSideEffect(sideEffect: SideEffect) {
         viewModelScope.launch {
-            _sideEffect.emit(sideEffect)
+            _sideEffect.send(sideEffect)
         }
     }
 }
