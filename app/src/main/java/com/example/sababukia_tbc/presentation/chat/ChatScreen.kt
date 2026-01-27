@@ -33,16 +33,17 @@ fun ChatScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    state.error?.let { error ->
-        onShowSnackbar(error)
-        viewModel.onEvent(ChatEvent.DismissError)
-    }
-
     ChatScreenContent(
         state = state,
         onSearchQueryChanged = { viewModel.onEvent(ChatEvent.OnSearchQueryChanged(it)) },
         onSearchClicked = { viewModel.onEvent(ChatEvent.OnSearchClicked) }
     )
+    state.error?.let { error ->
+        onShowSnackbar(error)
+        viewModel.onEvent(ChatEvent.DismissError)
+    }
+
+
 }
 
 @Composable
