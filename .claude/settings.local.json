@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(.gradlew build --no-daemon)",
+      "Bash(gradlew.bat build:*)",
+      "Bash(cmd /c \"gradlew.bat build --no-daemon\")",
+      "Bash(cmd /c \"cd /d D:\\\\AndroidProjects\\\\SabaBukia_TBC && gradlew.bat build --no-daemon\")",
+      "Bash(powershell:*)",
+      "WebFetch(domain:c37108e6-8faf-4a15-a91c-7d1bc9b48d8a.mock.pstmn.io)",
+      "Bash(tree:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(.\\\\gradlew assembleDebug:*)",
+      "Bash(gradlew.bat assembleDebug:*)",
+      "Bash(cmd.exe /c \"cd /d D:\\\\AndroidProjects\\\\SabaBukia_TBC && gradlew.bat assembleDebug\")",
+      "Bash(powershell.exe -Command \"cd ''D:\\\\AndroidProjects\\\\SabaBukia_TBC''; .\\\\gradlew.bat assembleDebug\")",
+      "Bash(powershell.exe -Command \"cd ''D:\\\\AndroidProjects\\\\SabaBukia_TBC''; .\\\\gradlew.bat compileDebugKotlin 2>&1 | Select-String -Pattern ''error|warning|BUILD''\")",
+      "Bash(powershell.exe:*)",
+      "Bash(./gradlew test:*)"
+    ]
+  }
+}
