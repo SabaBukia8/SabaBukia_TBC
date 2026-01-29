@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.sababukia_tbc.ui.theme.AppError
+import com.example.sababukia_tbc.ui.theme.AppColors
 import com.example.sababukia_tbc.ui.theme.AppTextStyle
 import com.example.sababukia_tbc.ui.theme.ApplicationTheme
 import com.example.sababukia_tbc.ui.theme.Spacing
@@ -31,7 +31,7 @@ fun ErrorContent(
         Text(
             text = message,
             style = AppTextStyle.bodyLarge,
-            color = AppError,
+            color = AppColors.current.error,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(Spacing.spacer16))

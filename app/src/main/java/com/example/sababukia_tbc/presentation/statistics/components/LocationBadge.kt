@@ -14,8 +14,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sababukia_tbc.R
+import com.example.sababukia_tbc.ui.theme.AppColors
+import com.example.sababukia_tbc.ui.theme.AppTextStyle
 import com.example.sababukia_tbc.ui.theme.ApplicationTheme
-import com.example.sababukia_tbc.ui.theme.BadgeText
 import com.example.sababukia_tbc.ui.theme.Spacing
 
 @Composable
@@ -23,6 +24,7 @@ fun LocationBadge(
     location: String,
     modifier: Modifier = Modifier
 ) {
+    val colors = AppColors.current
     Row(
         modifier = modifier
             .padding(horizontal = Spacing.spacer10, vertical = Spacing.spacer6),
@@ -31,14 +33,14 @@ fun LocationBadge(
         Icon(
             painter = painterResource(id = R.drawable.pin),
             contentDescription = null,
-            tint = BadgeText,
+            tint = colors.badgeText,
             modifier = Modifier.size(18.dp)
         )
         Spacer(modifier = Modifier.width(Spacing.spacer4))
         Text(
             text = location,
-            color = BadgeText,
-            style = com.example.sababukia_tbc.ui.theme.AppTextStyle.bodyLarge
+            color = colors.badgeText,
+            style = AppTextStyle.bodyLarge
         )
     }
 }

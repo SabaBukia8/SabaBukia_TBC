@@ -27,9 +27,9 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.sababukia_tbc.domain.model.WorkspaceItem
+import com.example.sababukia_tbc.ui.theme.AppColors
 import com.example.sababukia_tbc.ui.theme.AppTextStyle
 import com.example.sababukia_tbc.ui.theme.ApplicationTheme
-import com.example.sababukia_tbc.ui.theme.CardGreen
 import com.example.sababukia_tbc.ui.theme.Radius
 import com.example.sababukia_tbc.ui.theme.Spacing
 
@@ -38,21 +38,22 @@ fun WorkspaceCard(
     workspace: WorkspaceItem,
     modifier: Modifier = Modifier
 ) {
+    val colors = AppColors.current
     val cardShape = RoundedCornerShape(Radius.radius25)
     Box(
         modifier = modifier
             .shadow(
-                elevation = 32.dp,
+                elevation = 40.dp,
                 shape = cardShape,
-                ambientColor = Color.Black.copy(alpha = 0.8f),
-                spotColor = Color.Black.copy(alpha = 0.8f)
+                ambientColor = Color.Black.copy(alpha = 0.9f),
+                spotColor = Color.Black.copy(alpha = 0.9f)
             )
             .clip(cardShape)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(CardGreen)
+                .background(colors.cardGreen)
         )
 
         AsyncImage(
@@ -71,8 +72,9 @@ fun WorkspaceCard(
                 .background(
                     Brush.verticalGradient(
                         colorStops = arrayOf(
-                            0.5f to Color(0x001A3B34),
-                            1.0f to Color(0xB30B0B0B)
+                            0.35f to Color(0x001A3B34),
+                            0.75f to Color(0x800B0B0B),
+                            1.0f to Color(0xCC0B0B0B)
                         )
                     )
                 )

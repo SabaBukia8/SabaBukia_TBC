@@ -21,23 +21,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sababukia_tbc.R
+import com.example.sababukia_tbc.ui.theme.AppColors
 import com.example.sababukia_tbc.ui.theme.ApplicationTheme
-import com.example.sababukia_tbc.ui.theme.BottomNavBackground
-import com.example.sababukia_tbc.ui.theme.BottomNavSelected
-import com.example.sababukia_tbc.ui.theme.BottomNavUnselected
-import com.example.sababukia_tbc.ui.theme.CardShadowColor
 import com.example.sababukia_tbc.ui.theme.Spacing
 
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
+    val colors = AppColors.current
     val navShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp)
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(14.dp, navShape, ambientColor = CardShadowColor, spotColor = CardShadowColor)
-            .background(BottomNavBackground, navShape)
+            .shadow(14.dp, navShape, ambientColor = colors.cardShadow, spotColor = colors.cardShadow)
+            .background(colors.bottomNavBackground, navShape)
             .padding(vertical = Spacing.spacer32),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
@@ -46,7 +44,7 @@ fun BottomNavigationBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_heart),
                 contentDescription = "Favorite",
-                tint = BottomNavUnselected,
+                tint = colors.bottomNavUnselected,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -55,7 +53,7 @@ fun BottomNavigationBar(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(BottomNavSelected),
+                .background(colors.bottomNavSelected),
             contentAlignment = Alignment.Center
         ) {
             IconButton(onClick = {}) {
@@ -72,7 +70,7 @@ fun BottomNavigationBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_message),
                 contentDescription = "Messages",
-                tint = BottomNavUnselected,
+                tint = colors.bottomNavUnselected,
                 modifier = Modifier.size(24.dp)
             )
         }

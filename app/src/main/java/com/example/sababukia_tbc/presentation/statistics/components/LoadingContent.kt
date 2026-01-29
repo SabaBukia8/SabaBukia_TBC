@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.sababukia_tbc.ui.theme.AppPrimary
+import com.example.sababukia_tbc.ui.theme.AppColors
 import com.example.sababukia_tbc.ui.theme.ApplicationTheme
 
 @Composable
@@ -19,7 +19,7 @@ fun LoadingContent(
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            color = AppPrimary
+            color = AppColors.current.primary
         )
     }
 }
