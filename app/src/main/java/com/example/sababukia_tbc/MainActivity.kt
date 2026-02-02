@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.sababukia_tbc.presentation.common.LocalSnackbarController
 import com.example.sababukia_tbc.presentation.common.SnackbarController
-import com.example.sababukia_tbc.presentation.components.BottomNavigationBar
 import com.example.sababukia_tbc.presentation.navigation.AppNavHost
 import com.example.sababukia_tbc.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppTheme(darkTheme = true) {
+            AppTheme {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 val snackbarController = remember(snackbarHostState, scope) {
@@ -41,8 +40,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
-                        containerColor = AppTheme.colors.backgroundGradientStart,
-                        bottomBar = { BottomNavigationBar() }
+                        containerColor = AppTheme.colors.backgroundGradientStart
                     ) { paddingValues ->
                         Box(
                             modifier = Modifier
