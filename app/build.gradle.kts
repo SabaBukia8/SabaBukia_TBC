@@ -20,7 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "\"https://721659fa-22e5-4fe1-b42e-f482698553b4.mock.pstmn.io/\"")
+        buildConfigField("String", "BASE_URL", "\"https://e97b2d97-2949-4fd7-8e15-be64c65ab561.mock.pstmn.io/\"")
     }
 
     buildTypes {

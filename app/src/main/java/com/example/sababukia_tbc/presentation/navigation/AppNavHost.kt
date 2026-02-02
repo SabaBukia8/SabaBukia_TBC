@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sababukia_tbc.presentation.screen.feed.FeedScreen
+import com.example.sababukia_tbc.presentation.screen.registration.RegistrationScreen
 
 @Composable
 fun AppNavHost(
@@ -15,11 +15,11 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.Feed,
+        startDestination = Routes.Registration,
         modifier = modifier
     ) {
-        composable<Routes.Feed> {
-            FeedScreen()
+        composable<Routes.Registration> {
+            RegistrationScreen()
         }
     }
 }

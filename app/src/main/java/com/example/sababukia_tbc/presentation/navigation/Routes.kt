@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 sealed interface Routes {
     @Serializable
-    data object Feed : Routes
+    data object Registration : Routes
 }

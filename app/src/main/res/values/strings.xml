@@ -5,4 +5,13 @@
     <string name="unknown_error">An error occurred</string>
     <string name="likes_count">%d Likes</string>
     <string name="comments_count">%d Comments</string>
+
+    <!-- Registration Screen -->
+    <string name="registration_title">Registration</string>
+    <string name="registration_button">Register</string>
+    <string name="registration_success">Registration successful!</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_fill_required_fields">Please fill in all required fields</string>
+    <string name="error_pins_do_not_match">PINs do not match</string>
+    <string name="error_field_not_filled">Field is not filled (%1$s)</string>
 </resources>

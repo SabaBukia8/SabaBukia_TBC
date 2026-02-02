@@ -1,7 +1,6 @@
 package com.example.sababukia_tbc.domain.model
 
-data class Story(
+data class FormSection(
     val id: Int,
-    val cover: String,
-    val title: String
+    val fields: List<FormField>
 )
