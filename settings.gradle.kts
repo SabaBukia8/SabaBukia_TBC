@@ -21,4 +21,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "SabaBukia_TBC"
 include(":app")
-include(":app:lib")
+include(":core:common")
+include(":core:network")
+include(":core:ui")
+include(":core:designsystem")
+include(":feature:registration:domain")
+include(":feature:registration:data")
+include(":feature:registration:presentation")

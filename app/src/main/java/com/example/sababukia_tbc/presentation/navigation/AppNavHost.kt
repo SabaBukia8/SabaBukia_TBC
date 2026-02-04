@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sababukia_tbc.presentation.screen.registration.RegistrationScreen
+import com.example.sababukia_tbc.feature.registration.presentation.navigation.RegistrationRoute
+import com.example.sababukia_tbc.feature.registration.presentation.navigation.registrationScreen
 
 @Composable
 fun AppNavHost(
@@ -15,11 +15,9 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.Registration,
+        startDestination = RegistrationRoute,
         modifier = modifier
     ) {
-        composable<Routes.Registration> {
-            RegistrationScreen()
-        }
+        registrationScreen()
     }
 }

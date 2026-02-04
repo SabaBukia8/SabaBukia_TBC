@@ -15,10 +15,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.sababukia_tbc.presentation.common.LocalSnackbarController
-import com.example.sababukia_tbc.presentation.common.SnackbarController
+import com.example.sababukia_tbc.core.designsystem.theme.AppTheme
+import com.example.sababukia_tbc.core.ui.base.LocalSnackbarController
+import com.example.sababukia_tbc.core.ui.base.SnackbarController
 import com.example.sababukia_tbc.presentation.navigation.AppNavHost
-import com.example.sababukia_tbc.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

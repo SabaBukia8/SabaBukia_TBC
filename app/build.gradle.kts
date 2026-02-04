@@ -46,6 +46,15 @@ android {
 }
 
 dependencies {
+    // Project modules
+    implementation(project(":core:common"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:network"))
+    implementation(project(":core:ui"))
+    implementation(project(":feature:registration:domain"))
+    implementation(project(":feature:registration:data"))
+    implementation(project(":feature:registration:presentation"))
+
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -68,23 +77,8 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
-    // Network
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.retrofit.kotlinx.serialization.converter)
-
-    // Image loading
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-
     // Testing
     testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.turbine)
-    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
